@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strix Simulado - PDF Parser</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PDF.js da Mozilla para ler arquivos PDF no navegador -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header class="navbar">
+        <div class="brand">
+            <span class="owl-icon">🦉</span>
+            <span class="brand-name">STRIX <span>SIMULADO</span></span>
+        </div>
+        <div class="exam-title">SIMULADO INTERATIVO VIA PDF</div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- 1. TELA DE UPLOAD DO PDF -->
+        <section id="upload-section" class="card">
+            <h2>Alimentar Simulado com PDF</h2>
+            <p class="subtitle">Faça o upload da sua prova ou apostila em PDF. As questões e alternativas (A, B, C, D, E) serão extraídas automaticamente.</p>
+            
+            <div class="drop-zone" id="drop-zone">
+                <div class="upload-icon">📄</div>
+                <p>Arraste e solte seu arquivo PDF aqui</p>
+                <span>ou</span>
+                <label for="pdf-file-input" class="btn-upload">Selecionar Arquivo PDF</label>
+                <input type="file" id="pdf-file-input" accept="application/pdf" style="display: none;">
+            </div>
+
+            <div id="status-message" class="status-message"></div>
+        </section>
+
+        <!-- 2. TELA DO SIMULADO (Oculto por padrão) -->
+        <section id="quiz-section" class="card" style="display: none;">
+            <div class="question-header">
+                <div class="question-number" id="q-number">01</div>
+                <div class="question-text" id="q-text">Carregando questão...</div>
+            </div>
+
+            <div class="options-container" id="options-container">
+                <!-- As opções A, B, C, D, E serão geradas aqui dinamicamente -->
+            </div>
+
+            <div class="question-footer">
+                <div class="timer-wrapper">
+                    <div class="timer-clock" id="timer">00:00:00</div>
+                    <div class="timer-label">Tempo Decorrido</div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button id="btn-prev" class="btn-secondary" onclick="prevQuestion()">◄ Anterior</button>
+                    <button id="btn-next" class="btn-primary" onclick="nextQuestion()">Próxima ►</button>
+                    <button id="btn-finish" class="btn-success" onclick="finishQuiz()" style="display: none;">Finalizar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. TELA DE RESULTADO (Oculto por padrão) -->
+        <section id="result-section" class="card" style="display: none;">
+            <h2>Simulado Concluído! 🎉</h2>
+            <div class="results-summary">
+                <p>Você respondeu <strong id="total-answered">0</strong> de <strong id="total-questions">0</strong> questões.</p>
+            </div>
+            <button class="btn-primary" onclick="location.reload()">Carregar Novo PDF</button>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
