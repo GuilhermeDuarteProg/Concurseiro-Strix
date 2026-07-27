@@ -1,0 +1,255 @@
+:root {
+    --bg-dark: #0b0712;
+    --card-bg: #150d22;
+    --accent-purple: #8b5cf6;
+    --glow-purple: #a855f7;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --border-color: #2e1d48;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background-color: rgba(21, 13, 34, 0.85);
+    border-bottom: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.brand-name span {
+    color: var(--glow-purple);
+}
+
+.exam-title {
+    background: linear-gradient(135deg, var(--accent-purple), var(--glow-purple));
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Container */
+.main-container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.1);
+}
+
+h2 {
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+
+/* Drop Zone do PDF */
+.drop-zone {
+    border: 2px dashed var(--accent-purple);
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    background-color: rgba(139, 92, 246, 0.03);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+    background-color: rgba(139, 92, 246, 0.08);
+    border-color: var(--glow-purple);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+}
+
+.upload-icon {
+    font-size: 3rem;
+}
+
+.btn-upload {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: inline-block;
+}
+
+.btn-upload:hover {
+    opacity: 0.9;
+}
+
+.status-message {
+    margin-top: 15px;
+    font-weight: 600;
+    color: var(--glow-purple);
+    text-align: center;
+}
+
+/* Questão e Opções */
+.question-header {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.question-number {
+    background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+}
+
+.question-text {
+    flex: 1;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    padding: 14px 18px;
+    border-radius: 10px;
+    color: var(--text-primary);
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.98rem;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.option-btn .badge {
+    background-color: rgba(139, 92, 246, 0.15);
+    color: var(--glow-purple);
+    border: 1px solid var(--accent-purple);
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.option-btn:hover {
+    border-color: var(--accent-purple);
+    background-color: rgba(139, 92, 246, 0.08);
+}
+
+.option-btn.selected {
+    border-color: var(--glow-purple);
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), transparent);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
+}
+
+.option-btn.selected .badge {
+    background-color: var(--glow-purple);
+    color: #fff;
+}
+
+/* Rodapé e Botões */
+.question-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.timer-clock {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--glow-purple);
+    font-family: monospace;
+}
+
+.timer-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary, .btn-secondary, .btn-success {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent-purple);
+}
+
+.btn-success {
+    background-color: #10b981;
+    color: white;
+}
