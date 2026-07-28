@@ -17,28 +17,32 @@ const quizSection = document.getElementById('quiz-section');
 const resultSection = document.getElementById('result-section');
 
 // Configuração do Drag and Drop
-dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-});
+if (dropZone) {
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
 
-dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('dragover');
-});
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
 
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    if (e.dataTransfer.files.length) {
-        handleFile(e.dataTransfer.files[0]);
-    }
-});
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
+}
 
-fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length) {
-        handleFile(e.target.files[0]);
-    }
-});
+if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            handleFile(e.target.files[0]);
+        }
+    });
+}
 
 // Processa o arquivo PDF
 async function handleFile(file) {
@@ -64,7 +68,7 @@ async function handleFile(file) {
         questions = parseQuestionsFromText(fullText);
 
         if (questions.length === 0) {
-            statusMessage.textContent = 'Não foi possível identificar questões com alternativas (A, B, C, D, E) neste PDF.';
+            statusMessage.textContent = 'Não foi possível identificar questões com alternativas neste PDF.';
             return;
         }
 
@@ -76,21 +80,28 @@ async function handleFile(file) {
     }
 }
 
-// Algoritmo para separar Questões e Alternativas (A, B, C, D, E)
+// Algoritmo MELHORADO para separar Questões e Alternativas (A, B, C, D, E)
 function parseQuestionsFromText(text) {
     const extractedQuestions = [];
-    
-    // Normaliza quebras e espaçamentos
-    const cleanText = text.replace(/\s+/g, ' ');
 
-    // Expressão para localizar padrões como: 1. Texto / 01) Texto / Questão 1
-    const questionBlocks = cleanText.split(/(?=(?:Questão\s+\d+|\b\d{1,2}[\.\)]))\s*/i);
+    // 1. Limpeza de sujeiras do PDF (código 'pcimarkpci' e marcas d'água)
+    let cleanText = text.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*==/g, ''); 
+    cleanText = cleanText.replace(/\s+/g, ' ');
+
+    // 2. Pula instruções e cabeçalhos desnecessários do início da prova
+    const startPos = cleanText.search(/(?:PROVA|LÍNGUA PORTUGUESA|CONHECIMENTOS|QUESTÃO\s+0?1)/i);
+    if (startPos !== -1 && startPos < 2000) {
+        cleanText = cleanText.substring(startPos);
+    }
+
+    // 3. Separa os blocos de questões (procura por 1., 01), Questão 1, etc.)
+    const questionBlocks = cleanText.split(/(?=(?:Questão\s+\d+|\b\d{1,2}[\.\)]\s+))/i);
 
     questionBlocks.forEach((block) => {
-        // Expressão para encontrar alternativas A), B), C), D), E) ou A., B., C., D., E.
+        // Captura alternativas A), B), C), D), E)
         const optionMatches = [...block.matchAll(/(?:^|\s)([A-E])[\.\)]\s*(.*?)(?=(?:\s[A-E][\.\)]|$))/gi)];
 
-        if (optionMatches.length >= 4) { // Aceita 4 ou 5 opções
+        if (optionMatches.length >= 4) {
             const options = {};
             optionMatches.forEach(match => {
                 const letter = match[1].toUpperCase();
@@ -98,11 +109,11 @@ function parseQuestionsFromText(text) {
                 options[letter] = optionText;
             });
 
-            // Extrai o texto da questão (o que vem antes da opção A)
+            // Extrai o enunciado da questão
             const firstOptionIndex = block.search(/(?:^|\s)[A-E][\.\)]/i);
             let questionText = firstOptionIndex !== -1 ? block.substring(0, firstOptionIndex).trim() : block;
             
-            // Remove o número inicial da questão no enunciado
+            // Remove numeração do início do enunciado
             questionText = questionText.replace(/^(Questão\s+\d+|\d{1,2}[\.\)]\s*)/i, '').trim();
 
             if (questionText.length > 5) {
@@ -130,7 +141,7 @@ function startQuiz() {
     renderQuestion();
 }
 
-// Renderiza a questão atual
+// Renderiza a questão
 function renderQuestion() {
     const q = questions[currentQuestionIndex];
     
@@ -160,7 +171,7 @@ function renderQuestion() {
         }
     });
 
-    // Atualiza botões de navegação
+    // Navegação
     document.getElementById('btn-prev').style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
     
     if (currentQuestionIndex === questions.length - 1) {
@@ -172,13 +183,11 @@ function renderQuestion() {
     }
 }
 
-// Seleciona a resposta
 function selectAnswer(letter) {
     userAnswers[currentQuestionIndex] = letter;
     renderQuestion();
 }
 
-// Navegação
 function nextQuestion() {
     if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
@@ -193,7 +202,6 @@ function prevQuestion() {
     }
 }
 
-// Cronômetro
 function startTimer() {
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
@@ -205,7 +213,6 @@ function startTimer() {
     }, 1000);
 }
 
-// Finalizar
 function finishQuiz() {
     clearInterval(timerInterval);
     quizSection.style.display = 'none';
