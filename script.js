@@ -33,7 +33,7 @@ async function processAndStart() {
         return;
     }
 
-    statusMsg.textContent = 'Extraindo, reconstruindo palavras cortadas e limpando o PDF... Aguarde.';
+    statusMsg.textContent = 'Eliminando capa de instruções e organizando as questões... Aguarde.';
 
     try {
         const examText = await extractTextFromPDF(examFile);
@@ -64,7 +64,25 @@ async function processAndStart() {
     }
 }
 
-// RECONSTRÓI PALAVRAS CORTADAS POR QUEBRA DE LINHA (Ex: "gru - pos" -> "grupos", "confor - midade" -> "conformidade")
+// REMOVE A CAPA DE INSTRUÇÕES DA BANCA (Ex: "O candidato recebeu do fiscal...", "LEIA COM ATENÇÃO")
+function removeCoverPage(text) {
+    if (!text) return '';
+
+    // Procura o início real da prova (Ex: LÍNGUA PORTUGUESA, CONHECIMENTOS BÁSICOS/ESPECÍFICOS ou TEXTO I)
+    const realStartMatch = text.search(/(?:LÍNGUA\s+PORTUGUESA|CONHECIMENTOS\s+(?:BÁSICOS|ESPECÍFICOS|GERAIS)|TEXTO\s+[I1V])/i);
+
+    if (realStartMatch !== -1 && realStartMatch < 3500) {
+        return text.substring(realStartMatch);
+    }
+
+    // Caso não encontre cabeçalhos padrão, remove trechos com regras de fiscal/eliminação
+    let clean = text.replace(/LEIA\s+ATENTAMENTE\s+AS\s+INSTRUÇÕES[\s\S]*?(?=LÍNGUA|CONHECIMENTOS|TEXTO|QUESTÃO\s+0?1\b)/gi, '');
+    clean = clean.replace(/O\s+candidato\s+recebeu\s+do\s+fiscal[\s\S]*?(?=LÍNGUA|CONHECIMENTOS|TEXTO|QUESTÃO\s+0?1\b)/gi, '');
+
+    return clean;
+}
+
+// CORRIGE PALAVRAS CORTADAS COM HÍFEN (Ex: "gru - pos" -> "grupos")
 function fixHyphenatedWords(text) {
     if (!text) return '';
     return text.replace(/([a-zA-Z\u00C0-\u00FF]+)\s*-\s*([a-zA-Z\u00C0-\u00FF]+)/g, '$1$2');
@@ -81,7 +99,6 @@ function cleanGarbage(text) {
     clean = clean.replace(/www\.pciconcursos\.com\.br\s*(?:PROVA)?/gi, '');
     clean = clean.replace(/ADMINISTRAÇÃO\s*\d*\s*TERRA\s*TRANSPETRO\s*\d*/gi, '');
     clean = clean.replace(/CONHECIMENTOS\s+(?:ESPECÍFICOS|BÁSICOS|GERAIS)\s*\d*/gi, '');
-    clean = clean.replace(/LÍNGUA\s+(?:PORTUGUESA|INGLESA)\s*\d*/gi, '');
     clean = clean.replace(/RACIOCÍNIO\s+LÓGICO(?:\s+MATEMÁTICO)?\s*\d*/gi, '');
     clean = clean.replace(/RASCUNHO\s*\d*/gi, '');
     clean = clean.replace(/PROVA\s+\d+/gi, '');
@@ -91,7 +108,7 @@ function cleanGarbage(text) {
     return fixHyphenatedWords(clean);
 }
 
-// EXTRAÇÃO POR COLUNAS COM ORDENAÇÃO DE LINHAS
+// LEITURA POR COLUNAS E LINHAS
 async function extractTextFromPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -145,9 +162,10 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER PRECISO
+// EXTRAÇÃO DE QUESTÕES SEM A CAPA DE INSTRUÇÕES
 function parseExamQuestions(rawText) {
-    const clean = cleanGarbage(rawText);
+    const withoutCover = removeCoverPage(rawText);
+    const clean = cleanGarbage(withoutCover);
     const extracted = [];
 
     const optionRegex = /(?:^|\s)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/gi;
@@ -170,7 +188,7 @@ function parseExamQuestions(rawText) {
 
             for (let j = i + 1; j < matches.length; j++) {
                 const m = matches[j];
-                if (m.index - aMatch.index > 3000) break;
+                if (m.index - aMatch.index > 3500) break;
 
                 if (!bMatch && m.letter === 'B') bMatch = m;
                 else if (bMatch && !cMatch && m.letter === 'C') cMatch = m;
@@ -184,6 +202,7 @@ function parseExamQuestions(rawText) {
             if (bMatch && cMatch && dMatch && eMatch) {
                 let rawPrecedingText = clean.substring(0, aMatch.index).trim();
 
+                // Procura a numeração da questão no texto anterior
                 const qMatches = [...rawPrecedingText.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
 
                 let questionStatement = rawPrecedingText;
@@ -213,6 +232,11 @@ function parseExamQuestions(rawText) {
                 }
 
                 let optE = cleanGarbage(clean.substring(eMatch.index + eMatch.length, endOfE));
+
+                // Descarta se for texto de regra do fiscal
+                if (questionStatement.includes("O candidato recebeu do fiscal") || questionStatement.includes("CARTÃO-RESPOSTA")) {
+                    continue;
+                }
 
                 if (questionStatement.length > 3 && optA && optB && optC && optD && optE) {
                     extracted.push({
