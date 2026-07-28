@@ -3,52 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strix Simulado - PDF Parser</title>
+    <title>Strix Simulado - Concursos</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- PDF.js da Mozilla para ler arquivos PDF no navegador -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
-    <!-- Cabeçalho -->
     <header class="navbar">
         <div class="brand">
             <span class="owl-icon">🦉</span>
             <span class="brand-name">STRIX <span>SIMULADO</span></span>
         </div>
-        <div class="exam-title">SIMULADO INTERATIVO VIA PDF</div>
+        <div class="exam-title">PROVAS & GABARITOS</div>
     </header>
 
     <main class="main-container">
 
-        <!-- 1. TELA DE UPLOAD DO PDF -->
+        <!-- UPLOAD SECTION -->
         <section id="upload-section" class="card">
-            <h2>Alimentar Simulado com PDF</h2>
-            <p class="subtitle">Faça o upload da sua prova ou apostila em PDF. As questões e alternativas (A, B, C, D, E) serão extraídas automaticamente.</p>
+            <h2>Alimentar Simulado</h2>
+            <p class="subtitle">Envie o PDF da prova e (opcionalmente) o PDF ou texto do gabarito oficial para correção automática.</p>
             
-            <div class="drop-zone" id="drop-zone">
-                <div class="upload-icon">📄</div>
-                <p>Arraste e solte seu arquivo PDF aqui</p>
-                <span>ou</span>
-                <label for="pdf-file-input" class="btn-upload">Selecionar Arquivo PDF</label>
-                <input type="file" id="pdf-file-input" accept="application/pdf" style="display: none;">
+            <div class="upload-grid">
+                <!-- Prova PDF -->
+                <div class="drop-zone" id="drop-zone-exam">
+                    <div class="upload-icon">📄</div>
+                    <h3>PDF da Prova</h3>
+                    <p>Arraste o PDF da prova aqui</p>
+                    <label for="pdf-exam-input" class="btn-upload">Buscar Prova</label>
+                    <input type="file" id="pdf-exam-input" accept="application/pdf" style="display: none;">
+                    <span id="exam-file-name" class="file-name"></span>
+                </div>
+
+                <!-- Gabarito PDF -->
+                <div class="drop-zone" id="drop-zone-answer">
+                    <div class="upload-icon">✅</div>
+                    <h3>PDF do Gabarito (Opcional)</h3>
+                    <p>Arraste o PDF do gabarito aqui</p>
+                    <label for="pdf-answer-input" class="btn-upload btn-secondary-upload">Buscar Gabarito</label>
+                    <input type="file" id="pdf-answer-input" accept="application/pdf" style="display: none;">
+                    <span id="answer-file-name" class="file-name"></span>
+                </div>
             </div>
 
+            <!-- Entrada Manual de Gabarito (Caso não tenha em PDF) -->
+            <div class="manual-gabarito-box">
+                <label for="manual-gabarito">Ou cole o gabarito em texto (Exemplo: 1-A, 2-C, 3-E, 4-B...):</label>
+                <textarea id="manual-gabarito" placeholder="1-A, 2-B, 3-C, 4-D, 5-E..."></textarea>
+            </div>
+
+            <button id="btn-start-quiz" class="btn-primary btn-large" onclick="processAndStart()">Iniciar Simulado ➔</button>
             <div id="status-message" class="status-message"></div>
         </section>
 
-        <!-- 2. TELA DO SIMULADO (Oculto por padrão) -->
+        <!-- QUIZ SECTION -->
         <section id="quiz-section" class="card" style="display: none;">
             <div class="question-header">
                 <div class="question-number" id="q-number">01</div>
                 <div class="question-text" id="q-text">Carregando questão...</div>
             </div>
 
-            <div class="options-container" id="options-container">
-                <!-- As opções A, B, C, D, E serão geradas aqui dinamicamente -->
-            </div>
+            <div class="options-container" id="options-container"></div>
 
             <div class="question-footer">
                 <div class="timer-wrapper">
@@ -59,18 +75,32 @@
                 <div class="nav-buttons">
                     <button id="btn-prev" class="btn-secondary" onclick="prevQuestion()">◄ Anterior</button>
                     <button id="btn-next" class="btn-primary" onclick="nextQuestion()">Próxima ►</button>
-                    <button id="btn-finish" class="btn-success" onclick="finishQuiz()" style="display: none;">Finalizar</button>
+                    <button id="btn-finish" class="btn-success" onclick="finishQuiz()" style="display: none;">Finalizar e Corrigir</button>
                 </div>
             </div>
         </section>
 
-        <!-- 3. TELA DE RESULTADO (Oculto por padrão) -->
+        <!-- RESULT SECTION -->
         <section id="result-section" class="card" style="display: none;">
-            <h2>Simulado Concluído! 🎉</h2>
+            <h2>Resultado do Simulado 🎉</h2>
             <div class="results-summary">
-                <p>Você respondeu <strong id="total-answered">0</strong> de <strong id="total-questions">0</strong> questões.</p>
+                <div class="score-card">
+                    <span class="score-title">Sua Nota</span>
+                    <span class="score-value" id="score-percentage">0%</span>
+                </div>
+                <div class="details-card">
+                    <p>Acertos: <strong id="correct-count" class="txt-success">0</strong></p>
+                    <p>Erros: <strong id="incorrect-count" class="txt-danger">0</strong></p>
+                    <p>Respondidas: <strong id="answered-count">0</strong> de <strong id="total-count">0</strong></p>
+                </div>
             </div>
-            <button class="btn-primary" onclick="location.reload()">Carregar Novo PDF</button>
+
+            <div class="gabarito-review">
+                <h3>Revisão das Questões</h3>
+                <div id="review-list" class="review-list"></div>
+            </div>
+
+            <button class="btn-primary" onclick="location.reload()" style="margin-top: 20px;">Carregar Novo Simulado</button>
         </section>
 
     </main>
