@@ -33,7 +33,7 @@ async function processAndStart() {
         return;
     }
 
-    statusMsg.textContent = 'Extraindo e limpando as questões do PDF... Aguarde.';
+    statusMsg.textContent = 'Extraindo, reconstruindo palavras cortadas e limpando o PDF... Aguarde.';
 
     try {
         const examText = await extractTextFromPDF(examFile);
@@ -64,6 +64,12 @@ async function processAndStart() {
     }
 }
 
+// RECONSTRÓI PALAVRAS CORTADAS POR QUEBRA DE LINHA (Ex: "gru - pos" -> "grupos", "confor - midade" -> "conformidade")
+function fixHyphenatedWords(text) {
+    if (!text) return '';
+    return text.replace(/([a-zA-Z\u00C0-\u00FF]+)\s*-\s*([a-zA-Z\u00C0-\u00FF]+)/g, '$1$2');
+}
+
 // LIMPEZA RIGOROSA DE MARCAS D'ÁGUA E CABEÇALHOS
 function cleanGarbage(text) {
     if (!text) return '';
@@ -81,7 +87,8 @@ function cleanGarbage(text) {
     clean = clean.replace(/PROVA\s+\d+/gi, '');
     clean = clean.replace(/How space technology is bringing green wins for transport/gi, '');
 
-    return clean.replace(/\s+/g, ' ').trim();
+    clean = clean.replace(/\s+/g, ' ').trim();
+    return fixHyphenatedWords(clean);
 }
 
 // EXTRAÇÃO POR COLUNAS COM ORDENAÇÃO DE LINHAS
@@ -138,12 +145,11 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER PRECISO: IGNORA TEXTOS DE APOIO E VALIDA APENAS OPÇÕES COM FORMATO (A), A), A. OU A -
+// PARSER PRECISO
 function parseExamQuestions(rawText) {
     const clean = cleanGarbage(rawText);
     const extracted = [];
 
-    // Exige pontuação explícita para ser considerada alternativa: (A), A), A. ou A -
     const optionRegex = /(?:^|\s)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/gi;
     const matches = [];
     let match;
@@ -178,7 +184,6 @@ function parseExamQuestions(rawText) {
             if (bMatch && cMatch && dMatch && eMatch) {
                 let rawPrecedingText = clean.substring(0, aMatch.index).trim();
 
-                // Localiza o início da questão no texto anterior (Ex: "1 O fragmento...", "QUESTÃO 1")
                 const qMatches = [...rawPrecedingText.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
 
                 let questionStatement = rawPrecedingText;
@@ -188,11 +193,12 @@ function parseExamQuestions(rawText) {
                 }
 
                 questionStatement = questionStatement.replace(/^(QUESTÃO\s+\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
+                questionStatement = cleanGarbage(questionStatement);
 
-                let optA = clean.substring(aMatch.index + aMatch.length, bMatch.index).trim();
-                let optB = clean.substring(bMatch.index + bMatch.length, cMatch.index).trim();
-                let optC = clean.substring(cMatch.index + cMatch.length, dMatch.index).trim();
-                let optD = clean.substring(dMatch.index + dMatch.length, eMatch.index).trim();
+                let optA = cleanGarbage(clean.substring(aMatch.index + aMatch.length, bMatch.index));
+                let optB = cleanGarbage(clean.substring(bMatch.index + bMatch.length, cMatch.index));
+                let optC = cleanGarbage(clean.substring(cMatch.index + cMatch.length, dMatch.index));
+                let optD = cleanGarbage(clean.substring(dMatch.index + dMatch.length, eMatch.index));
 
                 let endOfE = clean.length;
                 const nextAMatch = matches.find(m => m.letter === 'A' && m.index > eMatch.index);
@@ -206,8 +212,7 @@ function parseExamQuestions(rawText) {
                     }
                 }
 
-                let optE = clean.substring(eMatch.index + eMatch.length, endOfE).trim();
-                optE = cleanGarbage(optE);
+                let optE = cleanGarbage(clean.substring(eMatch.index + eMatch.length, endOfE));
 
                 if (questionStatement.length > 3 && optA && optB && optC && optD && optE) {
                     extracted.push({
