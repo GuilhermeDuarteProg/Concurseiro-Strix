@@ -33,14 +33,14 @@ async function processAndStart() {
         return;
     }
 
-    statusMsg.textContent = 'Lendo a prova e ignorando capas/instruções...';
+    statusMsg.textContent = 'Lendo e extraindo questões do PDF... Aguarde.';
 
     try {
         const examText = await extractTextFromPDF(examFile);
         questions = parseExamQuestions(examText);
 
         if (questions.length === 0) {
-            statusMsg.textContent = 'Não foi possível identificar as questões da prova.';
+            statusMsg.textContent = 'Não foi possível extrair as questões do PDF. Verifique se o PDF contém texto selecionável.';
             return;
         }
 
@@ -79,57 +79,52 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// FILTRO AVANÇADO: Ignora regras de capa e foca apenas nas questões da prova
+// PARSER INTELIGENTE: Lê a prova inteira sem cortes cegos e ignora capas
 function parseExamQuestions(text) {
     const extracted = [];
 
-    // 1. Limpa marcas d'água do PCI Concursos
+    // 1. Limpeza geral de código PCI e espaços múltiplos
     let clean = text.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*==?/gi, '');
     clean = clean.replace(/pcimarkpci/gi, '');
     clean = clean.replace(/\s+/g, ' ');
 
-    // 2. CORTA A CAPA E INSTRUÇÕES
-    // Procura o início real das matérias (Língua Portuguesa, Conhecimentos, etc.)
-    const startExamRegex = /(?:LÍNGUA\s+PORTUGUESA|CONHECIMENTOS\s+BÁSICOS|CONHECIMENTOS\s+ESPECÍFICOS|RACIOCÍNIO\s+LÓGICO|PORTUGUÊS)/i;
-    const startMatch = clean.search(startExamRegex);
-    
-    if (startMatch !== -1) {
-        clean = clean.substring(startMatch);
-    } else {
-        // Caso não ache o nome da matéria, pula os primeiros 1500 caracteres (onde fica a capa)
-        if (clean.length > 1500) {
-            clean = clean.substring(1200);
-        }
-    }
-
-    // 3. Separa os blocos de questões
-    const blocks = clean.split(/(?=(?:QUESTÃO\s+\d+|\b\d{1,2}\s*[\.\)-]\s+[A-Z]))/i);
+    // 2. Separa por blocos numéricos (Ex: "1 -", "01.", "QUESTÃO 1", "1 ")
+    const blocks = clean.split(/(?=(?:\bQUESTÃO\s+\d+|\b\d{1,2}\s*[\.\)-]\s+[A-Z\u00C0-\u00FF]))/i);
 
     blocks.forEach((block) => {
-        // Ignora blocos que ainda contenham regras de eliminação
-        if (block.toLowerCase().includes('será eliminado') || block.toLowerCase().includes('leia atentamente')) {
+        const lower = block.toLowerCase();
+
+        // Descarta blocos de instrução/capa de prova
+        if (lower.includes('será eliminado') || lower.includes('leia atentamente') || lower.includes('folha de respostas')) {
             return;
         }
 
-        // Procura opções A, B, C, D, E
-        const optionRegex = /(?:^|\s)([A-E])[\.\)\-]\s+(.*?)(?=(?:\s+[A-E][\.\)\-]\s+|$))/gi;
+        // Identifica alternativas A, B, C, D, E (flexível para A), A., (A), A -)
+        const optionRegex = /(?:^|\s)[(\[]?([A-E])[)\.\-\]]\s+(.*?)(?=(?:\s+[(\[]?[A-E][)\.\-\]]\s+|$))/gi;
         const matches = [...block.matchAll(optionRegex)];
 
-        if (matches.length >= 4) {
+        // Aceita se encontrar pelo menos 3 opções válidas
+        if (matches.length >= 3) {
             const options = {};
             matches.forEach(m => {
                 const letter = m[1].toUpperCase();
                 let optText = m[2].trim();
-                if (optText.length > 350) optText = optText.substring(0, 350) + '...';
+                if (optText.length > 400) optText = optText.substring(0, 400) + '...';
                 options[letter] = optText;
             });
 
-            const firstOptIdx = block.search(/(?:^|\s)[A-E][\.\)\-]\s+/i);
+            // O enunciado é o trecho antes da primeira alternativa
+            const firstOptIdx = block.search(/(?:^|\s)[(\[]?[A-E][)\.\-\]]\s+/i);
             let qText = firstOptIdx !== -1 ? block.substring(0, firstOptIdx).trim() : block;
+            
+            // Remove número inicial do enunciado
             qText = qText.replace(/^(QUESTÃO\s+\d+|\d{1,2}\s*[\.\)-]\s*)/i, '').trim();
 
             if (qText.length > 5) {
-                extracted.push({ text: qText, options: options });
+                extracted.push({
+                    text: qText,
+                    options: options
+                });
             }
         }
     });
