@@ -33,7 +33,7 @@ async function processAndStart() {
         return;
     }
 
-    statusMsg.textContent = 'Processando o PDF e organizando as questões... Aguarde.';
+    statusMsg.textContent = 'Extraindo e limpando as questões do PDF... Aguarde.';
 
     try {
         const examText = await extractTextFromPDF(examFile);
@@ -64,13 +64,13 @@ async function processAndStart() {
     }
 }
 
-// LIMPEZA PROFUNDA DE MARCAS D'ÁGUA E CABEÇALHOS
+// LIMPEZA RIGOROSA DE MARCAS D'ÁGUA E CABEÇALHOS
 function cleanGarbage(text) {
     if (!text) return '';
     let clean = text;
 
-    clean = clean.replace(/pcimarkpci[A-Za-z0-9+/=]*/gi, '');
-    clean = clean.replace(/[A-Za-z0-9+/=]{20,}==?/g, '');
+    clean = clean.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*/gi, '');
+    clean = clean.replace(/[A-Za-z0-9+/=]{15,}==?/g, '');
     clean = clean.replace(/1\s*2\s*3\s*4\s*5\s*6\s*7\s*8\s*9\s*/g, '');
     clean = clean.replace(/www\.pciconcursos\.com\.br\s*(?:PROVA)?/gi, '');
     clean = clean.replace(/ADMINISTRAÇÃO\s*\d*\s*TERRA\s*TRANSPETRO\s*\d*/gi, '');
@@ -84,7 +84,7 @@ function cleanGarbage(text) {
     return clean.replace(/\s+/g, ' ').trim();
 }
 
-// LEITURA POR COLUNAS E LINHAS
+// EXTRAÇÃO POR COLUNAS COM ORDENAÇÃO DE LINHAS
 async function extractTextFromPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -138,83 +138,80 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// EXTRAÇÃO RIGOROSA: EXIGE SEQUÊNCIA A -> B -> C -> D -> E
+// PARSER PRECISO: IGNORA TEXTOS DE APOIO E VALIDA APENAS OPÇÕES COM FORMATO (A), A), A. OU A -
 function parseExamQuestions(rawText) {
     const clean = cleanGarbage(rawText);
     const extracted = [];
 
-    // Localiza todas as ocorrências das letras das opções
-    const optionRegex = /(?:^|\s)[(\[]?([A-E])[)\.\-\]]?\s+/gi;
+    // Exige pontuação explícita para ser considerada alternativa: (A), A), A. ou A -
+    const optionRegex = /(?:^|\s)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/gi;
     const matches = [];
     let match;
 
     while ((match = optionRegex.exec(clean)) !== null) {
+        const letter = (match[1] || match[2]).toUpperCase();
         matches.push({
-            letter: match[1].toUpperCase(),
+            letter: letter,
             index: match.index,
             length: match[0].length
         });
     }
-
-    let lastEndIndex = 0;
 
     for (let i = 0; i < matches.length; i++) {
         if (matches[i].letter === 'A') {
             const aMatch = matches[i];
             let bMatch = null, cMatch = null, dMatch = null, eMatch = null;
 
-            // Garante sequência estrita A -> B -> C -> D -> E a uma distância razoável
             for (let j = i + 1; j < matches.length; j++) {
                 const m = matches[j];
-                if (m.index - aMatch.index > 2500) break;
+                if (m.index - aMatch.index > 3000) break;
 
-                if (!bMatch && m.letter === 'B' && m.index > aMatch.index) {
-                    bMatch = m;
-                } else if (bMatch && !cMatch && m.letter === 'C' && m.index > bMatch.index) {
-                    cMatch = m;
-                } else if (cMatch && !dMatch && m.letter === 'D' && m.index > bMatch.index) {
-                    dMatch = m;
-                } else if (dMatch && !eMatch && m.letter === 'E' && m.index > dMatch.index) {
+                if (!bMatch && m.letter === 'B') bMatch = m;
+                else if (bMatch && !cMatch && m.letter === 'C') cMatch = m;
+                else if (cMatch && !dMatch && m.letter === 'D') dMatch = m;
+                else if (dMatch && !eMatch && m.letter === 'E') {
                     eMatch = m;
                     break;
                 }
             }
 
             if (bMatch && cMatch && dMatch && eMatch) {
-                let rawEnunciado = clean.substring(lastEndIndex, aMatch.index).trim();
+                let rawPrecedingText = clean.substring(0, aMatch.index).trim();
 
-                // Caso haja texto de apoio no bloco, isola a partir do número da questão
-                const qMatches = [...rawEnunciado.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
+                // Localiza o início da questão no texto anterior (Ex: "1 O fragmento...", "QUESTÃO 1")
+                const qMatches = [...rawPrecedingText.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
+
+                let questionStatement = rawPrecedingText;
                 if (qMatches.length > 0) {
                     const lastQ = qMatches[qMatches.length - 1];
-                    rawEnunciado = rawEnunciado.substring(lastQ.index).trim();
+                    questionStatement = rawPrecedingText.substring(lastQ.index).trim();
                 }
 
-                let cleanedEnunciado = rawEnunciado.replace(/^(QUESTÃO\s+\d+|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
+                questionStatement = questionStatement.replace(/^(QUESTÃO\s+\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
 
                 let optA = clean.substring(aMatch.index + aMatch.length, bMatch.index).trim();
                 let optB = clean.substring(bMatch.index + bMatch.length, cMatch.index).trim();
                 let optC = clean.substring(cMatch.index + cMatch.length, dMatch.index).trim();
                 let optD = clean.substring(dMatch.index + dMatch.length, eMatch.index).trim();
 
-                // Define o fim da Opção E no início da próxima questão ou próxima opção A
-                let nextAIndex = clean.length;
-                for (let k = matches.indexOf(eMatch) + 1; k < matches.length; k++) {
-                    if (matches[k].letter === 'A') {
-                        nextAIndex = matches[k].index;
-                        break;
+                let endOfE = clean.length;
+                const nextAMatch = matches.find(m => m.letter === 'A' && m.index > eMatch.index);
+                if (nextAMatch) {
+                    const subText = clean.substring(eMatch.index + eMatch.length, nextAMatch.index);
+                    const nextQInSub = subText.search(/(?:\bQUESTÃO\s+\d{1,2}\b|\b\d{1,2}\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/i);
+                    if (nextQInSub !== -1) {
+                        endOfE = eMatch.index + eMatch.length + nextQInSub;
+                    } else {
+                        endOfE = nextAMatch.index;
                     }
                 }
 
-                let rawOptE = clean.substring(eMatch.index + eMatch.length, nextAIndex).trim();
-                
-                // Remove qualquer número de questão posterior que tenha entrado no final da opção E
-                const nextQMatch = rawOptE.search(/(?:\bQUESTÃO\s+\d{1,2}\b|\b\d{1,2}\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/i);
-                let optE = nextQMatch !== -1 ? rawOptE.substring(0, nextQMatch).trim() : rawOptE;
+                let optE = clean.substring(eMatch.index + eMatch.length, endOfE).trim();
+                optE = cleanGarbage(optE);
 
-                if (cleanedEnunciado.length > 3 && optA && optB && optC && optD && optE) {
+                if (questionStatement.length > 3 && optA && optB && optC && optD && optE) {
                     extracted.push({
-                        text: cleanedEnunciado,
+                        text: questionStatement,
                         options: {
                             A: optA,
                             B: optB,
@@ -223,8 +220,9 @@ function parseExamQuestions(rawText) {
                             E: optE
                         }
                     });
-                    lastEndIndex = eMatch.index + eMatch.length + optE.length;
                 }
+
+                i = matches.indexOf(eMatch);
             }
         }
     }
