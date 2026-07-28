@@ -64,7 +64,7 @@ async function processAndStart() {
     }
 }
 
-// LEITOR POR COLUNAS (Resolve o problema de misturar lado esquerdo e direito)
+// EXTRAÇÃO PRECISA POR COLUNAS E LINHAS
 async function extractTextFromPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -84,7 +84,6 @@ async function extractTextFromPDF(file) {
             const x = item.transform[4];
             const y = item.transform[5];
 
-            // Separa os elementos da esquerda e da direita
             if (x < midX) {
                 leftCol.push({ str: item.str, y, x });
             } else {
@@ -92,12 +91,29 @@ async function extractTextFromPDF(file) {
             }
         });
 
-        // Ordena de cima para baixo (coordenada Y decrescente no PDF)
-        leftCol.sort((a, b) => b.y - a.y || a.x - b.x);
-        rightCol.sort((a, b) => b.y - a.y || a.x - b.x);
+        const sortByYandX = (items) => {
+            const lines = [];
+            items.forEach(item => {
+                let line = lines.find(l => Math.abs(l.y - item.y) < 4);
+                if (line) {
+                    line.items.push(item);
+                } else {
+                    lines.push({ y: item.y, items: [item] });
+                }
+            });
 
-        const leftText = leftCol.map(item => item.str).join(' ');
-        const rightText = rightCol.map(item => item.str).join(' ');
+            lines.sort((a, b) => b.y - a.y);
+
+            let text = '';
+            lines.forEach(line => {
+                line.items.sort((a, b) => a.x - b.x);
+                text += line.items.map(it => it.str).join(' ') + ' ';
+            });
+            return text;
+        };
+
+        const leftText = sortByYandX(leftCol);
+        const rightText = sortByYandX(rightCol);
 
         fullText += leftText + '\n' + rightText + '\n';
     }
@@ -105,38 +121,46 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER INTELIGENTE COM REMOÇÃO DE SUJEIRA
+// PARSER INTELIGENTE: Separa todas as questões sem engolir enunciados
 function parseExamQuestions(text) {
     const extracted = [];
 
     let clean = text;
 
-    // 1. Remove marcas d'água PCI Concursos e strings Base64
-    clean = clean.replace(/1\s*2\s*3\s*4\s*5\s*6\s*7\s*8\s*9\s*[A-Za-z0-9+/=]*==?\s*www\.pciconcursos\.com\.br\s*PROVA/gi, '');
+    // 1. Limpeza profunda de cabeçalhos, rodapés, RASCUNHO e marcas d'água PCI
+    clean = clean.replace(/ADMINISTRAÇÃO\s+\d*\s*TERRA\s+TRANSPETRO\s*\d*/gi, '');
+    clean = clean.replace(/CONHECIMENTOS\s+(?:ESPECÍFICOS|BÁSICOS|GERAIS)\s*\d*/gi, '');
+    clean = clean.replace(/LÍNGUA\s+(?:PORTUGUESA|INGLESA)\s*\d*/gi, '');
+    clean = clean.replace(/RACIOCÍNIO\s+LÓGICO(?:\s+MATEMÁTICO)?\s*\d*/gi, '');
+    clean = clean.replace(/RASCUNHO\s*\d*/gi, '');
+    clean = clean.replace(/PROVA\s+\d+/gi, '');
+    clean = clean.replace(/1\s*2\s*3\s*4\s*5\s*6\s*7\s*8\s*9\s*[A-Za-z0-9+/=]{10,}==?\s*(?:www\.pciconcursos\.com\.br)?\s*(?:PROVA)?/gi, '');
     clean = clean.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*==?/gi, '');
-    clean = clean.replace(/pcimarkpci/gi, '');
-    clean = clean.replace(/[A-Za-z0-9+/=]{30,}==?/g, '');
-    clean = clean.replace(/www\.pciconcursos\.com\.br\s*PROVA/gi, '');
-
-    // 2. Remove cabeçalhos e rodapés da Transpetro/Cesgranrio
-    clean = clean.replace(/ADMINISTRAÇÃO\s+\d+\s+TERRA\s+TRANSPETRO\s*(?:RASCUNHO\s+\d+)?/gi, '');
-    clean = clean.replace(/CONHECIMENTOS\s+ESPECÍFICOS\s+\d+/gi, '');
-    clean = clean.replace(/RASCUNHO\s+\d+/gi, '');
+    clean = clean.replace(/www\.pciconcursos\.com\.br\s*PROVA?/gi, '');
+    clean = clean.replace(/[A-Za-z0-9+/=]{20,}==?/g, '');
     clean = clean.replace(/\s+/g, ' ');
 
-    // 3. Separa pelos números de questão (Ex: "QUESTÃO 1", "01 ", "1 .")
-    const blocks = clean.split(/(?=(?:\bQUESTÃO\s+\d{1,2}\b|\b\d{1,2}\s*[\.\)-]\s+[A-Z\u00C0-\u00FF]))/i);
+    // 2. Corta antes da primeira questão válida (pula capa de instruções)
+    const firstQMatch = clean.search(/(?:\bQUESTÃO\s+1\b|\b1\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC][a-z\u00E0-\u00FC])/);
+    if (firstQMatch !== -1) {
+        clean = clean.substring(firstQMatch);
+    }
 
-    blocks.forEach((block) => {
+    // 3. Separa exatamente em cada número de questão (Ex: "1 ", "2 ", "3 ", "70 ")
+    const questionSplitRegex = /(?=\b(?:QUESTÃO\s+\d{1,2}\b|\d{1,2}\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC][a-z\u00E0-\u00FC]))/g;
+    const blocks = clean.split(questionSplitRegex);
+
+    blocks.forEach((rawBlock) => {
+        let block = rawBlock.trim();
         const lower = block.toLowerCase();
 
-        // Descarta capas/instruções
+        // Descarta blocos de instruções ou capas
         if (lower.includes('será eliminado') || lower.includes('leia atentamente') || lower.includes('folha de respostas')) {
             return;
         }
 
-        // Procura alternativas de A a E
-        const optionRegex = /(?:^|\s)[(\[]?([A-E])[)\.\-\]]\s+(.*?)(?=(?:\s+[(\[]?[A-E][)\.\-\]]\s+|$))/gi;
+        // Procura opções A, B, C, D, E garantindo que a opção E pare no início da próxima questão
+        const optionRegex = /(?:^|\s)[(\[]?([A-E])[)\.\-\]]?\s+(.*?)(?=(?:\s+[(\[]?[A-E][)\.\-\]]?\s+|\s+\d{1,2}\s+[A-Z\u00C0-\u00DC][a-z\u00E0-\u00FC]|$))/gi;
         const matches = [...block.matchAll(optionRegex)];
 
         if (matches.length >= 4) {
@@ -144,21 +168,17 @@ function parseExamQuestions(text) {
             matches.forEach(m => {
                 const letter = m[1].toUpperCase();
                 let optText = m[2].trim();
-                
-                // Limpa sujeira final no texto das alternativas
-                optText = optText.replace(/www\.pciconcursos\.com\.br.*/gi, '').trim();
-                
                 options[letter] = optText;
             });
 
-            // Isola o enunciado do trecho antes das alternativas
-            const firstOptIdx = block.search(/(?:^|\s)[(\[]?[A-E][)\.\-\]]\s+/i);
+            // O enunciado é tudo o que vem antes da Opção A
+            const firstOptIdx = block.search(/(?:^|\s)[(\[]?[A-E][)\.\-\]]?\s+/i);
             let qText = firstOptIdx !== -1 ? block.substring(0, firstOptIdx).trim() : block;
             
-            // Limpa numeração do topo do enunciado
-            qText = qText.replace(/^(QUESTÃO\s+\d+|\d{1,2}\s*[\.\)-]\s*)/i, '').trim();
+            // Remove o número inicial da questão (Ex: "01 ", "1 ", "QUESTÃO 1 ")
+            qText = qText.replace(/^(QUESTÃO\s+\d+|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
 
-            if (qText.length > 5) {
+            if (qText.length > 3) {
                 extracted.push({
                     text: qText,
                     options: options
