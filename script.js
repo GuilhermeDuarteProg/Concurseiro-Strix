@@ -33,14 +33,14 @@ async function processAndStart() {
         return;
     }
 
-    statusMsg.textContent = 'Lendo e organizando as colunas da prova... Aguarde.';
+    statusMsg.textContent = 'Processando o PDF e organizando as questões... Aguarde.';
 
     try {
         const examText = await extractTextFromPDF(examFile);
         questions = parseExamQuestions(examText);
 
         if (questions.length === 0) {
-            statusMsg.textContent = 'Não foi possível extrair as questões do PDF.';
+            statusMsg.textContent = 'Não foi possível extrair as questões do PDF. Verifique o arquivo.';
             return;
         }
 
@@ -64,7 +64,27 @@ async function processAndStart() {
     }
 }
 
-// EXTRAÇÃO PRECISA POR COLUNAS E LINHAS
+// LIMPEZA PROFUNDA DE MARCAS D'ÁGUA E CABEÇALHOS
+function cleanGarbage(text) {
+    if (!text) return '';
+    let clean = text;
+
+    clean = clean.replace(/pcimarkpci[A-Za-z0-9+/=]*/gi, '');
+    clean = clean.replace(/[A-Za-z0-9+/=]{20,}==?/g, '');
+    clean = clean.replace(/1\s*2\s*3\s*4\s*5\s*6\s*7\s*8\s*9\s*/g, '');
+    clean = clean.replace(/www\.pciconcursos\.com\.br\s*(?:PROVA)?/gi, '');
+    clean = clean.replace(/ADMINISTRAÇÃO\s*\d*\s*TERRA\s*TRANSPETRO\s*\d*/gi, '');
+    clean = clean.replace(/CONHECIMENTOS\s+(?:ESPECÍFICOS|BÁSICOS|GERAIS)\s*\d*/gi, '');
+    clean = clean.replace(/LÍNGUA\s+(?:PORTUGUESA|INGLESA)\s*\d*/gi, '');
+    clean = clean.replace(/RACIOCÍNIO\s+LÓGICO(?:\s+MATEMÁTICO)?\s*\d*/gi, '');
+    clean = clean.replace(/RASCUNHO\s*\d*/gi, '');
+    clean = clean.replace(/PROVA\s+\d+/gi, '');
+    clean = clean.replace(/How space technology is bringing green wins for transport/gi, '');
+
+    return clean.replace(/\s+/g, ' ').trim();
+}
+
+// LEITURA POR COLUNAS E LINHAS
 async function extractTextFromPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -112,80 +132,102 @@ async function extractTextFromPDF(file) {
             return text;
         };
 
-        const leftText = sortByYandX(leftCol);
-        const rightText = sortByYandX(rightCol);
-
-        fullText += leftText + '\n' + rightText + '\n';
+        fullText += sortByYandX(leftCol) + '\n' + sortByYandX(rightCol) + '\n';
     }
 
     return fullText;
 }
 
-// PARSER INTELIGENTE: Separa todas as questões sem engolir enunciados
-function parseExamQuestions(text) {
+// EXTRAÇÃO RIGOROSA: EXIGE SEQUÊNCIA A -> B -> C -> D -> E
+function parseExamQuestions(rawText) {
+    const clean = cleanGarbage(rawText);
     const extracted = [];
 
-    let clean = text;
+    // Localiza todas as ocorrências das letras das opções
+    const optionRegex = /(?:^|\s)[(\[]?([A-E])[)\.\-\]]?\s+/gi;
+    const matches = [];
+    let match;
 
-    // 1. Limpeza profunda de cabeçalhos, rodapés, RASCUNHO e marcas d'água PCI
-    clean = clean.replace(/ADMINISTRAÇÃO\s+\d*\s*TERRA\s+TRANSPETRO\s*\d*/gi, '');
-    clean = clean.replace(/CONHECIMENTOS\s+(?:ESPECÍFICOS|BÁSICOS|GERAIS)\s*\d*/gi, '');
-    clean = clean.replace(/LÍNGUA\s+(?:PORTUGUESA|INGLESA)\s*\d*/gi, '');
-    clean = clean.replace(/RACIOCÍNIO\s+LÓGICO(?:\s+MATEMÁTICO)?\s*\d*/gi, '');
-    clean = clean.replace(/RASCUNHO\s*\d*/gi, '');
-    clean = clean.replace(/PROVA\s+\d+/gi, '');
-    clean = clean.replace(/1\s*2\s*3\s*4\s*5\s*6\s*7\s*8\s*9\s*[A-Za-z0-9+/=]{10,}==?\s*(?:www\.pciconcursos\.com\.br)?\s*(?:PROVA)?/gi, '');
-    clean = clean.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*==?/gi, '');
-    clean = clean.replace(/www\.pciconcursos\.com\.br\s*PROVA?/gi, '');
-    clean = clean.replace(/[A-Za-z0-9+/=]{20,}==?/g, '');
-    clean = clean.replace(/\s+/g, ' ');
-
-    // 2. Corta antes da primeira questão válida (pula capa de instruções)
-    const firstQMatch = clean.search(/(?:\bQUESTÃO\s+1\b|\b1\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC][a-z\u00E0-\u00FC])/);
-    if (firstQMatch !== -1) {
-        clean = clean.substring(firstQMatch);
+    while ((match = optionRegex.exec(clean)) !== null) {
+        matches.push({
+            letter: match[1].toUpperCase(),
+            index: match.index,
+            length: match[0].length
+        });
     }
 
-    // 3. Separa exatamente em cada número de questão (Ex: "1 ", "2 ", "3 ", "70 ")
-    const questionSplitRegex = /(?=\b(?:QUESTÃO\s+\d{1,2}\b|\d{1,2}\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC][a-z\u00E0-\u00FC]))/g;
-    const blocks = clean.split(questionSplitRegex);
+    let lastEndIndex = 0;
 
-    blocks.forEach((rawBlock) => {
-        let block = rawBlock.trim();
-        const lower = block.toLowerCase();
+    for (let i = 0; i < matches.length; i++) {
+        if (matches[i].letter === 'A') {
+            const aMatch = matches[i];
+            let bMatch = null, cMatch = null, dMatch = null, eMatch = null;
 
-        // Descarta blocos de instruções ou capas
-        if (lower.includes('será eliminado') || lower.includes('leia atentamente') || lower.includes('folha de respostas')) {
-            return;
-        }
+            // Garante sequência estrita A -> B -> C -> D -> E a uma distância razoável
+            for (let j = i + 1; j < matches.length; j++) {
+                const m = matches[j];
+                if (m.index - aMatch.index > 2500) break;
 
-        // Procura opções A, B, C, D, E garantindo que a opção E pare no início da próxima questão
-        const optionRegex = /(?:^|\s)[(\[]?([A-E])[)\.\-\]]?\s+(.*?)(?=(?:\s+[(\[]?[A-E][)\.\-\]]?\s+|\s+\d{1,2}\s+[A-Z\u00C0-\u00DC][a-z\u00E0-\u00FC]|$))/gi;
-        const matches = [...block.matchAll(optionRegex)];
+                if (!bMatch && m.letter === 'B' && m.index > aMatch.index) {
+                    bMatch = m;
+                } else if (bMatch && !cMatch && m.letter === 'C' && m.index > bMatch.index) {
+                    cMatch = m;
+                } else if (cMatch && !dMatch && m.letter === 'D' && m.index > bMatch.index) {
+                    dMatch = m;
+                } else if (dMatch && !eMatch && m.letter === 'E' && m.index > dMatch.index) {
+                    eMatch = m;
+                    break;
+                }
+            }
 
-        if (matches.length >= 4) {
-            const options = {};
-            matches.forEach(m => {
-                const letter = m[1].toUpperCase();
-                let optText = m[2].trim();
-                options[letter] = optText;
-            });
+            if (bMatch && cMatch && dMatch && eMatch) {
+                let rawEnunciado = clean.substring(lastEndIndex, aMatch.index).trim();
 
-            // O enunciado é tudo o que vem antes da Opção A
-            const firstOptIdx = block.search(/(?:^|\s)[(\[]?[A-E][)\.\-\]]?\s+/i);
-            let qText = firstOptIdx !== -1 ? block.substring(0, firstOptIdx).trim() : block;
-            
-            // Remove o número inicial da questão (Ex: "01 ", "1 ", "QUESTÃO 1 ")
-            qText = qText.replace(/^(QUESTÃO\s+\d+|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
+                // Caso haja texto de apoio no bloco, isola a partir do número da questão
+                const qMatches = [...rawEnunciado.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
+                if (qMatches.length > 0) {
+                    const lastQ = qMatches[qMatches.length - 1];
+                    rawEnunciado = rawEnunciado.substring(lastQ.index).trim();
+                }
 
-            if (qText.length > 3) {
-                extracted.push({
-                    text: qText,
-                    options: options
-                });
+                let cleanedEnunciado = rawEnunciado.replace(/^(QUESTÃO\s+\d+|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
+
+                let optA = clean.substring(aMatch.index + aMatch.length, bMatch.index).trim();
+                let optB = clean.substring(bMatch.index + bMatch.length, cMatch.index).trim();
+                let optC = clean.substring(cMatch.index + cMatch.length, dMatch.index).trim();
+                let optD = clean.substring(dMatch.index + dMatch.length, eMatch.index).trim();
+
+                // Define o fim da Opção E no início da próxima questão ou próxima opção A
+                let nextAIndex = clean.length;
+                for (let k = matches.indexOf(eMatch) + 1; k < matches.length; k++) {
+                    if (matches[k].letter === 'A') {
+                        nextAIndex = matches[k].index;
+                        break;
+                    }
+                }
+
+                let rawOptE = clean.substring(eMatch.index + eMatch.length, nextAIndex).trim();
+                
+                // Remove qualquer número de questão posterior que tenha entrado no final da opção E
+                const nextQMatch = rawOptE.search(/(?:\bQUESTÃO\s+\d{1,2}\b|\b\d{1,2}\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/i);
+                let optE = nextQMatch !== -1 ? rawOptE.substring(0, nextQMatch).trim() : rawOptE;
+
+                if (cleanedEnunciado.length > 3 && optA && optB && optC && optD && optE) {
+                    extracted.push({
+                        text: cleanedEnunciado,
+                        options: {
+                            A: optA,
+                            B: optB,
+                            C: optC,
+                            D: optD,
+                            E: optE
+                        }
+                    });
+                    lastEndIndex = eMatch.index + eMatch.length + optE.length;
+                }
             }
         }
-    });
+    }
 
     return extracted;
 }
