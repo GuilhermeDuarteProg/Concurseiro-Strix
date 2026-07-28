@@ -1,7 +1,7 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 let questions = [];
-let gabaritoMap = {}; // Armazena o gabarito {1: 'A', 2: 'C', ...}
+let gabaritoMap = {};
 let currentQuestionIndex = 0;
 let userAnswers = {};
 let timerInterval;
@@ -33,26 +33,23 @@ async function processAndStart() {
         return;
     }
 
-    statusMsg.textContent = 'Processando arquivo(s)... Aguarde.';
+    statusMsg.textContent = 'Lendo a prova e ignorando capas/instruções...';
 
     try {
-        // 1. Extrai Texto da Prova
         const examText = await extractTextFromPDF(examFile);
         questions = parseExamQuestions(examText);
 
         if (questions.length === 0) {
-            statusMsg.textContent = 'Não foi possível extrair as questões. Tente outro arquivo de prova.';
+            statusMsg.textContent = 'Não foi possível identificar as questões da prova.';
             return;
         }
 
-        // 2. Extrai ou Lê Gabarito
         gabaritoMap = {};
         if (answerFile) {
             const answerText = await extractTextFromPDF(answerFile);
             gabaritoMap = parseGabaritoText(answerText);
         }
 
-        // Verifica gabarito manual digitado
         const manualText = document.getElementById('manual-gabarito').value;
         if (manualText.trim() !== '') {
             const manualMap = parseGabaritoText(manualText);
@@ -63,11 +60,10 @@ async function processAndStart() {
 
     } catch (err) {
         console.error(err);
-        statusMsg.textContent = 'Erro ao processar os arquivos PDF.';
+        statusMsg.textContent = 'Erro ao processar o arquivo PDF.';
     }
 }
 
-// Extrai texto bruto do PDF usando PDF.js
 async function extractTextFromPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -83,26 +79,39 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// Parser Robusto de Provas (Remove Marcas D'água, Lixo e Duas Colunas)
+// FILTRO AVANÇADO: Ignora regras de capa e foca apenas nas questões da prova
 function parseExamQuestions(text) {
     const extracted = [];
 
-    // Limpa código base64 e marca d'água 'pcimarkpci'
+    // 1. Limpa marcas d'água do PCI Concursos
     let clean = text.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*==?/gi, '');
     clean = clean.replace(/pcimarkpci/gi, '');
     clean = clean.replace(/\s+/g, ' ');
 
-    // Corta o cabeçalho e regras iniciais de instrução
-    const startMatch = clean.search(/(?:QUESTÃO\s+0?1\b|PROVA\s+1|LÍNGUA\ PORTUGUESA)/i);
-    if (startMatch !== -1 && startMatch < 3000) {
+    // 2. CORTA A CAPA E INSTRUÇÕES
+    // Procura o início real das matérias (Língua Portuguesa, Conhecimentos, etc.)
+    const startExamRegex = /(?:LÍNGUA\s+PORTUGUESA|CONHECIMENTOS\s+BÁSICOS|CONHECIMENTOS\s+ESPECÍFICOS|RACIOCÍNIO\s+LÓGICO|PORTUGUÊS)/i;
+    const startMatch = clean.search(startExamRegex);
+    
+    if (startMatch !== -1) {
         clean = clean.substring(startMatch);
+    } else {
+        // Caso não ache o nome da matéria, pula os primeiros 1500 caracteres (onde fica a capa)
+        if (clean.length > 1500) {
+            clean = clean.substring(1200);
+        }
     }
 
-    // Divide em blocos por número de questão (Ex: "1 - ", "01.", "QUESTÃO 1")
+    // 3. Separa os blocos de questões
     const blocks = clean.split(/(?=(?:QUESTÃO\s+\d+|\b\d{1,2}\s*[\.\)-]\s+[A-Z]))/i);
 
     blocks.forEach((block) => {
-        // Encontra opções A, B, C, D, E de forma rigorosa
+        // Ignora blocos que ainda contenham regras de eliminação
+        if (block.toLowerCase().includes('será eliminado') || block.toLowerCase().includes('leia atentamente')) {
+            return;
+        }
+
+        // Procura opções A, B, C, D, E
         const optionRegex = /(?:^|\s)([A-E])[\.\)\-]\s+(.*?)(?=(?:\s+[A-E][\.\)\-]\s+|$))/gi;
         const matches = [...block.matchAll(optionRegex)];
 
@@ -111,12 +120,10 @@ function parseExamQuestions(text) {
             matches.forEach(m => {
                 const letter = m[1].toUpperCase();
                 let optText = m[2].trim();
-                // Limita tamanho exagerado por falha de parser em textos de leitura
-                if (optText.length > 300) optText = optText.substring(0, 300) + '...';
+                if (optText.length > 350) optText = optText.substring(0, 350) + '...';
                 options[letter] = optText;
             });
 
-            // Extrai o enunciado da questão (o que vem antes da Opção A)
             const firstOptIdx = block.search(/(?:^|\s)[A-E][\.\)\-]\s+/i);
             let qText = firstOptIdx !== -1 ? block.substring(0, firstOptIdx).trim() : block;
             qText = qText.replace(/^(QUESTÃO\s+\d+|\d{1,2}\s*[\.\)-]\s*)/i, '').trim();
@@ -130,7 +137,6 @@ function parseExamQuestions(text) {
     return extracted;
 }
 
-// Extrai Gabarito (ex: 1-A, 02: C, 3. E)
 function parseGabaritoText(text) {
     const map = {};
     const regex = /(\b\d{1,2}\b)\s*[\-\:\.\)\s]+\s*([A-E])\b/gi;
