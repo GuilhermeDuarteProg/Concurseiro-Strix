@@ -33,7 +33,7 @@ async function processAndStart() {
         return;
     }
 
-    statusMsg.textContent = 'Eliminando capa de instruções e organizando as questões... Aguarde.';
+    statusMsg.textContent = 'Filtrando instruções e extraindo as questões... Aguarde.';
 
     try {
         const examText = await extractTextFromPDF(examFile);
@@ -64,22 +64,28 @@ async function processAndStart() {
     }
 }
 
-// REMOVE A CAPA DE INSTRUÇÕES DA BANCA (Ex: "O candidato recebeu do fiscal...", "LEIA COM ATENÇÃO")
-function removeCoverPage(text) {
-    if (!text) return '';
-
-    // Procura o início real da prova (Ex: LÍNGUA PORTUGUESA, CONHECIMENTOS BÁSICOS/ESPECÍFICOS ou TEXTO I)
-    const realStartMatch = text.search(/(?:LÍNGUA\s+PORTUGUESA|CONHECIMENTOS\s+(?:BÁSICOS|ESPECÍFICOS|GERAIS)|TEXTO\s+[I1V])/i);
-
-    if (realStartMatch !== -1 && realStartMatch < 3500) {
-        return text.substring(realStartMatch);
-    }
-
-    // Caso não encontre cabeçalhos padrão, remove trechos com regras de fiscal/eliminação
-    let clean = text.replace(/LEIA\s+ATENTAMENTE\s+AS\s+INSTRUÇÕES[\s\S]*?(?=LÍNGUA|CONHECIMENTOS|TEXTO|QUESTÃO\s+0?1\b)/gi, '');
-    clean = clean.replace(/O\s+candidato\s+recebeu\s+do\s+fiscal[\s\S]*?(?=LÍNGUA|CONHECIMENTOS|TEXTO|QUESTÃO\s+0?1\b)/gi, '');
-
-    return clean;
+// DETECTOR DE REGRAS E INSTRUÇÕES DA BANCA (ANTIFALSO-POSITIVO)
+function isInstructionBlock(text) {
+    if (!text) return false;
+    const lower = text.toLowerCase();
+    const instructionKeywords = [
+        'será eliminado',
+        'cartão-resposta',
+        'cartão resposta',
+        'cartãoresposta',
+        'caderno de questões',
+        'ausentar da sala',
+        'recebeu do fiscal',
+        'folha de respostas',
+        'preenchimento dos círculos',
+        'duração desta prova',
+        'leia atentamente',
+        'marcação das folhas',
+        'lista de presença',
+        'processo seletivo público',
+        'aparelhos sonoros'
+    ];
+    return instructionKeywords.some(keyword => lower.includes(keyword));
 }
 
 // CORRIGE PALAVRAS CORTADAS COM HÍFEN (Ex: "gru - pos" -> "grupos")
@@ -88,7 +94,7 @@ function fixHyphenatedWords(text) {
     return text.replace(/([a-zA-Z\u00C0-\u00FF]+)\s*-\s*([a-zA-Z\u00C0-\u00FF]+)/g, '$1$2');
 }
 
-// LIMPEZA RIGOROSA DE MARCAS D'ÁGUA E CABEÇALHOS
+// LIMPEZA RIGOROSA DE CABEÇALHOS E MARCAS D'ÁGUA
 function cleanGarbage(text) {
     if (!text) return '';
     let clean = text;
@@ -102,13 +108,12 @@ function cleanGarbage(text) {
     clean = clean.replace(/RACIOCÍNIO\s+LÓGICO(?:\s+MATEMÁTICO)?\s*\d*/gi, '');
     clean = clean.replace(/RASCUNHO\s*\d*/gi, '');
     clean = clean.replace(/PROVA\s+\d+/gi, '');
-    clean = clean.replace(/How space technology is bringing green wins for transport/gi, '');
 
     clean = clean.replace(/\s+/g, ' ').trim();
     return fixHyphenatedWords(clean);
 }
 
-// LEITURA POR COLUNAS E LINHAS
+// EXTRAÇÃO POR COLUNAS E LINHAS
 async function extractTextFromPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -162,10 +167,9 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// EXTRAÇÃO DE QUESTÕES SEM A CAPA DE INSTRUÇÕES
+// PARSER DE QUESTÕES COM FILTRO ANTICAPA
 function parseExamQuestions(rawText) {
-    const withoutCover = removeCoverPage(rawText);
-    const clean = cleanGarbage(withoutCover);
+    const clean = cleanGarbage(rawText);
     const extracted = [];
 
     const optionRegex = /(?:^|\s)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/gi;
@@ -202,7 +206,7 @@ function parseExamQuestions(rawText) {
             if (bMatch && cMatch && dMatch && eMatch) {
                 let rawPrecedingText = clean.substring(0, aMatch.index).trim();
 
-                // Procura a numeração da questão no texto anterior
+                // Identifica onde começa a pergunta (procura por "QUESTÃO X" ou números com inicial maiúscula)
                 const qMatches = [...rawPrecedingText.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
 
                 let questionStatement = rawPrecedingText;
@@ -233,12 +237,15 @@ function parseExamQuestions(rawText) {
 
                 let optE = cleanGarbage(clean.substring(eMatch.index + eMatch.length, endOfE));
 
-                // Descarta se for texto de regra do fiscal
-                if (questionStatement.includes("O candidato recebeu do fiscal") || questionStatement.includes("CARTÃO-RESPOSTA")) {
-                    continue;
-                }
+                // VALIDAÇÃO ANTINSTRUÇÕES: Se o enunciado ou qualquer alternativa contiver texto de capa, descarta
+                const isInstruction = isInstructionBlock(questionStatement) ||
+                                      isInstructionBlock(optA) ||
+                                      isInstructionBlock(optB) ||
+                                      isInstructionBlock(optC) ||
+                                      isInstructionBlock(optD) ||
+                                      isInstructionBlock(optE);
 
-                if (questionStatement.length > 3 && optA && optB && optC && optD && optE) {
+                if (!isInstruction && questionStatement.length > 3 && optA && optB && optC && optD && optE) {
                     extracted.push({
                         text: questionStatement,
                         options: {
