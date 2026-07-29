@@ -130,111 +130,127 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER ROBUSTO DE QUESTÕES COM DETECÇÃO E ORDENAÇÃO NUMÉRICA ESTRITA
+// EXTRAÇÃO DE ALTERNATIVAS DENTRO DE UM BLOCO DE TEXTO
+function extractOptionsFromSlice(slice) {
+    const optRegex = /(?:^|\n|\s+)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/g;
+    
+    const matches = [];
+    let m;
+    while ((m = optRegex.exec(slice)) !== null) {
+        const letter = (m[1] || m[2]).toUpperCase();
+        matches.push({
+            letter: letter,
+            index: m.index,
+            matchLength: m[0].length
+        });
+    }
+
+    let matchA = null, matchB = null, matchC = null, matchD = null, matchE = null;
+
+    for (let item of matches) {
+        if (item.letter === 'A' && !matchA) {
+            matchA = item;
+        } else if (item.letter === 'B' && matchA && !matchB && item.index > matchA.index) {
+            matchB = item;
+        } else if (item.letter === 'C' && matchB && !matchC && item.index > matchB.index) {
+            matchC = item;
+        } else if (item.letter === 'D' && matchC && !matchD && item.index > matchC.index) {
+            matchD = item;
+        } else if (item.letter === 'E' && matchD && !matchE && item.index > matchD.index) {
+            matchE = item;
+        }
+    }
+
+    if (matchA && matchB && matchC && matchD && matchE) {
+        if ((matchE.index - matchA.index) > 2500) {
+            return { valid: false };
+        }
+
+        const statement = slice.substring(0, matchA.index).trim();
+        const optA = slice.substring(matchA.index + matchA.matchLength, matchB.index).trim();
+        const optB = slice.substring(matchB.index + matchB.matchLength, matchC.index).trim();
+        const optC = slice.substring(matchC.index + matchC.matchLength, matchD.index).trim();
+        const optD = slice.substring(matchD.index + matchD.matchLength, matchE.index).trim();
+
+        const restE = slice.substring(matchE.index + matchE.matchLength);
+        let endEOffset = restE.search(/\n\s*\n|\n\s*(?:QUESTÃO|\d{1,2}\s*[\.\)\-])/i);
+        if (endEOffset === -1 || endEOffset > 500) {
+            endEOffset = Math.min(restE.length, 400);
+        }
+        const optE = restE.substring(0, endEOffset).trim();
+
+        return {
+            valid: true,
+            statement: statement,
+            options: {
+                A: cleanGarbage(optA),
+                B: cleanGarbage(optB),
+                C: cleanGarbage(optC),
+                D: cleanGarbage(optD),
+                E: cleanGarbage(optE)
+            }
+        };
+    }
+
+    return { valid: false };
+}
+
+// PARSER ROBUSTO DE QUESTÕES (CAPTURA TODAS AS QUESTÕES E ORDENA)
 function parseExamQuestions(rawText) {
     const cleanText = cleanGarbage(rawText);
     const extracted = [];
 
-    // Verifica se a palavra "QUESTÃO" é usada no PDF para criar um filtro mais rigoroso
-    const hasQuestaoKeyword = /QUESTÃO\s*\d{1,2}/i.test(cleanText);
-
-    // Se houver a palavra QUESTÃO no PDF, usamos rigor máximo para evitar falsos positivos
-    const qHeaderRegex = hasQuestaoKeyword 
-        ? /(?:^|\n|\s+)(?:QUESTÃO)\s*(\d{1,2})\b/gi
-        : /(?:^|\n)\s*(\d{1,2})\s*[\.\)\-]\s+(?=[A-Z\u00C0-\u00DC\“\"\'\(\d])/gi;
-
-    const qMatches = [];
+    // Busca por possíveis numerações de questão no início de linha
+    const qHeaderRegex = /(?:^|\n)\s*(?:QUESTÃO\s*)?(\d{1,2})\s*[\.\)\-]?\s+/gi;
     let match;
+    const candidates = [];
 
     while ((match = qHeaderRegex.exec(cleanText)) !== null) {
-        const qNum = parseInt(match[1], 10);
-        // Descarta números maiores que 120 (prováveis erros de leitura)
-        if (qNum > 0 && qNum <= 120) {
-            qMatches.push({
-                number: qNum,
+        const num = parseInt(match[1], 10);
+        if (num >= 1 && num <= 120) {
+            candidates.push({
+                number: num,
                 index: match.index,
-                length: match[0].length
+                contentIndex: match.index + match[0].length
             });
         }
     }
 
-    if (qMatches.length === 0) return [];
+    let lastSupportText = '';
 
-    let currentSupportText = '';
-
-    for (let i = 0; i < qMatches.length; i++) {
-        const qCurr = qMatches[i];
-        const startIndex = qCurr.index + qCurr.length;
-        const endIndex = (i < qMatches.length - 1) ? qMatches[i + 1].index : cleanText.length;
+    for (let i = 0; i < candidates.length; i++) {
+        const cand = candidates[i];
         
-        const rawBlock = cleanText.substring(startIndex, endIndex).trim();
+        // Analisa uma fatia do texto de até 3500 caracteres a partir do número da questão
+        const searchSlice = cleanText.substring(cand.contentIndex, cand.contentIndex + 3500);
+        const parsed = extractOptionsFromSlice(searchSlice);
 
-        // Identifica alternativas (A, B, C, D, E)
-        const optRegex = /(?:^|\s)\(?([A-E])\)[\.\-]?\s+/gi;
-        const optMatches = [];
-        let optMatch;
+        if (parsed.valid) {
+            let statement = parsed.statement;
 
-        while ((optMatch = optRegex.exec(rawBlock)) !== null) {
-            optMatches.push({
-                letter: optMatch[1].toUpperCase(),
-                index: optMatch.index
-            });
-        }
-
-        // Filtra e valida sequência A -> B -> C -> D -> E
-        let aIndex = -1, bIndex = -1, cIndex = -1, dIndex = -1, eIndex = -1;
-        for (let m of optMatches) {
-            if (m.letter === 'A' && aIndex === -1) aIndex = m.index;
-            else if (m.letter === 'B' && aIndex !== -1 && bIndex === -1) bIndex = m.index;
-            else if (m.letter === 'C' && bIndex !== -1 && cIndex === -1) cIndex = m.index;
-            else if (m.letter === 'D' && cIndex !== -1 && dIndex === -1) dIndex = m.index;
-            else if (m.letter === 'E' && dIndex !== -1 && eIndex === -1) eIndex = m.index;
-        }
-
-        // Se encontrou as alternativas corretamente
-        if (aIndex !== -1 && bIndex !== -1 && cIndex !== -1 && dIndex !== -1 && eIndex !== -1) {
-            let statementAndSupport = rawBlock.substring(0, aIndex).trim();
-            
-            // Verifica se existe cabeçalho de texto de apoio
-            const textHeaderMatch = statementAndSupport.match(/(?:\bTEXTO\s+[I|V|X\d]*|\bREAD\s+THE\s+TEXT|\bLEIA\s+O\s+TEXTO)/i);
-            
-            let statement = statementAndSupport;
+            // Extrai texto de apoio/referência se houver
+            const textHeaderMatch = statement.match(/(?:\bTEXTO\s+[I|V|X\d]*|\bREAD\s+THE\s+TEXT|\bLEIA\s+O\s+TEXTO)/i);
             if (textHeaderMatch) {
                 const headerIdx = textHeaderMatch.index;
                 if (headerIdx > 0) {
-                    currentSupportText = statementAndSupport.substring(headerIdx).trim();
-                    statement = statementAndSupport.substring(0, headerIdx).trim();
+                    lastSupportText = statement.substring(headerIdx).trim();
+                    statement = statement.substring(0, headerIdx).trim();
                 } else {
-                    currentSupportText = statementAndSupport;
+                    lastSupportText = statement;
                     statement = '';
                 }
             }
 
-            const optA = rawBlock.substring(aIndex, bIndex).replace(/^(?:\(A\)|A[\.\)\-])\s*/i, '').trim();
-            const optB = rawBlock.substring(bIndex, cIndex).replace(/^(?:\(B\)|B[\.\)\-])\s*/i, '').trim();
-            const optC = rawBlock.substring(cIndex, dIndex).replace(/^(?:\(C\)|C[\.\)\-])\s*/i, '').trim();
-            const optD = rawBlock.substring(dIndex, eIndex).replace(/^(?:\(D\)|D[\.\)\-])\s*/i, '').trim();
-            const optE = rawBlock.substring(eIndex).replace(/^(?:\(E\)|E[\.\)\-])\s*/i, '').trim();
-
             extracted.push({
-                number: qCurr.number,
-                text: statement || `Questão ${qCurr.number}`,
-                supportText: currentSupportText,
-                options: {
-                    A: cleanGarbage(optA),
-                    B: cleanGarbage(optB),
-                    C: cleanGarbage(optC),
-                    D: cleanGarbage(optD),
-                    E: cleanGarbage(optE)
-                }
+                number: cand.number,
+                text: statement || `Questão ${cand.number}`,
+                supportText: lastSupportText,
+                options: parsed.options
             });
         }
     }
 
-    // CORREÇÃO CRÍTICA 1: Ordenação numérica crescente obrigatória (1, 2, 3...)
-    extracted.sort((a, b) => a.number - b.number);
-
-    // CORREÇÃO CRÍTICA 2: Remoção de duplicatas de números de questões
+    // Remoção de duplicatas (mantém a primeira ocorrência válida de cada questão)
     const uniqueQuestions = [];
     const seenNumbers = new Set();
 
@@ -245,16 +261,18 @@ function parseExamQuestions(rawText) {
         }
     }
 
+    // ORDENAÇÃO NUMÉRICA CRESCENTE GARANTIDA (1, 2, 3 ... N)
+    uniqueQuestions.sort((a, b) => a.number - b.number);
+
     return uniqueQuestions;
 }
 
-// PARSER DE GABARITO AMPLIADO E ROBUSTO
+// PARSER DE GABARITO ROBUSTO
 function parseGabaritoText(text) {
     if (!text) return {};
     const map = {};
     const clean = text.replace(/\r?\n/g, ' ');
     
-    // Suporta formatos: "1-A", "01. B", "1 A", "1: C", "1) D", "QUESTÃO 1 - A"
     const regex = /(?:^|\s|;|,|\|)(?:QUESTÃO\s*)?(\d{1,2})\s*[\-\:\.\)\s]+\s*([A-E])(?=\s|$|;|,|\||\d)/gi;
     let match;
 
@@ -285,7 +303,7 @@ async function processAndStart() {
         questions = parseExamQuestions(examText);
 
         if (questions.length === 0) {
-            if (statusMsg) statusMsg.textContent = 'Não foi possível extrair as questões do PDF. Verifique se o arquivo é válido.';
+            if (statusMsg) statusMsg.textContent = 'Não foi possível extrair as questões do PDF. Verifique o arquivo enviado.';
             return;
         }
 
@@ -446,22 +464,27 @@ function finishQuiz() {
 
     let correctCount = 0;
     let incorrectCount = 0;
+    let answeredCount = 0;
+
     const reviewList = document.getElementById('review-list');
     if (reviewList) reviewList.innerHTML = '';
 
     questions.forEach((q, idx) => {
         const qNum = q.number ? q.number : (idx + 1);
-        const userAns = userAnswers[idx] || 'Não respondida';
+        const userAns = userAnswers[idx];
         const officialAns = gabaritoMap[qNum] || 'N/D';
 
         let statusClass = '';
-        if (officialAns !== 'N/D') {
-            if (userAns === officialAns) {
-                correctCount++;
-                statusClass = 'is-correct';
-            } else {
-                incorrectCount++;
-                statusClass = 'is-incorrect';
+        if (userAns) {
+            answeredCount++;
+            if (officialAns !== 'N/D') {
+                if (userAns === officialAns) {
+                    correctCount++;
+                    statusClass = 'is-correct';
+                } else {
+                    incorrectCount++;
+                    statusClass = 'is-incorrect';
+                }
             }
         }
 
@@ -471,7 +494,7 @@ function finishQuiz() {
             item.innerHTML = `
                 <div>
                     <strong>Questão ${String(qNum).padStart(2, '0')}</strong><br>
-                    Sua resposta: <strong>${escapeHtml(userAns)}</strong>
+                    Sua resposta: <strong>${userAns ? escapeHtml(userAns) : 'Não respondida'}</strong>
                 </div>
                 <div style="text-align: right;">
                     Gabarito Oficial: <strong class="txt-success">${escapeHtml(officialAns)}</strong>
@@ -482,10 +505,7 @@ function finishQuiz() {
     });
 
     const total = questions.length;
-    const answeredWithGabarito = Object.keys(gabaritoMap).length;
-    const percentage = total > 0 && answeredWithGabarito > 0 
-        ? Math.round((correctCount / total) * 100) 
-        : 0;
+    const percentage = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
 
     const scoreEl = document.getElementById('score-percentage');
     const correctEl = document.getElementById('correct-count');
@@ -496,6 +516,6 @@ function finishQuiz() {
     if (scoreEl) scoreEl.textContent = `${percentage}%`;
     if (correctEl) correctEl.textContent = correctCount;
     if (incorrectEl) incorrectEl.textContent = incorrectCount;
-    if (answeredEl) answeredEl.textContent = Object.keys(userAnswers).length;
+    if (answeredEl) answeredEl.textContent = answeredCount;
     if (totalEl) totalEl.textContent = total;
 }
