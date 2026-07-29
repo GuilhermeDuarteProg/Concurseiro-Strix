@@ -64,7 +64,7 @@ async function processAndStart() {
     }
 }
 
-// DETECTOR DE REGRAS DE CAPA DA BANCA (Apenas regras administrativas estritas)
+// DETECTOR DE REGRAS DE CAPA DA BANCA (Regras administrativas estritas)
 function isInstructionBlock(text) {
     if (!text) return false;
     const lower = text.toLowerCase();
@@ -165,7 +165,7 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER DE QUESTÕES COM EXTRAÇÃO DE TEXTO DE APOIO CORRIGIDO
+// PARSER DE QUESTÕES PRECISO E SEQUENCIAL
 function parseExamQuestions(rawText) {
     const clean = cleanGarbage(rawText);
     const extracted = [];
@@ -184,8 +184,9 @@ function parseExamQuestions(rawText) {
     }
 
     let lastEIndex = 0;
-    let currentSupportText = '';
+    let mainReadingText = ''; // Armazena o texto principal de interpretação (crônica/artigo)
 
+    const blocks = [];
     for (let i = 0; i < matches.length; i++) {
         if (matches[i].letter === 'A') {
             const aMatch = matches[i];
@@ -205,39 +206,6 @@ function parseExamQuestions(rawText) {
             }
 
             if (bMatch && cMatch && dMatch && eMatch) {
-                let rawPrecedingText = clean.substring(lastEIndex, aMatch.index).trim();
-
-                // Identifica onde começa a pergunta (número da questão)
-                const qMatches = [...rawPrecedingText.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
-
-                let questionStatement = rawPrecedingText;
-
-                if (qMatches.length > 0) {
-                    const lastQ = qMatches[qMatches.length - 1];
-                    
-                    // O texto ANTES da questão é tratado como Texto de Apoio
-                    let potentialSupport = rawPrecedingText.substring(0, lastQ.index).trim();
-                    potentialSupport = cleanGarbage(potentialSupport);
-
-                    // Se encontrou texto relevante antes da questão (sem travas rígidas de instruções genéricas)
-                    if (potentialSupport.length > 15) {
-                        const isCoverInstruction = ['cartão-resposta', 'cartão resposta', 'duração desta prova', 'folha de respostas'].some(k => potentialSupport.toLowerCase().includes(k));
-                        if (!isCoverInstruction) {
-                            currentSupportText = potentialSupport;
-                        }
-                    }
-
-                    questionStatement = rawPrecedingText.substring(lastQ.index).trim();
-                }
-
-                questionStatement = questionStatement.replace(/^(QUESTÃO\s+\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
-                questionStatement = cleanGarbage(questionStatement);
-
-                let optA = cleanGarbage(clean.substring(aMatch.index + aMatch.length, bMatch.index));
-                let optB = cleanGarbage(clean.substring(bMatch.index + bMatch.length, cMatch.index));
-                let optC = cleanGarbage(clean.substring(cMatch.index + cMatch.length, dMatch.index));
-                let optD = cleanGarbage(clean.substring(dMatch.index + dMatch.length, eMatch.index));
-
                 let endOfE = clean.length;
                 const nextAMatch = matches.find(m => m.letter === 'A' && m.index > eMatch.index);
                 if (nextAMatch) {
@@ -250,35 +218,71 @@ function parseExamQuestions(rawText) {
                     }
                 }
 
-                let optE = cleanGarbage(clean.substring(eMatch.index + eMatch.length, endOfE));
+                blocks.push({
+                    precedingText: clean.substring(lastEIndex, aMatch.index).trim(),
+                    aMatch, bMatch, cMatch, dMatch, eMatch,
+                    endOfE
+                });
 
                 lastEIndex = endOfE;
-
-                const isInstruction = isInstructionBlock(questionStatement) ||
-                                      isInstructionBlock(optA) ||
-                                      isInstructionBlock(optB) ||
-                                      isInstructionBlock(optC) ||
-                                      isInstructionBlock(optD) ||
-                                      isInstructionBlock(optE);
-
-                if (!isInstruction && questionStatement.length > 3 && optA && optB && optC && optD && optE) {
-                    extracted.push({
-                        text: questionStatement,
-                        supportText: currentSupportText,
-                        options: {
-                            A: optA,
-                            B: optB,
-                            C: optC,
-                            D: optD,
-                            E: optE
-                        }
-                    });
-                }
-
                 i = matches.indexOf(eMatch);
             }
         }
     }
+
+    // Processamento sequencial buscando exatamente a questão atual (1, 2, 3...)
+    blocks.forEach((block, index) => {
+        const expectedQNum = index + 1;
+        let rawPreceding = block.precedingText;
+
+        // Busca especificamente pelo número sequencial exato da questão
+        const numRegex = new RegExp(`(?:\\bQUESTÃO\\s*0?${expectedQNum}\\b|\\b0?${expectedQNum}\\s*[\\.\\)\\-]\\s*)`, 'i');
+        const numMatch = rawPreceding.match(numRegex);
+
+        let supportBeforeThis = '';
+        let statement = rawPreceding;
+
+        if (numMatch && numMatch.index !== undefined) {
+            supportBeforeThis = rawPreceding.substring(0, numMatch.index).trim();
+            statement = rawPreceding.substring(numMatch.index + numMatch[0].length).trim();
+        } else {
+            statement = statement.replace(/^(?:QUESTÃO\s*\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
+        }
+
+        // Se encontrou um texto de leitura extenso (>120 caracteres) antes da questão
+        if (supportBeforeThis.length > 120 && !isInstructionBlock(supportBeforeThis)) {
+            mainReadingText = supportBeforeThis;
+        }
+
+        statement = cleanGarbage(statement);
+
+        let optA = cleanGarbage(clean.substring(block.aMatch.index + block.aMatch.length, block.bMatch.index));
+        let optB = cleanGarbage(clean.substring(block.bMatch.index + block.bMatch.length, block.cMatch.index));
+        let optC = cleanGarbage(clean.substring(block.cMatch.index + block.cMatch.length, block.dMatch.index));
+        let optD = cleanGarbage(clean.substring(block.dMatch.index + block.dMatch.length, block.eMatch.index));
+        let optE = cleanGarbage(clean.substring(block.eMatch.index + block.eMatch.length, block.endOfE));
+
+        const isInstruction = isInstructionBlock(statement) ||
+                              isInstructionBlock(optA) ||
+                              isInstructionBlock(optB) ||
+                              isInstructionBlock(optC) ||
+                              isInstructionBlock(optD) ||
+                              isInstructionBlock(optE);
+
+        if (!isInstruction && statement.length > 3 && optA && optB && optC && optD && optE) {
+            extracted.push({
+                text: statement,
+                supportText: mainReadingText,
+                options: {
+                    A: optA,
+                    B: optB,
+                    C: optC,
+                    D: optD,
+                    E: optE
+                }
+            });
+        }
+    });
 
     return extracted;
 }
@@ -312,12 +316,13 @@ function startQuiz() {
 function renderQuestion() {
     const q = questions[currentQuestionIndex];
 
-    // Garante dinamicamente a presença do container de Texto de Apoio
+    // Cria/localiza o container de Texto de Apoio
     let supportContainer = document.getElementById('texto-apoio-container');
     if (!supportContainer) {
         supportContainer = document.createElement('div');
         supportContainer.id = 'texto-apoio-container';
         supportContainer.style.cssText = `
+            width: 100%;
             background-color: #1a1528;
             border-left: 4px solid #8b5cf6;
             padding: 16px;
@@ -326,19 +331,23 @@ function renderQuestion() {
             font-size: 0.95rem;
             line-height: 1.6;
             color: #e2e8f0;
-            max-height: 250px;
+            max-height: 280px;
             overflow-y: auto;
             white-space: pre-line;
+            box-sizing: border-box;
         `;
+        
+        // Insere no topo do cartão da questão (acima do cabeçalho flex)
         const qTextEl = document.getElementById('q-text');
-        if (qTextEl && qTextEl.parentNode) {
-            qTextEl.parentNode.insertBefore(supportContainer, qTextEl);
+        if (qTextEl) {
+            const parentCard = qTextEl.closest('.card-questao') || qTextEl.parentElement.parentElement || qTextEl.parentElement;
+            parentCard.insertBefore(supportContainer, parentCard.firstChild);
         }
     }
 
-    // Exibe ou esconde o texto de referência
+    // Exibe o texto de referência apenas se ele existir
     if (q.supportText && q.supportText.trim() !== '') {
-        supportContainer.innerHTML = `<strong style="color: #a78bfa; display: block; margin-bottom: 8px; text-transform: uppercase; font-size: 0.85rem;">📖 Texto de Referência:</strong>${q.supportText}`;
+        supportContainer.innerHTML = `<strong style="color: #a78bfa; display: block; margin-bottom: 8px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">📖 Texto de Referência:</strong>${q.supportText}`;
         supportContainer.style.display = 'block';
     } else {
         supportContainer.style.display = 'none';
