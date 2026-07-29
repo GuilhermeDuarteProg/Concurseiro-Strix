@@ -64,7 +64,7 @@ async function processAndStart() {
     }
 }
 
-// DETECTOR DE REGRAS E INSTRUÇÕES DA BANCA (ANTIFALSO-POSITIVO)
+// DETECTOR DE REGRAS DE CAPA DA BANCA (Apenas regras administrativas estritas)
 function isInstructionBlock(text) {
     if (!text) return false;
     const lower = text.toLowerCase();
@@ -79,10 +79,8 @@ function isInstructionBlock(text) {
         'folha de respostas',
         'preenchimento dos círculos',
         'duração desta prova',
-        'leia atentamente',
         'marcação das folhas',
         'lista de presença',
-        'processo seletivo público',
         'aparelhos sonoros'
     ];
     return instructionKeywords.some(keyword => lower.includes(keyword));
@@ -167,7 +165,7 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER DE QUESTÕES COM EXTRAÇÃO DE TEXTO DE APOIO
+// PARSER DE QUESTÕES COM EXTRAÇÃO DE TEXTO DE APOIO CORRIGIDO
 function parseExamQuestions(rawText) {
     const clean = cleanGarbage(rawText);
     const extracted = [];
@@ -209,7 +207,7 @@ function parseExamQuestions(rawText) {
             if (bMatch && cMatch && dMatch && eMatch) {
                 let rawPrecedingText = clean.substring(lastEIndex, aMatch.index).trim();
 
-                // Identifica onde começa o número da pergunta
+                // Identifica onde começa a pergunta (número da questão)
                 const qMatches = [...rawPrecedingText.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
 
                 let questionStatement = rawPrecedingText;
@@ -217,16 +215,16 @@ function parseExamQuestions(rawText) {
                 if (qMatches.length > 0) {
                     const lastQ = qMatches[qMatches.length - 1];
                     
-                    // O texto ANTES da questão é o Texto de Apoio / Referência
+                    // O texto ANTES da questão é tratado como Texto de Apoio
                     let potentialSupport = rawPrecedingText.substring(0, lastQ.index).trim();
                     potentialSupport = cleanGarbage(potentialSupport);
 
-                    // Se encontrou um texto longo e válido de apoio antes da questão
-                    if (potentialSupport.length > 25 && !isInstructionBlock(potentialSupport)) {
-                        currentSupportText = potentialSupport;
-                    } else if (/MATEMÁTICA|RACIOCÍNIO|INFORMÁTICA|DIREITO/i.test(rawPrecedingText) && potentialSupport.length < 20) {
-                        // Se mudou para matérias exatas sem texto, limpa o texto anterior
-                        currentSupportText = '';
+                    // Se encontrou texto relevante antes da questão (sem travas rígidas de instruções genéricas)
+                    if (potentialSupport.length > 15) {
+                        const isCoverInstruction = ['cartão-resposta', 'cartão resposta', 'duração desta prova', 'folha de respostas'].some(k => potentialSupport.toLowerCase().includes(k));
+                        if (!isCoverInstruction) {
+                            currentSupportText = potentialSupport;
+                        }
                     }
 
                     questionStatement = rawPrecedingText.substring(lastQ.index).trim();
@@ -314,7 +312,7 @@ function startQuiz() {
 function renderQuestion() {
     const q = questions[currentQuestionIndex];
 
-    // Garante dynamicamente a presença do container de Texto de Apoio
+    // Garante dinamicamente a presença do container de Texto de Apoio
     let supportContainer = document.getElementById('texto-apoio-container');
     if (!supportContainer) {
         supportContainer = document.createElement('div');
