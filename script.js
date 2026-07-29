@@ -167,7 +167,7 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER DE QUESTÕES COM FILTRO ANTICAPA
+// PARSER DE QUESTÕES COM EXTRAÇÃO DE TEXTO DE APOIO
 function parseExamQuestions(rawText) {
     const clean = cleanGarbage(rawText);
     const extracted = [];
@@ -184,6 +184,9 @@ function parseExamQuestions(rawText) {
             length: match[0].length
         });
     }
+
+    let lastEIndex = 0;
+    let currentSupportText = '';
 
     for (let i = 0; i < matches.length; i++) {
         if (matches[i].letter === 'A') {
@@ -204,14 +207,28 @@ function parseExamQuestions(rawText) {
             }
 
             if (bMatch && cMatch && dMatch && eMatch) {
-                let rawPrecedingText = clean.substring(0, aMatch.index).trim();
+                let rawPrecedingText = clean.substring(lastEIndex, aMatch.index).trim();
 
-                // Identifica onde começa a pergunta (procura por "QUESTÃO X" ou números com inicial maiúscula)
+                // Identifica onde começa o número da pergunta
                 const qMatches = [...rawPrecedingText.matchAll(/(?:\bQUESTÃO\s+(\d{1,2})\b|\b(\d{1,2})\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/gi)];
 
                 let questionStatement = rawPrecedingText;
+
                 if (qMatches.length > 0) {
                     const lastQ = qMatches[qMatches.length - 1];
+                    
+                    // O texto ANTES da questão é o Texto de Apoio / Referência
+                    let potentialSupport = rawPrecedingText.substring(0, lastQ.index).trim();
+                    potentialSupport = cleanGarbage(potentialSupport);
+
+                    // Se encontrou um texto longo e válido de apoio antes da questão
+                    if (potentialSupport.length > 25 && !isInstructionBlock(potentialSupport)) {
+                        currentSupportText = potentialSupport;
+                    } else if (/MATEMÁTICA|RACIOCÍNIO|INFORMÁTICA|DIREITO/i.test(rawPrecedingText) && potentialSupport.length < 20) {
+                        // Se mudou para matérias exatas sem texto, limpa o texto anterior
+                        currentSupportText = '';
+                    }
+
                     questionStatement = rawPrecedingText.substring(lastQ.index).trim();
                 }
 
@@ -237,7 +254,8 @@ function parseExamQuestions(rawText) {
 
                 let optE = cleanGarbage(clean.substring(eMatch.index + eMatch.length, endOfE));
 
-                // VALIDAÇÃO ANTINSTRUÇÕES: Se o enunciado ou qualquer alternativa contiver texto de capa, descarta
+                lastEIndex = endOfE;
+
                 const isInstruction = isInstructionBlock(questionStatement) ||
                                       isInstructionBlock(optA) ||
                                       isInstructionBlock(optB) ||
@@ -248,6 +266,7 @@ function parseExamQuestions(rawText) {
                 if (!isInstruction && questionStatement.length > 3 && optA && optB && optC && optD && optE) {
                     extracted.push({
                         text: questionStatement,
+                        supportText: currentSupportText,
                         options: {
                             A: optA,
                             B: optB,
@@ -294,6 +313,38 @@ function startQuiz() {
 
 function renderQuestion() {
     const q = questions[currentQuestionIndex];
+
+    // Garante dynamicamente a presença do container de Texto de Apoio
+    let supportContainer = document.getElementById('texto-apoio-container');
+    if (!supportContainer) {
+        supportContainer = document.createElement('div');
+        supportContainer.id = 'texto-apoio-container';
+        supportContainer.style.cssText = `
+            background-color: #1a1528;
+            border-left: 4px solid #8b5cf6;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            max-height: 250px;
+            overflow-y: auto;
+            white-space: pre-line;
+        `;
+        const qTextEl = document.getElementById('q-text');
+        if (qTextEl && qTextEl.parentNode) {
+            qTextEl.parentNode.insertBefore(supportContainer, qTextEl);
+        }
+    }
+
+    // Exibe ou esconde o texto de referência
+    if (q.supportText && q.supportText.trim() !== '') {
+        supportContainer.innerHTML = `<strong style="color: #a78bfa; display: block; margin-bottom: 8px; text-transform: uppercase; font-size: 0.85rem;">📖 Texto de Referência:</strong>${q.supportText}`;
+        supportContainer.style.display = 'block';
+    } else {
+        supportContainer.style.display = 'none';
+    }
 
     document.getElementById('q-number').textContent = String(currentQuestionIndex + 1).padStart(2, '0');
     document.getElementById('q-text').textContent = q.text;
