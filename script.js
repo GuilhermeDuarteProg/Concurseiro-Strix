@@ -33,7 +33,7 @@ async function processAndStart() {
         return;
     }
 
-    statusMsg.textContent = 'Filtrando instruções e extraindo as questões... Aguarde.';
+    statusMsg.textContent = 'Extraindo e organizando as questões do PDF... Aguarde.';
 
     try {
         const examText = await extractTextFromPDF(examFile);
@@ -72,7 +72,6 @@ function isInstructionBlock(text) {
         'será eliminado',
         'cartão-resposta',
         'cartão resposta',
-        'cartãoresposta',
         'caderno de questões',
         'ausentar da sala',
         'recebeu do fiscal',
@@ -92,40 +91,24 @@ function fixHyphenatedWords(text) {
     return text.replace(/([a-zA-Z\u00C0-\u00FF]+)\s*-\s*([a-zA-Z\u00C0-\u00FF]+)/g, '$1$2');
 }
 
-// LIMPEZA RIGOROSA DE CABEÇALHOS E MARCAS D'ÁGUA
+// LIMPEZA SEGURA DE CABEÇALHOS E MARCAS D'ÁGUA
 function cleanGarbage(text) {
     if (!text) return '';
     let clean = text;
 
     clean = clean.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*/gi, '');
-    clean = clean.replace(/[A-Za-z0-9+/=]{15,}==?/g, '');
-    clean = clean.replace(/1\s*2\s*3\s*4\s*5\s*6\s*7\s*8\s*9\s*/g, '');
+    clean = clean.replace(/[A-Za-z0-9+/=]{20,}==?/g, '');
     clean = clean.replace(/www\.pciconcursos\.com\.br\s*(?:PROVA)?/gi, '');
-    clean = clean.replace(/ADMINISTRAÇÃO\s*\d*\s*TERRA\s*TRANSPETRO\s*\d*/gi, '');
-    clean = clean.replace(/CONHECIMENTOS\s+(?:ESPECÍFICOS|BÁSICOS|GERAIS)\s*\d*/gi, '');
-    clean = clean.replace(/RACIOCÍNIO\s+LÓGICO(?:\s+MATEMÁTICO)?\s*\d*/gi, '');
-    clean = clean.replace(/RASCUNHO\s*\d*/gi, '');
-    clean = clean.replace(/PROVA\s+\d+/gi, '');
+    clean = clean.replace(/ADMINISTRAÇÃO\s+\d*\s*TERRA\s*TRANSPETRO\s*\d*/gi, '');
+    clean = clean.replace(/CONHECIMENTOS\s+(?:ESPECÍFICOS|BÁSICOS|GERAIS)/gi, '');
+    clean = clean.replace(/RACIOCÍNIO\s+LÓGICO(?:\s+MATEMÁTICO)?/gi, '');
+    clean = clean.replace(/RASCUNHO/gi, '');
 
-    clean = clean.replace(/\s+/g, ' ').trim();
+    clean = clean.replace(/[ \t]+/g, ' ').trim();
     return fixHyphenatedWords(clean);
 }
 
-// BUSCADOR DE MARCADOR ESPECÍFICO DE QUESTÃO (Ex: Procura exatamente por Q3 para fechar Q2)
-function findQuestionMarker(text, qNum) {
-    if (!text) return null;
-    const padded = String(qNum).padStart(2, '0');
-    const numStr = String(qNum);
-
-    const pattern = new RegExp(
-        `(?:\\bQUESTÃO\\s*(?:${numStr}|${padded})\\b|\\b(?:${numStr}|${padded})\\s*[\\.\\)\\-]\\s*|\\b(?:${numStr}|${padded})\\s+(?=[A-Z\\u00C0-\\u00DC]))`,
-        'i'
-    );
-
-    return pattern.exec(text);
-}
-
-// EXTRAÇÃO POR COLUNAS E LINHAS
+// EXTRAÇÃO POR COLUNAS E LINHAS DO PDF
 async function extractTextFromPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -179,11 +162,12 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER DE QUESTÕES COM BUSCA SEQUENCIAL DE NÚMEROS
+// PARSER DETERMINÍSTICO E ROBUTO DE QUESTÕES
 function parseExamQuestions(rawText) {
     const clean = cleanGarbage(rawText);
     const extracted = [];
 
+    // Localiza todas as marcações de alternativas (A, B, C, D, E)
     const optionRegex = /(?:^|\s)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/gi;
     const matches = [];
     let match;
@@ -197,6 +181,7 @@ function parseExamQuestions(rawText) {
         });
     }
 
+    // Agrupa em blocos de questões válidos (A -> B -> C -> D -> E)
     const blocks = [];
     for (let i = 0; i < matches.length; i++) {
         if (matches[i].letter === 'A') {
@@ -223,89 +208,116 @@ function parseExamQuestions(rawText) {
         }
     }
 
-    let mainReadingText = '';
+    if (blocks.length === 0) return [];
 
-    for (let idx = 0; idx < blocks.length; idx++) {
-        const currentQNum = idx + 1;
-        const block = blocks[idx];
+    let currentSupportText = '';
 
-        let statement = '';
-        if (idx === 0) {
-            const rawPreceding = clean.substring(0, block.aMatch.index);
-            const qMatch = findQuestionMarker(rawPreceding, currentQNum);
+    const parsedBlocks = blocks.map((block, idx) => ({
+        block: block,
+        number: idx + 1,
+        statement: '',
+        optA: '', optB: '', optC: '', optD: '', optE: ''
+    }));
 
-            if (qMatch) {
-                const supportCandidate = rawPreceding.substring(0, qMatch.index).trim();
-                if (supportCandidate.length > 100 && !isInstructionBlock(supportCandidate)) {
-                    mainReadingText = supportCandidate;
-                }
-                statement = rawPreceding.substring(qMatch.index + qMatch[0].length).trim();
-            } else {
-                statement = rawPreceding.replace(/^(?:QUESTÃO\s*\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
-            }
-        } else {
-            statement = block.extractedStatement || '';
+    // Processa o texto antes da Primeira Questão
+    const textBeforeFirst = clean.substring(0, blocks[0].aMatch.index);
+    const firstQMatch = textBeforeFirst.match(/(?:\bQUESTÃO\s*(\d{1,2})\b|\b(\d{1,2})\s*[\.\)\-]\s+|\b(\d{1,2})\s+(?=[A-Z\u00C0-\u00DC]))/i);
+
+    if (firstQMatch) {
+        const qNum = parseInt(firstQMatch[1] || firstQMatch[2] || firstQMatch[3], 10);
+        parsedBlocks[0].number = qNum;
+        
+        const supportCandidate = textBeforeFirst.substring(0, firstQMatch.index).trim();
+        if (supportCandidate.length > 100 && !isInstructionBlock(supportCandidate)) {
+            currentSupportText = cleanGarbage(supportCandidate);
         }
+        parsedBlocks[0].statement = textBeforeFirst.substring(firstQMatch.index + firstQMatch[0].length).trim();
+    } else {
+        parsedBlocks[0].statement = textBeforeFirst.replace(/^(?:QUESTÃO\s*\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
+    }
 
-        statement = cleanGarbage(statement);
+    // Processa cada questão e faz o corte preciso entre a alternativa E e o enunciado seguinte
+    for (let i = 0; i < blocks.length; i++) {
+        const curr = parsedBlocks[i];
+        const block = curr.block;
 
-        let optA = cleanGarbage(clean.substring(block.aMatch.index + block.aMatch.length, block.bMatch.index));
-        let optB = cleanGarbage(clean.substring(block.bMatch.index + block.bMatch.length, block.cMatch.index));
-        let optC = cleanGarbage(clean.substring(block.cMatch.index + block.cMatch.length, block.dMatch.index));
-        let optD = cleanGarbage(clean.substring(block.dMatch.index + block.dMatch.length, block.eMatch.index));
+        curr.optA = cleanGarbage(clean.substring(block.aMatch.index + block.aMatch.length, block.bMatch.index));
+        curr.optB = cleanGarbage(clean.substring(block.bMatch.index + block.bMatch.length, block.cMatch.index));
+        curr.optC = cleanGarbage(clean.substring(block.cMatch.index + block.cMatch.length, block.dMatch.index));
+        curr.optD = cleanGarbage(clean.substring(block.dMatch.index + block.dMatch.length, block.eMatch.index));
 
-        let optE = '';
         const eStart = block.eMatch.index + block.eMatch.length;
 
-        if (idx < blocks.length - 1) {
-            const nextQNum = currentQNum + 1;
-            const nextBlock = blocks[idx + 1];
-            const subText = clean.substring(eStart, nextBlock.aMatch.index);
+        if (i < blocks.length - 1) {
+            const nextAIndex = blocks[i + 1].aMatch.index;
+            const subText = clean.substring(eStart, nextAIndex);
 
-            const qNextMatch = findQuestionMarker(subText, nextQNum);
+            const expectedNextNum = curr.number + 1;
 
-            if (qNextMatch) {
-                optE = clean.substring(eStart, eStart + qNextMatch.index);
-                nextBlock.extractedStatement = subText.substring(qNextMatch.index + qNextMatch[0].length);
-            } else {
-                const fallbackMatch = subText.match(/(?:\bQUESTÃO\s*\d{1,2}\b|\b\d{1,2}\s*[\.\)-]\s*)/i);
-                if (fallbackMatch) {
-                    optE = clean.substring(eStart, eStart + fallbackMatch.index);
-                    nextBlock.extractedStatement = subText.substring(fallbackMatch.index + fallbackMatch[0].length);
-                } else {
-                    optE = subText;
-                    nextBlock.extractedStatement = '';
+            // Busca cirúrgica pelo número exato da próxima questão no trecho
+            const nextMarkerRegex = new RegExp(
+                `(?:\\bQUESTÃO\\s*0?${expectedNextNum}\\b|\\b0?${expectedNextNum}\\s*[\\.\\)\\-]\\s*|\\b0?${expectedNextNum}\\s+(?=[A-Z\\u00C0-\\u00DC]))`,
+                'i'
+            );
+            let matchNext = subText.match(nextMarkerRegex);
+
+            if (!matchNext) {
+                matchNext = subText.match(/(?:\bQUESTÃO\s*(\d{1,2})\b|\b(\d{1,2})\s*[\.\)\-]\s+|\b(\d{1,2})\s+(?=[A-Z\u00C0-\u00DC]))/i);
+            }
+
+            if (matchNext) {
+                curr.optE = cleanGarbage(subText.substring(0, matchNext.index));
+                
+                let detectedNum = expectedNextNum;
+                if (matchNext[1] || matchNext[2] || matchNext[3]) {
+                    detectedNum = parseInt(matchNext[1] || matchNext[2] || matchNext[3], 10);
                 }
+                parsedBlocks[i + 1].number = detectedNum;
+
+                let afterMarker = subText.substring(matchNext.index + matchNext[0].length);
+
+                // Se houver um novo texto de apoio extenso antes da questão
+                if (afterMarker.length > 250) {
+                    const possibleSupportMatch = afterMarker.match(/(?:\bLEIA O TEXTO\b|\bTEXTO\s+[I|V|X\d]+\b)/i);
+                    if (possibleSupportMatch && possibleSupportMatch.index > 0) {
+                        currentSupportText = cleanGarbage(afterMarker.substring(0, possibleSupportMatch.index));
+                        afterMarker = afterMarker.substring(possibleSupportMatch.index);
+                    }
+                }
+
+                parsedBlocks[i + 1].statement = afterMarker.trim();
+            } else {
+                curr.optE = cleanGarbage(subText);
+                parsedBlocks[i + 1].statement = '';
             }
         } else {
-            let endOfText = clean.length;
+            let endText = clean.length;
             const subText = clean.substring(eStart);
             const gabMatch = subText.search(/(?:GABARITO|PROVA\s+CONCLUÍDA|PCI\s*CONCURSOS)/i);
-            if (gabMatch !== -1) {
-                endOfText = eStart + gabMatch;
-            }
-            optE = clean.substring(eStart, endOfText);
+            if (gabMatch !== -1) endText = eStart + gabMatch;
+            curr.optE = cleanGarbage(clean.substring(eStart, endText));
         }
 
-        optE = cleanGarbage(optE);
+        curr.statement = cleanGarbage(curr.statement);
 
-        const isInstruction = isInstructionBlock(statement) ||
-                              isInstructionBlock(optA) ||
-                              isInstructionBlock(optB) ||
-                              isInstructionBlock(optC) ||
-                              isInstructionBlock(optD) ||
-                              isInstructionBlock(optE);
+        const isInstruction = isInstructionBlock(curr.statement) ||
+                              isInstructionBlock(curr.optA) ||
+                              isInstructionBlock(curr.optB) ||
+                              isInstructionBlock(curr.optC) ||
+                              isInstructionBlock(curr.optD) ||
+                              isInstructionBlock(curr.optE);
 
-        if (!isInstruction && statement.length > 3 && optA && optB && optC && optD && optE) {
+        if (!isInstruction && curr.statement.length > 2 && curr.optA && curr.optB && curr.optC && curr.optD && curr.optE) {
             extracted.push({
-                text: statement,
-                supportText: mainReadingText,
+                number: curr.number,
+                text: curr.statement,
+                supportText: currentSupportText,
                 options: {
-                    A: optA,
-                    B: optB,
-                    C: optC,
-                    D: optD,
-                    E: optE
+                    A: curr.optA,
+                    B: curr.optB,
+                    C: curr.optC,
+                    D: curr.optD,
+                    E: curr.optE
                 }
             });
         }
@@ -377,7 +389,9 @@ function renderQuestion() {
         supportContainer.style.display = 'none';
     }
 
-    document.getElementById('q-number').textContent = String(currentQuestionIndex + 1).padStart(2, '0');
+    // Exibe o número REAL extraído da questão no PDF
+    const displayNum = q.number ? q.number : (currentQuestionIndex + 1);
+    document.getElementById('q-number').textContent = String(displayNum).padStart(2, '0');
     document.getElementById('q-text').textContent = q.text;
 
     const container = document.getElementById('options-container');
@@ -445,7 +459,7 @@ function finishQuiz() {
     reviewList.innerHTML = '';
 
     questions.forEach((q, idx) => {
-        const qNum = idx + 1;
+        const qNum = q.number ? q.number : (idx + 1);
         const userAns = userAnswers[idx] || 'Não respondida';
         const officialAns = gabaritoMap[qNum] || 'N/D';
 
