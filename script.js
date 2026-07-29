@@ -12,11 +12,10 @@ let secondsElapsed = 0;
 let examFile = null;
 let answerFile = null;
 
-// Inicialização segura de ouvintes de eventos (DOM Loaded)
+// Inicialização de ouvintes de eventos
 document.addEventListener('DOMContentLoaded', () => {
     const examInput = document.getElementById('pdf-exam-input');
     const answerInput = document.getElementById('pdf-answer-input');
-    const btnProcess = document.getElementById('btn-process'); // Se houver botão de iniciar
 
     if (examInput) {
         examInput.addEventListener('change', (e) => {
@@ -50,35 +49,29 @@ function escapeHtml(text) {
         .replace(/'/g, "&#039;");
 }
 
-// CORREÇÃO: Corrige apenas hífens de quebra de linha (não destrói palavras compostas como "cartão-resposta")
+// Corrige apenas hífens de quebra de linha
 function fixHyphenatedWords(text) {
     if (!text) return '';
     return text.replace(/([a-zA-Z\u00C0-\u00FF]+)-\s*\n\s*([a-zA-Z\u00C0-\u00FF]+)/g, '$1$2');
 }
 
-// LIMPEZA SEGURA DE CABEÇALHOS, RODAPÉS E MARCAS D'ÁGUA
+// Limpeza segura de cabeçalhos, rodapés e marcas d'água
 function cleanGarbage(text) {
     if (!text) return '';
     let clean = text;
 
-    // Remove marcas do PCI Concursos e lixo base64
     clean = clean.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*/gi, '');
     clean = clean.replace(/[A-Za-z0-9+/=]{20,}==?/g, '');
     clean = clean.replace(/www\.pciconcursos\.com\.br/gi, '');
 
-    // Remove rodapés e cabeçalhos recorrentes da Cesgranrio / Transpetro
     clean = clean.replace(/PROVA\s+\d*[\s\-]*ADMINISTRAÇÃO/gi, '');
     clean = clean.replace(/BR\s+PETROBRAS\s+TRANSPORTE\s+S\.\s*A\./gi, '');
     clean = clean.replace(/TRANSPETRO/gi, '');
     clean = clean.replace(/FUNDAÇÃO\s+CESGRANRIO/gi, '');
-    clean = clean.replace(/\bTERRA\b/gi, '');
     clean = clean.replace(/RASCUNHO/gi, '');
     clean = clean.replace(/Continua\b/gi, '');
 
-    // Corrige quebras de linha com hífen
     clean = fixHyphenatedWords(clean);
-
-    // Normaliza espaços em branco
     clean = clean.replace(/[ \t]+/g, ' ').trim();
     return clean;
 }
@@ -121,11 +114,11 @@ async function extractTextFromPDF(file) {
                 }
             });
 
-            lines.sort((a, b) => b.y - a.y); // Do topo para baixo
+            lines.sort((a, b) => b.y - a.y);
 
             let text = '';
             lines.forEach(line => {
-                line.items.sort((a, b) => a.x - b.x); // Da esquerda para a direita
+                line.items.sort((a, b) => a.x - b.x);
                 text += line.items.map(it => it.str).join(' ') + '\n';
             });
             return text;
@@ -137,43 +130,46 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER ROBUSTO DE QUESTÕES (ABORDAGEM POR BLOCOS DE QUESTÃO)
+// PARSER ROBUSTO DE QUESTÕES COM DETECÇÃO E ORDENAÇÃO NUMÉRICA ESTRITA
 function parseExamQuestions(rawText) {
     const cleanText = cleanGarbage(rawText);
     const extracted = [];
 
-    // Regex para identificar início de questões (Ex: "QUESTÃO 01", "1", "01.")
-    const qHeaderRegex = /(?:^|\n|\s+)(?:QUESTÃO\s*)?(\d{1,2})\s*[\.\)\-]?\s+(?=[A-Z\u00C0-\u00DC\“\"\'\(\d])/gi;
-    
-    // Localiza onde começam as questões para ignorar a capa/instruções do concurso
-    const firstQMatch = qHeaderRegex.exec(cleanText);
-    if (!firstQMatch) return [];
+    // Verifica se a palavra "QUESTÃO" é usada no PDF para criar um filtro mais rigoroso
+    const hasQuestaoKeyword = /QUESTÃO\s*\d{1,2}/i.test(cleanText);
 
-    const textFromFirstQ = cleanText.substring(firstQMatch.index);
-    
-    // Divide o texto da prova em blocos por número de questão
+    // Se houver a palavra QUESTÃO no PDF, usamos rigor máximo para evitar falsos positivos
+    const qHeaderRegex = hasQuestaoKeyword 
+        ? /(?:^|\n|\s+)(?:QUESTÃO)\s*(\d{1,2})\b/gi
+        : /(?:^|\n)\s*(\d{1,2})\s*[\.\)\-]\s+(?=[A-Z\u00C0-\u00DC\“\"\'\(\d])/gi;
+
     const qMatches = [];
     let match;
-    const blockRegex = /(?:^|\n|\s+)(?:QUESTÃO\s*)?(\d{1,2})\s*[\.\)\-]?\s+(?=[A-Z\u00C0-\u00DC\“\"\'\(\d])/gi;
 
-    while ((match = blockRegex.exec(textFromFirstQ)) !== null) {
-        qMatches.push({
-            number: parseInt(match[1], 10),
-            index: match.index,
-            length: match[0].length
-        });
+    while ((match = qHeaderRegex.exec(cleanText)) !== null) {
+        const qNum = parseInt(match[1], 10);
+        // Descarta números maiores que 120 (prováveis erros de leitura)
+        if (qNum > 0 && qNum <= 120) {
+            qMatches.push({
+                number: qNum,
+                index: match.index,
+                length: match[0].length
+            });
+        }
     }
+
+    if (qMatches.length === 0) return [];
 
     let currentSupportText = '';
 
     for (let i = 0; i < qMatches.length; i++) {
         const qCurr = qMatches[i];
         const startIndex = qCurr.index + qCurr.length;
-        const endIndex = (i < qMatches.length - 1) ? qMatches[i + 1].index : textFromFirstQ.length;
+        const endIndex = (i < qMatches.length - 1) ? qMatches[i + 1].index : cleanText.length;
         
-        const rawBlock = textFromFirstQ.substring(startIndex, endIndex).trim();
+        const rawBlock = cleanText.substring(startIndex, endIndex).trim();
 
-        // Regex rigoroso para alternativas A, B, C, D, E
+        // Identifica alternativas (A, B, C, D, E)
         const optRegex = /(?:^|\s)\(?([A-E])\)[\.\-]?\s+/gi;
         const optMatches = [];
         let optMatch;
@@ -181,12 +177,11 @@ function parseExamQuestions(rawText) {
         while ((optMatch = optRegex.exec(rawBlock)) !== null) {
             optMatches.push({
                 letter: optMatch[1].toUpperCase(),
-                index: optMatch.index,
-                length: optMatch[0].length
+                index: optMatch.index
             });
         }
 
-        // Filtra para garantir a sequência correta A -> B -> C -> D -> E
+        // Filtra e valida sequência A -> B -> C -> D -> E
         let aIndex = -1, bIndex = -1, cIndex = -1, dIndex = -1, eIndex = -1;
         for (let m of optMatches) {
             if (m.letter === 'A' && aIndex === -1) aIndex = m.index;
@@ -196,12 +191,12 @@ function parseExamQuestions(rawText) {
             else if (m.letter === 'E' && dIndex !== -1 && eIndex === -1) eIndex = m.index;
         }
 
-        // Se encontrou as 5 alternativas de forma válida
+        // Se encontrou as alternativas corretamente
         if (aIndex !== -1 && bIndex !== -1 && cIndex !== -1 && dIndex !== -1 && eIndex !== -1) {
             let statementAndSupport = rawBlock.substring(0, aIndex).trim();
             
-            // Detecta se há texto de apoio/leitura antes do enunciado
-            const textHeaderMatch = statementAndSupport.match(/(?:\bTEXTO\s+[I|V|X\d]*|\bREAD\s+THE\s+TEXT|\bLEIA\s+O\s+TEXTO|\bÀ\s+moda\s+brasileira\b|\bHow\s+space\s+technology\b)/i);
+            // Verifica se existe cabeçalho de texto de apoio
+            const textHeaderMatch = statementAndSupport.match(/(?:\bTEXTO\s+[I|V|X\d]*|\bREAD\s+THE\s+TEXT|\bLEIA\s+O\s+TEXTO)/i);
             
             let statement = statementAndSupport;
             if (textHeaderMatch) {
@@ -236,21 +231,37 @@ function parseExamQuestions(rawText) {
         }
     }
 
-    return extracted;
+    // CORREÇÃO CRÍTICA 1: Ordenação numérica crescente obrigatória (1, 2, 3...)
+    extracted.sort((a, b) => a.number - b.number);
+
+    // CORREÇÃO CRÍTICA 2: Remoção de duplicatas de números de questões
+    const uniqueQuestions = [];
+    const seenNumbers = new Set();
+
+    for (const q of extracted) {
+        if (!seenNumbers.has(q.number)) {
+            seenNumbers.add(q.number);
+            uniqueQuestions.push(q);
+        }
+    }
+
+    return uniqueQuestions;
 }
 
-// PARSER DE GABARITO ROBUSTO
+// PARSER DE GABARITO AMPLIADO E ROBUSTO
 function parseGabaritoText(text) {
     if (!text) return {};
     const map = {};
-    // Aceita formatos: "1-A", "01. B", "1 A", "1: C", "1) D"
-    const regex = /(?:^|\s|;|,)(\d{1,2})\s*[\-\:\.\)\s]+\s*([A-E])(?=\s|$|;|,|\d)/gi;
+    const clean = text.replace(/\r?\n/g, ' ');
+    
+    // Suporta formatos: "1-A", "01. B", "1 A", "1: C", "1) D", "QUESTÃO 1 - A"
+    const regex = /(?:^|\s|;|,|\|)(?:QUESTÃO\s*)?(\d{1,2})\s*[\-\:\.\)\s]+\s*([A-E])(?=\s|$|;|,|\||\d)/gi;
     let match;
 
-    while ((match = regex.exec(text)) !== null) {
+    while ((match = regex.exec(clean)) !== null) {
         const qNum = parseInt(match[1], 10);
         const letter = match[2].toUpperCase();
-        if (qNum >= 1 && qNum <= 150) {
+        if (qNum >= 1 && qNum <= 120) {
             map[qNum] = letter;
         }
     }
@@ -274,7 +285,7 @@ async function processAndStart() {
         questions = parseExamQuestions(examText);
 
         if (questions.length === 0) {
-            if (statusMsg) statusMsg.textContent = 'Não foi possível extrair as questões do PDF. Verifique se é um arquivo de prova válido.';
+            if (statusMsg) statusMsg.textContent = 'Não foi possível extrair as questões do PDF. Verifique se o arquivo é válido.';
             return;
         }
 
@@ -294,7 +305,7 @@ async function processAndStart() {
 
     } catch (err) {
         console.error("Erro durante o processamento:", err);
-        if (statusMsg) statusMsg.textContent = 'Erro ao processar o arquivo PDF. Verifique se o arquivo não está corrompido.';
+        if (statusMsg) statusMsg.textContent = 'Erro ao processar o arquivo PDF. Tente novamente.';
     }
 }
 
@@ -320,7 +331,6 @@ function renderQuestion() {
 
     const q = questions[currentQuestionIndex];
 
-    // Gerenciamento do Container do Texto de Apoio
     let supportContainer = document.getElementById('texto-apoio-container');
     if (!supportContainer) {
         supportContainer = document.createElement('div');
@@ -380,7 +390,6 @@ function renderQuestion() {
         });
     }
 
-    // Botões de Navegação
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
     const btnFinish = document.getElementById('btn-finish');
@@ -410,7 +419,7 @@ function prevQuestion() {
     }
 }
 
-// CRONÔMETRO COM PREVENÇÃO DE MÚLTIPLOS INTERVALOS
+// CRONÔMETRO
 function startTimer() {
     if (timerInterval) clearInterval(timerInterval);
     
