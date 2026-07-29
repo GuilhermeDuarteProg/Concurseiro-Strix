@@ -64,7 +64,7 @@ async function processAndStart() {
     }
 }
 
-// DETECTOR DE REGRAS DE CAPA DA BANCA (Regras administrativas estritas)
+// DETECTOR DE REGRAS DE CAPA DA BANCA
 function isInstructionBlock(text) {
     if (!text) return false;
     const lower = text.toLowerCase();
@@ -109,6 +109,20 @@ function cleanGarbage(text) {
 
     clean = clean.replace(/\s+/g, ' ').trim();
     return fixHyphenatedWords(clean);
+}
+
+// BUSCADOR DE MARCADOR ESPECÍFICO DE QUESTÃO (Ex: Procura exatamente por Q3 para fechar Q2)
+function findQuestionMarker(text, qNum) {
+    if (!text) return null;
+    const padded = String(qNum).padStart(2, '0');
+    const numStr = String(qNum);
+
+    const pattern = new RegExp(
+        `(?:\\bQUESTÃO\\s*(?:${numStr}|${padded})\\b|\\b(?:${numStr}|${padded})\\s*[\\.\\)\\-]\\s*|\\b(?:${numStr}|${padded})\\s+(?=[A-Z\\u00C0-\\u00DC]))`,
+        'i'
+    );
+
+    return pattern.exec(text);
 }
 
 // EXTRAÇÃO POR COLUNAS E LINHAS
@@ -165,7 +179,7 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// PARSER DE QUESTÕES PRECISO E SEQUENCIAL
+// PARSER DE QUESTÕES COM BUSCA SEQUENCIAL DE NÚMEROS
 function parseExamQuestions(rawText) {
     const clean = cleanGarbage(rawText);
     const extracted = [];
@@ -182,9 +196,6 @@ function parseExamQuestions(rawText) {
             length: match[0].length
         });
     }
-
-    let lastEIndex = 0;
-    let mainReadingText = ''; // Armazena o texto principal de interpretação (crônica/artigo)
 
     const blocks = [];
     for (let i = 0; i < matches.length; i++) {
@@ -206,52 +217,34 @@ function parseExamQuestions(rawText) {
             }
 
             if (bMatch && cMatch && dMatch && eMatch) {
-                let endOfE = clean.length;
-                const nextAMatch = matches.find(m => m.letter === 'A' && m.index > eMatch.index);
-                if (nextAMatch) {
-                    const subText = clean.substring(eMatch.index + eMatch.length, nextAMatch.index);
-                    const nextQInSub = subText.search(/(?:\bQUESTÃO\s+\d{1,2}\b|\b\d{1,2}\s*[\.\)-]?\s+[A-Z\u00C0-\u00DC])/i);
-                    if (nextQInSub !== -1) {
-                        endOfE = eMatch.index + eMatch.length + nextQInSub;
-                    } else {
-                        endOfE = nextAMatch.index;
-                    }
-                }
-
-                blocks.push({
-                    precedingText: clean.substring(lastEIndex, aMatch.index).trim(),
-                    aMatch, bMatch, cMatch, dMatch, eMatch,
-                    endOfE
-                });
-
-                lastEIndex = endOfE;
+                blocks.push({ aMatch, bMatch, cMatch, dMatch, eMatch });
                 i = matches.indexOf(eMatch);
             }
         }
     }
 
-    // Processamento sequencial buscando exatamente a questão atual (1, 2, 3...)
-    blocks.forEach((block, index) => {
-        const expectedQNum = index + 1;
-        let rawPreceding = block.precedingText;
+    let mainReadingText = '';
 
-        // Busca especificamente pelo número sequencial exato da questão
-        const numRegex = new RegExp(`(?:\\bQUESTÃO\\s*0?${expectedQNum}\\b|\\b0?${expectedQNum}\\s*[\\.\\)\\-]\\s*)`, 'i');
-        const numMatch = rawPreceding.match(numRegex);
+    for (let idx = 0; idx < blocks.length; idx++) {
+        const currentQNum = idx + 1;
+        const block = blocks[idx];
 
-        let supportBeforeThis = '';
-        let statement = rawPreceding;
+        let statement = '';
+        if (idx === 0) {
+            const rawPreceding = clean.substring(0, block.aMatch.index);
+            const qMatch = findQuestionMarker(rawPreceding, currentQNum);
 
-        if (numMatch && numMatch.index !== undefined) {
-            supportBeforeThis = rawPreceding.substring(0, numMatch.index).trim();
-            statement = rawPreceding.substring(numMatch.index + numMatch[0].length).trim();
+            if (qMatch) {
+                const supportCandidate = rawPreceding.substring(0, qMatch.index).trim();
+                if (supportCandidate.length > 100 && !isInstructionBlock(supportCandidate)) {
+                    mainReadingText = supportCandidate;
+                }
+                statement = rawPreceding.substring(qMatch.index + qMatch[0].length).trim();
+            } else {
+                statement = rawPreceding.replace(/^(?:QUESTÃO\s*\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
+            }
         } else {
-            statement = statement.replace(/^(?:QUESTÃO\s*\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
-        }
-
-        // Se encontrou um texto de leitura extenso (>120 caracteres) antes da questão
-        if (supportBeforeThis.length > 120 && !isInstructionBlock(supportBeforeThis)) {
-            mainReadingText = supportBeforeThis;
+            statement = block.extractedStatement || '';
         }
 
         statement = cleanGarbage(statement);
@@ -260,7 +253,41 @@ function parseExamQuestions(rawText) {
         let optB = cleanGarbage(clean.substring(block.bMatch.index + block.bMatch.length, block.cMatch.index));
         let optC = cleanGarbage(clean.substring(block.cMatch.index + block.cMatch.length, block.dMatch.index));
         let optD = cleanGarbage(clean.substring(block.dMatch.index + block.dMatch.length, block.eMatch.index));
-        let optE = cleanGarbage(clean.substring(block.eMatch.index + block.eMatch.length, block.endOfE));
+
+        let optE = '';
+        const eStart = block.eMatch.index + block.eMatch.length;
+
+        if (idx < blocks.length - 1) {
+            const nextQNum = currentQNum + 1;
+            const nextBlock = blocks[idx + 1];
+            const subText = clean.substring(eStart, nextBlock.aMatch.index);
+
+            const qNextMatch = findQuestionMarker(subText, nextQNum);
+
+            if (qNextMatch) {
+                optE = clean.substring(eStart, eStart + qNextMatch.index);
+                nextBlock.extractedStatement = subText.substring(qNextMatch.index + qNextMatch[0].length);
+            } else {
+                const fallbackMatch = subText.match(/(?:\bQUESTÃO\s*\d{1,2}\b|\b\d{1,2}\s*[\.\)-]\s*)/i);
+                if (fallbackMatch) {
+                    optE = clean.substring(eStart, eStart + fallbackMatch.index);
+                    nextBlock.extractedStatement = subText.substring(fallbackMatch.index + fallbackMatch[0].length);
+                } else {
+                    optE = subText;
+                    nextBlock.extractedStatement = '';
+                }
+            }
+        } else {
+            let endOfText = clean.length;
+            const subText = clean.substring(eStart);
+            const gabMatch = subText.search(/(?:GABARITO|PROVA\s+CONCLUÍDA|PCI\s*CONCURSOS)/i);
+            if (gabMatch !== -1) {
+                endOfText = eStart + gabMatch;
+            }
+            optE = clean.substring(eStart, endOfText);
+        }
+
+        optE = cleanGarbage(optE);
 
         const isInstruction = isInstructionBlock(statement) ||
                               isInstructionBlock(optA) ||
@@ -282,7 +309,7 @@ function parseExamQuestions(rawText) {
                 }
             });
         }
-    });
+    }
 
     return extracted;
 }
@@ -316,7 +343,6 @@ function startQuiz() {
 function renderQuestion() {
     const q = questions[currentQuestionIndex];
 
-    // Cria/localiza o container de Texto de Apoio
     let supportContainer = document.getElementById('texto-apoio-container');
     if (!supportContainer) {
         supportContainer = document.createElement('div');
@@ -337,7 +363,6 @@ function renderQuestion() {
             box-sizing: border-box;
         `;
         
-        // Insere no topo do cartão da questão (acima do cabeçalho flex)
         const qTextEl = document.getElementById('q-text');
         if (qTextEl) {
             const parentCard = qTextEl.closest('.card-questao') || qTextEl.parentElement.parentElement || qTextEl.parentElement;
@@ -345,7 +370,6 @@ function renderQuestion() {
         }
     }
 
-    // Exibe o texto de referência apenas se ele existir
     if (q.supportText && q.supportText.trim() !== '') {
         supportContainer.innerHTML = `<strong style="color: #a78bfa; display: block; margin-bottom: 8px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">📖 Texto de Referência:</strong>${q.supportText}`;
         supportContainer.style.display = 'block';
