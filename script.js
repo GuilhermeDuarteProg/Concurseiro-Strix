@@ -1,112 +1,89 @@
+// Configuração do Worker do PDF.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+// Estado global da aplicação
 let questions = [];
 let gabaritoMap = {};
 let currentQuestionIndex = 0;
 let userAnswers = {};
-let timerInterval;
+let timerInterval = null;
 let secondsElapsed = 0;
 
 let examFile = null;
 let answerFile = null;
 
-// Inputs e Listeners
-document.getElementById('pdf-exam-input').addEventListener('change', (e) => {
-    if (e.target.files.length) {
-        examFile = e.target.files[0];
-        document.getElementById('exam-file-name').textContent = examFile.name;
+// Inicialização segura de ouvintes de eventos (DOM Loaded)
+document.addEventListener('DOMContentLoaded', () => {
+    const examInput = document.getElementById('pdf-exam-input');
+    const answerInput = document.getElementById('pdf-answer-input');
+    const btnProcess = document.getElementById('btn-process'); // Se houver botão de iniciar
+
+    if (examInput) {
+        examInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                examFile = e.target.files[0];
+                const nameEl = document.getElementById('exam-file-name');
+                if (nameEl) nameEl.textContent = examFile.name;
+            }
+        });
+    }
+
+    if (answerInput) {
+        answerInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                answerFile = e.target.files[0];
+                const nameEl = document.getElementById('answer-file-name');
+                if (nameEl) nameEl.textContent = answerFile.name;
+            }
+        });
     }
 });
 
-document.getElementById('pdf-answer-input').addEventListener('change', (e) => {
-    if (e.target.files.length) {
-        answerFile = e.target.files[0];
-        document.getElementById('answer-file-name').textContent = answerFile.name;
-    }
-});
-
-async function processAndStart() {
-    const statusMsg = document.getElementById('status-message');
-
-    if (!examFile) {
-        statusMsg.textContent = 'Por favor, selecione pelo menos o PDF da prova.';
-        return;
-    }
-
-    statusMsg.textContent = 'Extraindo e organizando as questões do PDF... Aguarde.';
-
-    try {
-        const examText = await extractTextFromPDF(examFile);
-        questions = parseExamQuestions(examText);
-
-        if (questions.length === 0) {
-            statusMsg.textContent = 'Não foi possível extrair as questões do PDF. Verifique o arquivo.';
-            return;
-        }
-
-        gabaritoMap = {};
-        if (answerFile) {
-            const answerText = await extractTextFromPDF(answerFile);
-            gabaritoMap = parseGabaritoText(answerText);
-        }
-
-        const manualText = document.getElementById('manual-gabarito').value;
-        if (manualText.trim() !== '') {
-            const manualMap = parseGabaritoText(manualText);
-            gabaritoMap = { ...gabaritoMap, ...manualMap };
-        }
-
-        startQuiz();
-
-    } catch (err) {
-        console.error(err);
-        statusMsg.textContent = 'Erro ao processar o arquivo PDF.';
-    }
+// Helper para escapar HTML e prevenir XSS/quebras de layout
+function escapeHtml(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
-// DETECTOR DE REGRAS DE CAPA DA BANCA
-function isInstructionBlock(text) {
-    if (!text) return false;
-    const lower = text.toLowerCase();
-    const instructionKeywords = [
-        'será eliminado',
-        'cartão-resposta',
-        'cartão resposta',
-        'caderno de questões',
-        'ausentar da sala',
-        'recebeu do fiscal',
-        'folha de respostas',
-        'preenchimento dos círculos',
-        'duração desta prova',
-        'marcação das folhas',
-        'lista de presença',
-        'aparelhos sonoros'
-    ];
-    return instructionKeywords.some(keyword => lower.includes(keyword));
-}
-
-// CORRIGE PALAVRAS CORTADAS COM HÍFEN
+// CORREÇÃO: Corrige apenas hífens de quebra de linha (não destrói palavras compostas como "cartão-resposta")
 function fixHyphenatedWords(text) {
     if (!text) return '';
-    return text.replace(/([a-zA-Z\u00C0-\u00FF]+)\s*-\s*([a-zA-Z\u00C0-\u00FF]+)/g, '$1$2');
+    return text.replace(/([a-zA-Z\u00C0-\u00FF]+)-\s*\n\s*([a-zA-Z\u00C0-\u00FF]+)/g, '$1$2');
 }
 
-// LIMPEZA SEGURA DE CABEÇALHOS E MARCAS D'ÁGUA
+// LIMPEZA SEGURA DE CABEÇALHOS, RODAPÉS E MARCAS D'ÁGUA
 function cleanGarbage(text) {
     if (!text) return '';
     let clean = text;
 
+    // Remove marcas do PCI Concursos e lixo base64
     clean = clean.replace(/pcimarkpci\s*[A-Za-z0-9+/=]*/gi, '');
     clean = clean.replace(/[A-Za-z0-9+/=]{20,}==?/g, '');
-    clean = clean.replace(/www\.pciconcursos\.com\.br\s*(?:PROVA)?/gi, '');
-    clean = clean.replace(/RACIOCÍNIO\s+LÓGICO(?:\s+MATEMÁTICO)?/gi, '');
-    clean = clean.replace(/RASCUNHO/gi, '');
+    clean = clean.replace(/www\.pciconcursos\.com\.br/gi, '');
 
+    // Remove rodapés e cabeçalhos recorrentes da Cesgranrio / Transpetro
+    clean = clean.replace(/PROVA\s+\d*[\s\-]*ADMINISTRAÇÃO/gi, '');
+    clean = clean.replace(/BR\s+PETROBRAS\s+TRANSPORTE\s+S\.\s*A\./gi, '');
+    clean = clean.replace(/TRANSPETRO/gi, '');
+    clean = clean.replace(/FUNDAÇÃO\s+CESGRANRIO/gi, '');
+    clean = clean.replace(/\bTERRA\b/gi, '');
+    clean = clean.replace(/RASCUNHO/gi, '');
+    clean = clean.replace(/Continua\b/gi, '');
+
+    // Corrige quebras de linha com hífen
+    clean = fixHyphenatedWords(clean);
+
+    // Normaliza espaços em branco
     clean = clean.replace(/[ \t]+/g, ' ').trim();
-    return fixHyphenatedWords(clean);
+    return clean;
 }
 
-// EXTRAÇÃO POR COLUNAS E LINHAS DO PDF
+// EXTRAÇÃO POR COLUNAS E LINHAS DO PDF (COM ORDENAÇÃO DE LEITURA)
 async function extractTextFromPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -144,12 +121,12 @@ async function extractTextFromPDF(file) {
                 }
             });
 
-            lines.sort((a, b) => b.y - a.y);
+            lines.sort((a, b) => b.y - a.y); // Do topo para baixo
 
             let text = '';
             lines.forEach(line => {
-                line.items.sort((a, b) => a.x - b.x);
-                text += line.items.map(it => it.str).join(' ') + ' ';
+                line.items.sort((a, b) => a.x - b.x); // Da esquerda para a direita
+                text += line.items.map(it => it.str).join(' ') + '\n';
             });
             return text;
         };
@@ -160,189 +137,100 @@ async function extractTextFromPDF(file) {
     return fullText;
 }
 
-// BUSCA MARCADOR EXATO DA PRÓXIMA QUESTÃO
-function findNextQuestionMarker(text, expectedNum) {
-    if (!text) return null;
-    const padded = String(expectedNum).padStart(2, '0');
-    const numStr = String(expectedNum);
-
-    const regex = new RegExp(
-        `(?:\\bQUESTÃO\\s*(?:${numStr}|${padded})\\b|\\b(?:${numStr}|${padded})\\s*[\\.\\)\\-]\\s*|\\b(?:${numStr}|${padded})\\s+(?=[A-Z\\u00C0-\\u00DC]))`,
-        'i'
-    );
-    return regex.exec(text);
-}
-
-// PARSER ROBUTO DE QUESTÕES
+// PARSER ROBUSTO DE QUESTÕES (ABORDAGEM POR BLOCOS DE QUESTÃO)
 function parseExamQuestions(rawText) {
-    const clean = cleanGarbage(rawText);
+    const cleanText = cleanGarbage(rawText);
     const extracted = [];
 
-    const optionRegex = /(?:^|\s)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/gi;
-    const matches = [];
-    let match;
+    // Regex para identificar início de questões (Ex: "QUESTÃO 01", "1", "01.")
+    const qHeaderRegex = /(?:^|\n|\s+)(?:QUESTÃO\s*)?(\d{1,2})\s*[\.\)\-]?\s+(?=[A-Z\u00C0-\u00DC\“\"\'\(\d])/gi;
+    
+    // Localiza onde começam as questões para ignorar a capa/instruções do concurso
+    const firstQMatch = qHeaderRegex.exec(cleanText);
+    if (!firstQMatch) return [];
 
-    while ((match = optionRegex.exec(clean)) !== null) {
-        const letter = (match[1] || match[2]).toUpperCase();
-        matches.push({
-            letter: letter,
+    const textFromFirstQ = cleanText.substring(firstQMatch.index);
+    
+    // Divide o texto da prova em blocos por número de questão
+    const qMatches = [];
+    let match;
+    const blockRegex = /(?:^|\n|\s+)(?:QUESTÃO\s*)?(\d{1,2})\s*[\.\)\-]?\s+(?=[A-Z\u00C0-\u00DC\“\"\'\(\d])/gi;
+
+    while ((match = blockRegex.exec(textFromFirstQ)) !== null) {
+        qMatches.push({
+            number: parseInt(match[1], 10),
             index: match.index,
             length: match[0].length
         });
     }
 
-    const blocks = [];
-    for (let i = 0; i < matches.length; i++) {
-        if (matches[i].letter === 'A') {
-            const aMatch = matches[i];
-            let bMatch = null, cMatch = null, dMatch = null, eMatch = null;
-
-            for (let j = i + 1; j < matches.length; j++) {
-                const m = matches[j];
-                if (m.index - aMatch.index > 3500) break;
-
-                if (!bMatch && m.letter === 'B') bMatch = m;
-                else if (bMatch && !cMatch && m.letter === 'C') cMatch = m;
-                else if (cMatch && !dMatch && m.letter === 'D') dMatch = m;
-                else if (dMatch && !eMatch && m.letter === 'E') {
-                    eMatch = m;
-                    break;
-                }
-            }
-
-            if (bMatch && cMatch && dMatch && eMatch) {
-                blocks.push({ aMatch, bMatch, cMatch, dMatch, eMatch });
-                i = matches.indexOf(eMatch);
-            }
-        }
-    }
-
-    if (blocks.length === 0) return [];
-
     let currentSupportText = '';
 
-    const parsedBlocks = blocks.map((block, idx) => ({
-        block: block,
-        number: idx + 1,
-        statement: '',
-        supportText: '',
-        optA: '', optB: '', optC: '', optD: '', optE: ''
-    }));
-
-    // Processa o texto antes da Primeira Questão
-    const textBeforeFirst = clean.substring(0, blocks[0].aMatch.index);
-    const firstQMatch = textBeforeFirst.match(/(?:\bQUESTÃO\s*(\d{1,2})\b|\b(\d{1,2})\s*[\.\)\-]\s+|\b(\d{1,2})\s+(?=[A-Z\u00C0-\u00DC]))/i);
-
-    if (firstQMatch) {
-        const qNum = parseInt(firstQMatch[1] || firstQMatch[2] || firstQMatch[3], 10);
-        parsedBlocks[0].number = qNum;
+    for (let i = 0; i < qMatches.length; i++) {
+        const qCurr = qMatches[i];
+        const startIndex = qCurr.index + qCurr.length;
+        const endIndex = (i < qMatches.length - 1) ? qMatches[i + 1].index : textFromFirstQ.length;
         
-        const supportCandidate = textBeforeFirst.substring(0, firstQMatch.index).trim();
-        if (supportCandidate.length > 80 && !isInstructionBlock(supportCandidate)) {
-            parsedBlocks[0].supportText = cleanGarbage(supportCandidate);
+        const rawBlock = textFromFirstQ.substring(startIndex, endIndex).trim();
+
+        // Regex rigoroso para alternativas A, B, C, D, E
+        const optRegex = /(?:^|\s)\(?([A-E])\)[\.\-]?\s+/gi;
+        const optMatches = [];
+        let optMatch;
+
+        while ((optMatch = optRegex.exec(rawBlock)) !== null) {
+            optMatches.push({
+                letter: optMatch[1].toUpperCase(),
+                index: optMatch.index,
+                length: optMatch[0].length
+            });
         }
-        parsedBlocks[0].statement = textBeforeFirst.substring(firstQMatch.index + firstQMatch[0].length).trim();
-    } else {
-        parsedBlocks[0].statement = textBeforeFirst.replace(/^(?:QUESTÃO\s*\d{1,2}|\d{1,2}\s*[\.\)-]?\s*)/i, '').trim();
-    }
 
-    // Processa cada questão e separa corretamente a alternativa E de textos de apoio / matérias
-    for (let i = 0; i < blocks.length; i++) {
-        const curr = parsedBlocks[i];
-        const block = curr.block;
+        // Filtra para garantir a sequência correta A -> B -> C -> D -> E
+        let aIndex = -1, bIndex = -1, cIndex = -1, dIndex = -1, eIndex = -1;
+        for (let m of optMatches) {
+            if (m.letter === 'A' && aIndex === -1) aIndex = m.index;
+            else if (m.letter === 'B' && aIndex !== -1 && bIndex === -1) bIndex = m.index;
+            else if (m.letter === 'C' && bIndex !== -1 && cIndex === -1) cIndex = m.index;
+            else if (m.letter === 'D' && cIndex !== -1 && dIndex === -1) dIndex = m.index;
+            else if (m.letter === 'E' && dIndex !== -1 && eIndex === -1) eIndex = m.index;
+        }
 
-        curr.optA = cleanGarbage(clean.substring(block.aMatch.index + block.aMatch.length, block.bMatch.index));
-        curr.optB = cleanGarbage(clean.substring(block.bMatch.index + block.bMatch.length, block.cMatch.index));
-        curr.optC = cleanGarbage(clean.substring(block.cMatch.index + block.cMatch.length, block.dMatch.index));
-        curr.optD = cleanGarbage(clean.substring(block.dMatch.index + block.dMatch.length, block.eMatch.index));
-
-        const eStart = block.eMatch.index + block.eMatch.length;
-
-        if (i < blocks.length - 1) {
-            const nextAIndex = blocks[i + 1].aMatch.index;
-            const subText = clean.substring(eStart, nextAIndex);
-            const expectedNextNum = curr.number + 1;
-
-            // Expressão para identificar onde a alternativa E termina e começa um cabeçalho / texto de leitura
-            const headerRegex = /(?:\bPROVA\s+\d*|\bLÍNGUA\s+(?:INGLESA|PORTUGUESA)|\bCONHECIMENTOS\s+(?:ESPECÍFICOS|BÁSICOS|GERAIS)|\bTEXTO\s+(?:[I|V|X\d]+|\b)|\bLEIA\s+O\s+TEXTO|\bREAD\s+THE\s+TEXT|\bAS\s+QUESTÕES\b|\bQUESTIONS\b)/i;
-            const headerMatch = subText.match(headerRegex);
-
-            let qNextMatch = findNextQuestionMarker(subText, expectedNextNum);
-            if (!qNextMatch) {
-                qNextMatch = subText.match(/(?:\bQUESTÃO\s*(\d{1,2})\b|\b(\d{1,2})\s*[\.\)\-]\s+|\b(\d{1,2})\s+(?=[A-Z\u00C0-\u00DC]))/i);
-            }
-
-            let optEText = '';
-            let remainderText = '';
-
-            if (headerMatch && (!qNextMatch || headerMatch.index < qNextMatch.index)) {
-                optEText = subText.substring(0, headerMatch.index);
-                remainderText = subText.substring(headerMatch.index);
-            } else if (qNextMatch) {
-                optEText = subText.substring(0, qNextMatch.index);
-                remainderText = subText.substring(qNextMatch.index);
-            } else {
-                optEText = subText;
-                remainderText = '';
-            }
-
-            curr.optE = cleanGarbage(optEText);
-
-            if (remainderText) {
-                let qInRemainder = findNextQuestionMarker(remainderText, expectedNextNum);
-                if (!qInRemainder) {
-                    qInRemainder = remainderText.match(/(?:\bQUESTÃO\s*(\d{1,2})\b|\b(\d{1,2})\s*[\.\)\-]\s+|\b(\d{1,2})\s+(?=[A-Z\u00C0-\u00DC]))/i);
-                }
-
-                if (qInRemainder) {
-                    let detectedNum = expectedNextNum;
-                    if (qInRemainder[1] || qInRemainder[2] || qInRemainder[3]) {
-                        detectedNum = parseInt(qInRemainder[1] || qInRemainder[2] || qInRemainder[3], 10);
-                    }
-                    parsedBlocks[i + 1].number = detectedNum;
-
-                    const rawSupport = remainderText.substring(0, qInRemainder.index).trim();
-                    if (rawSupport.length > 40 && !isInstructionBlock(rawSupport)) {
-                        parsedBlocks[i + 1].supportText = cleanGarbage(rawSupport);
-                    }
-
-                    parsedBlocks[i + 1].statement = remainderText.substring(qInRemainder.index + qInRemainder[0].length).trim();
+        // Se encontrou as 5 alternativas de forma válida
+        if (aIndex !== -1 && bIndex !== -1 && cIndex !== -1 && dIndex !== -1 && eIndex !== -1) {
+            let statementAndSupport = rawBlock.substring(0, aIndex).trim();
+            
+            // Detecta se há texto de apoio/leitura antes do enunciado
+            const textHeaderMatch = statementAndSupport.match(/(?:\bTEXTO\s+[I|V|X\d]*|\bREAD\s+THE\s+TEXT|\bLEIA\s+O\s+TEXTO|\bÀ\s+moda\s+brasileira\b|\bHow\s+space\s+technology\b)/i);
+            
+            let statement = statementAndSupport;
+            if (textHeaderMatch) {
+                const headerIdx = textHeaderMatch.index;
+                if (headerIdx > 0) {
+                    currentSupportText = statementAndSupport.substring(headerIdx).trim();
+                    statement = statementAndSupport.substring(0, headerIdx).trim();
                 } else {
-                    parsedBlocks[i + 1].statement = remainderText.trim();
+                    currentSupportText = statementAndSupport;
+                    statement = '';
                 }
             }
-        } else {
-            let endText = clean.length;
-            const subText = clean.substring(eStart);
-            const gabMatch = subText.search(/(?:GABARITO|PROVA\s+CONCLUÍDA|PCI\s*CONCURSOS)/i);
-            if (gabMatch !== -1) endText = eStart + gabMatch;
-            curr.optE = cleanGarbage(clean.substring(eStart, endText));
-        }
 
-        if (curr.supportText) {
-            currentSupportText = curr.supportText;
-        }
+            const optA = rawBlock.substring(aIndex, bIndex).replace(/^(?:\(A\)|A[\.\)\-])\s*/i, '').trim();
+            const optB = rawBlock.substring(bIndex, cIndex).replace(/^(?:\(B\)|B[\.\)\-])\s*/i, '').trim();
+            const optC = rawBlock.substring(cIndex, dIndex).replace(/^(?:\(C\)|C[\.\)\-])\s*/i, '').trim();
+            const optD = rawBlock.substring(dIndex, eIndex).replace(/^(?:\(D\)|D[\.\)\-])\s*/i, '').trim();
+            const optE = rawBlock.substring(eIndex).replace(/^(?:\(E\)|E[\.\)\-])\s*/i, '').trim();
 
-        curr.statement = cleanGarbage(curr.statement);
-
-        const isInstruction = isInstructionBlock(curr.statement) ||
-                              isInstructionBlock(curr.optA) ||
-                              isInstructionBlock(curr.optB) ||
-                              isInstructionBlock(curr.optC) ||
-                              isInstructionBlock(curr.optD) ||
-                              isInstructionBlock(curr.optE);
-
-        if (!isInstruction && curr.statement.length > 2 && curr.optA && curr.optB && curr.optC && curr.optD && curr.optE) {
             extracted.push({
-                number: curr.number,
-                text: curr.statement,
+                number: qCurr.number,
+                text: statement || `Questão ${qCurr.number}`,
                 supportText: currentSupportText,
                 options: {
-                    A: curr.optA,
-                    B: curr.optB,
-                    C: curr.optC,
-                    D: curr.optD,
-                    E: curr.optE
+                    A: cleanGarbage(optA),
+                    B: cleanGarbage(optB),
+                    C: cleanGarbage(optC),
+                    D: cleanGarbage(optD),
+                    E: cleanGarbage(optE)
                 }
             });
         }
@@ -351,23 +239,72 @@ function parseExamQuestions(rawText) {
     return extracted;
 }
 
+// PARSER DE GABARITO ROBUSTO
 function parseGabaritoText(text) {
+    if (!text) return {};
     const map = {};
-    const regex = /(\b\d{1,2}\b)\s*[\-\:\.\)\s]+\s*([A-E])\b/gi;
+    // Aceita formatos: "1-A", "01. B", "1 A", "1: C", "1) D"
+    const regex = /(?:^|\s|;|,)(\d{1,2})\s*[\-\:\.\)\s]+\s*([A-E])(?=\s|$|;|,|\d)/gi;
     let match;
 
     while ((match = regex.exec(text)) !== null) {
         const qNum = parseInt(match[1], 10);
         const letter = match[2].toUpperCase();
-        map[qNum] = letter;
+        if (qNum >= 1 && qNum <= 150) {
+            map[qNum] = letter;
+        }
     }
 
     return map;
 }
 
+// PROCESSA OS ARQUIVOS E INICIA
+async function processAndStart() {
+    const statusMsg = document.getElementById('status-message');
+
+    if (!examFile) {
+        if (statusMsg) statusMsg.textContent = 'Por favor, selecione pelo menos o PDF da prova.';
+        return;
+    }
+
+    if (statusMsg) statusMsg.textContent = 'Extraindo e organizando as questões do PDF... Aguarde.';
+
+    try {
+        const examText = await extractTextFromPDF(examFile);
+        questions = parseExamQuestions(examText);
+
+        if (questions.length === 0) {
+            if (statusMsg) statusMsg.textContent = 'Não foi possível extrair as questões do PDF. Verifique se é um arquivo de prova válido.';
+            return;
+        }
+
+        gabaritoMap = {};
+        if (answerFile) {
+            const answerText = await extractTextFromPDF(answerFile);
+            gabaritoMap = parseGabaritoText(answerText);
+        }
+
+        const manualInput = document.getElementById('manual-gabarito');
+        if (manualInput && manualInput.value.trim() !== '') {
+            const manualMap = parseGabaritoText(manualInput.value);
+            gabaritoMap = { ...gabaritoMap, ...manualMap };
+        }
+
+        startQuiz();
+
+    } catch (err) {
+        console.error("Erro durante o processamento:", err);
+        if (statusMsg) statusMsg.textContent = 'Erro ao processar o arquivo PDF. Verifique se o arquivo não está corrompido.';
+    }
+}
+
+// INICIA O SIMULADO
 function startQuiz() {
-    document.getElementById('upload-section').style.display = 'none';
-    document.getElementById('quiz-section').style.display = 'block';
+    const uploadSec = document.getElementById('upload-section');
+    const quizSec = document.getElementById('quiz-section');
+
+    if (uploadSec) uploadSec.style.display = 'none';
+    if (quizSec) quizSec.style.display = 'block';
 
     currentQuestionIndex = 0;
     userAnswers = {};
@@ -377,9 +314,13 @@ function startQuiz() {
     renderQuestion();
 }
 
+// RENDERIZA A QUESTÃO ATUAL NO DOM
 function renderQuestion() {
+    if (!questions || questions.length === 0) return;
+
     const q = questions[currentQuestionIndex];
 
+    // Gerenciamento do Container do Texto de Apoio
     let supportContainer = document.getElementById('texto-apoio-container');
     if (!supportContainer) {
         supportContainer = document.createElement('div');
@@ -401,49 +342,57 @@ function renderQuestion() {
         `;
         
         const qTextEl = document.getElementById('q-text');
-        if (qTextEl) {
-            const parentCard = qTextEl.closest('.card-questao') || qTextEl.parentElement.parentElement || qTextEl.parentElement;
-            parentCard.insertBefore(supportContainer, parentCard.firstChild);
+        if (qTextEl && qTextEl.parentElement) {
+            qTextEl.parentElement.insertBefore(supportContainer, qTextEl);
         }
     }
 
     if (q.supportText && q.supportText.trim() !== '') {
-        supportContainer.innerHTML = `<strong style="color: #a78bfa; display: block; margin-bottom: 8px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">📖 Texto de Referência:</strong>${q.supportText}`;
+        supportContainer.innerHTML = `<strong style="color: #a78bfa; display: block; margin-bottom: 8px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">📖 Texto de Referência:</strong>${escapeHtml(q.supportText)}`;
         supportContainer.style.display = 'block';
-    } else {
+    } else if (supportContainer) {
         supportContainer.style.display = 'none';
     }
 
-    const displayNum = q.number ? q.number : (currentQuestionIndex + 1);
-    document.getElementById('q-number').textContent = String(displayNum).padStart(2, '0');
-    document.getElementById('q-text').textContent = q.text;
+    const qNumEl = document.getElementById('q-number');
+    const qTextEl = document.getElementById('q-text');
+
+    if (qNumEl) qNumEl.textContent = String(q.number || (currentQuestionIndex + 1)).padStart(2, '0');
+    if (qTextEl) qTextEl.textContent = q.text;
 
     const container = document.getElementById('options-container');
-    container.innerHTML = '';
+    if (container) {
+        container.innerHTML = '';
 
-    ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
-        if (q.options[letter]) {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            if (userAnswers[currentQuestionIndex] === letter) btn.classList.add('selected');
+        ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
+            if (q.options[letter]) {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                if (userAnswers[currentQuestionIndex] === letter) btn.classList.add('selected');
 
-            btn.innerHTML = `<span class="badge">${letter}</span><span>${q.options[letter]}</span>`;
-            btn.onclick = () => {
-                userAnswers[currentQuestionIndex] = letter;
-                renderQuestion();
-            };
-            container.appendChild(btn);
-        }
-    });
+                btn.innerHTML = `<span class="badge">${letter}</span><span>${escapeHtml(q.options[letter])}</span>`;
+                btn.onclick = () => {
+                    userAnswers[currentQuestionIndex] = letter;
+                    renderQuestion();
+                };
+                container.appendChild(btn);
+            }
+        });
+    }
 
-    document.getElementById('btn-prev').style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
+    // Botões de Navegação
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnFinish = document.getElementById('btn-finish');
+
+    if (btnPrev) btnPrev.style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
     
     if (currentQuestionIndex === questions.length - 1) {
-        document.getElementById('btn-next').style.display = 'none';
-        document.getElementById('btn-finish').style.display = 'inline-block';
+        if (btnNext) btnNext.style.display = 'none';
+        if (btnFinish) btnFinish.style.display = 'inline-block';
     } else {
-        document.getElementById('btn-next').style.display = 'inline-block';
-        document.getElementById('btn-finish').style.display = 'none';
+        if (btnNext) btnNext.style.display = 'inline-block';
+        if (btnFinish) btnFinish.style.display = 'none';
     }
 }
 
@@ -461,26 +410,35 @@ function prevQuestion() {
     }
 }
 
+// CRONÔMETRO COM PREVENÇÃO DE MÚLTIPLOS INTERVALOS
 function startTimer() {
-    clearInterval(timerInterval);
+    if (timerInterval) clearInterval(timerInterval);
+    
     timerInterval = setInterval(() => {
         secondsElapsed++;
         const hrs = String(Math.floor(secondsElapsed / 3600)).padStart(2, '0');
         const mins = String(Math.floor((secondsElapsed % 3600) / 60)).padStart(2, '0');
         const secs = String(secondsElapsed % 60).padStart(2, '0');
-        document.getElementById('timer').textContent = `${hrs}:${mins}:${secs}`;
+        
+        const timerEl = document.getElementById('timer');
+        if (timerEl) timerEl.textContent = `${hrs}:${mins}:${secs}`;
     }, 1000);
 }
 
+// CONCLUI O SIMULADO E EXIBE RESULTADOS
 function finishQuiz() {
-    clearInterval(timerInterval);
-    document.getElementById('quiz-section').style.display = 'none';
-    document.getElementById('result-section').style.display = 'block';
+    if (timerInterval) clearInterval(timerInterval);
+
+    const quizSec = document.getElementById('quiz-section');
+    const resultSec = document.getElementById('result-section');
+
+    if (quizSec) quizSec.style.display = 'none';
+    if (resultSec) resultSec.style.display = 'block';
 
     let correctCount = 0;
     let incorrectCount = 0;
     const reviewList = document.getElementById('review-list');
-    reviewList.innerHTML = '';
+    if (reviewList) reviewList.innerHTML = '';
 
     questions.forEach((q, idx) => {
         const qNum = q.number ? q.number : (idx + 1);
@@ -498,28 +456,37 @@ function finishQuiz() {
             }
         }
 
-        const item = document.createElement('div');
-        item.className = `review-item ${statusClass}`;
-        item.innerHTML = `
-            <div>
-                <strong>Questão ${String(qNum).padStart(2, '0')}</strong><br>
-                Sua resposta: <strong>${userAns}</strong>
-            </div>
-            <div style="text-align: right;">
-                Gabarito Oficial: <strong class="txt-success">${officialAns}</strong>
-            </div>
-        `;
-        reviewList.appendChild(item);
+        if (reviewList) {
+            const item = document.createElement('div');
+            item.className = `review-item ${statusClass}`;
+            item.innerHTML = `
+                <div>
+                    <strong>Questão ${String(qNum).padStart(2, '0')}</strong><br>
+                    Sua resposta: <strong>${escapeHtml(userAns)}</strong>
+                </div>
+                <div style="text-align: right;">
+                    Gabarito Oficial: <strong class="txt-success">${escapeHtml(officialAns)}</strong>
+                </div>
+            `;
+            reviewList.appendChild(item);
+        }
     });
 
     const total = questions.length;
-    const percentage = total > 0 && Object.keys(gabaritoMap).length > 0 
+    const answeredWithGabarito = Object.keys(gabaritoMap).length;
+    const percentage = total > 0 && answeredWithGabarito > 0 
         ? Math.round((correctCount / total) * 100) 
         : 0;
 
-    document.getElementById('score-percentage').textContent = `${percentage}%`;
-    document.getElementById('correct-count').textContent = correctCount;
-    document.getElementById('incorrect-count').textContent = incorrectCount;
-    document.getElementById('answered-count').textContent = Object.keys(userAnswers).length;
-    document.getElementById('total-count').textContent = total;
+    const scoreEl = document.getElementById('score-percentage');
+    const correctEl = document.getElementById('correct-count');
+    const incorrectEl = document.getElementById('incorrect-count');
+    const answeredEl = document.getElementById('answered-count');
+    const totalEl = document.getElementById('total-count');
+
+    if (scoreEl) scoreEl.textContent = `${percentage}%`;
+    if (correctEl) correctEl.textContent = correctCount;
+    if (incorrectEl) incorrectEl.textContent = incorrectCount;
+    if (answeredEl) answeredEl.textContent = Object.keys(userAnswers).length;
+    if (totalEl) totalEl.textContent = total;
 }
