@@ -6,7 +6,7 @@ let questionsData = [];
 let currentQuestionIndex = 0;
 let userAnswers = {};
 
-// 1) EXTRAÇÃO DE TEXTO DO PDF (SUPORTE A 2 COLUNAS - CESGRANRIO/TRANSPETRO)
+// 1) EXTRAÇÃO DE TEXTO DO PDF (SUPORTE A 2 COLUNAS)
 async function extractTextFromPDF(file) {
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -24,7 +24,7 @@ async function extractTextFromPDF(file) {
 
     if (items.length === 0) continue;
 
-    // Separa os itens da coluna da esquerda e da direita
+    // Separa as colunas esquerda e direita
     const leftCol = items.filter(it => it.x < midX);
     const rightCol = items.filter(it => it.x >= midX);
 
@@ -32,7 +32,7 @@ async function extractTextFromPDF(file) {
       if (colItems.length === 0) return "";
       colItems.sort((a, b) => b.y - a.y || a.x - b.x);
       
-      const LINE_TOLERANCE = 3;
+      const LINE_TOLERANCE = 4;
       const lines = [];
       let currentLine = [];
       let lastY = null;
@@ -72,9 +72,10 @@ function cleanGarbage(text) {
     .trim();
 }
 
-// 3) EXTRAÇÃO DE ALTERNATIVAS A-E
+// 3) EXTRAÇÃO DE ALTERNATIVAS (A, B, C, D, E)
 function extractOptionsFromSlice(slice) {
-  const optRegex = /(?:^|\n|\s+)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/g;
+  // Aceita (A), A), A., A -
+  const optRegex = /(?:^|\s|\n)(?:\(([A-E])\)|([A-E])\s*[\.\)\-])\s+/g;
   const matches = [];
   let m;
 
@@ -100,10 +101,7 @@ function extractOptionsFromSlice(slice) {
   }
 
   if (matchA && matchB && matchC && matchD && matchE) {
-    if ((matchE.index - matchA.index) > 3000) return { valid: false };
-
     const statement = slice.substring(0, matchA.index).trim();
-    if (statement.length < 5) return { valid: false };
 
     const optA = slice.substring(matchA.index + matchA.matchLength, matchB.index).trim();
     const optB = slice.substring(matchB.index + matchB.matchLength, matchC.index).trim();
@@ -111,37 +109,38 @@ function extractOptionsFromSlice(slice) {
     const optD = slice.substring(matchD.index + matchD.matchLength, matchE.index).trim();
 
     const restE = slice.substring(matchE.index + matchE.matchLength);
-    let endEOffset = restE.search(/(?:\n\s*\n|\n?\s*(?:QUESTÃO|\d{1,2}\s*[\.\)\-])|\n?\s*CONHECIMENTOS)/i);
-    if (endEOffset === -1 || endEOffset > 400) endEOffset = Math.min(restE.length, 300);
+    let endEOffset = restE.search(/(?:\n\s*\n|\n?\s*(?:QUESTÃO|\d{1,3}\s*[\.\)\-])|\n?\s*CONHECIMENTOS)/i);
+    if (endEOffset === -1 || endEOffset > 500) endEOffset = Math.min(restE.length, 400);
     const optE = restE.substring(0, endEOffset).trim();
 
-    const options = {
-      A: cleanGarbage(optA),
-      B: cleanGarbage(optB),
-      C: cleanGarbage(optC),
-      D: cleanGarbage(optD),
-      E: cleanGarbage(optE)
+    return {
+      valid: true,
+      statement,
+      options: {
+        A: cleanGarbage(optA) || "Opção A",
+        B: cleanGarbage(optB) || "Opção B",
+        C: cleanGarbage(optC) || "Opção C",
+        D: cleanGarbage(optD) || "Opção D",
+        E: cleanGarbage(optE) || "Opção E"
+      }
     };
-
-    if (Object.values(options).some(v => v.length < 1)) return { valid: false };
-
-    return { valid: true, statement, options };
   }
 
   return { valid: false };
 }
 
-// 4) PARSER PRINCIPAL DA PROVA
+// 4) PARSER DA PROVA (FLEXÍVEL PARA CESGRANRIO)
 function parseExamQuestions(rawText) {
   const cleanText = cleanGarbage(rawText);
 
-  // Procura padrão de início de questão: "QUESTÃO 1", "1.", "1 -", "1)"
-  const qHeaderRegex = /(?:^|\n)\s*(?:QUESTÃO\s+)?(\d{1,3})\s*[\.\)\-]\s+/gi;
+  // Reconhece "QUESTÃO 1", "QUESTÃO 01", "1.", "1)", "1 -"
+  const qHeaderRegex = /(?:^|\n)\s*(?:QUESTÃO\s+(\d{1,3})|(\d{1,3})\s*[\.\)\-:]\s+)/gi;
   let match;
   const candidates = [];
 
   while ((match = qHeaderRegex.exec(cleanText)) !== null) {
-    const num = parseInt(match[1], 10);
+    const numStr = match[1] || match[2];
+    const num = parseInt(numStr, 10);
     if (num >= 1 && num <= 120) {
       candidates.push({ number: num, index: match.index, contentIndex: match.index + match[0].length });
     }
@@ -152,8 +151,8 @@ function parseExamQuestions(rawText) {
 
   for (let i = 0; i < candidates.length; i++) {
     const cand = candidates[i];
-    const nextIndex = candidates[i + 1] ? candidates[i + 1].index : cand.contentIndex + 3000;
-    const searchSlice = cleanText.substring(cand.contentIndex, Math.min(cand.contentIndex + 3000, nextIndex));
+    const nextIndex = candidates[i + 1] ? candidates[i + 1].index : cand.contentIndex + 4000;
+    const searchSlice = cleanText.substring(cand.contentIndex, Math.min(cand.contentIndex + 4000, nextIndex));
     const parsed = extractOptionsFromSlice(searchSlice);
 
     if (parsed.valid) {
