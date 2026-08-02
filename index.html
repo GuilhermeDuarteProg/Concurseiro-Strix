@@ -1,110 +1,83 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strix Simulado - Concursos</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strix Simulado</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="brand">
-            <span class="owl-icon">🦉</span>
-            <span class="brand-name">STRIX <span>SIMULADO</span></span>
-        </div>
-        <div class="exam-title">PROVAS & GABARITOS</div>
-    </header>
+  <!-- Cabeçalho Principal -->
+  <header class="app-header">
+    <div class="brand-title">
+      <span>🦉</span> STRIX SIMULADO
+    </div>
+    <div class="brand-subtitle">PROVAS & GABARITOS</div>
+  </header>
 
-    <main class="main-container">
+  <!-- TELA 1: ALIMENTAR SIMULADO (UPLOAD) -->
+  <main id="setupScreen" class="card-container">
+    <h1 class="main-heading">Alimentar Simulado</h1>
+    <p class="sub-heading">Envie o PDF da prova e (opcionalmente) o PDF ou texto do gabarito oficial para correção automática.</p>
 
-        <!-- UPLOAD SECTION -->
-        <section id="upload-section" class="card">
-            <h2>Alimentar Simulado</h2>
-            <p class="subtitle">Envie o PDF da prova e (opcionalmente) o PDF ou texto do gabarito oficial para correção automática.</p>
-            
-            <div class="upload-grid">
-                <!-- Prova PDF -->
-                <div class="drop-zone" id="drop-zone-exam">
-                    <div class="upload-icon">📄</div>
-                    <h3>PDF da Prova</h3>
-                    <p>Arraste o PDF da prova aqui</p>
-                    <label for="pdf-exam-input" class="btn-upload">Buscar Prova</label>
-                    <input type="file" id="pdf-exam-input" accept="application/pdf" style="display: none;">
-                    <span id="exam-file-name" class="file-name"></span>
-                </div>
+    <div class="form-group">
+      <h2 class="section-title">PDF da Prova</h2>
+      <div class="drop-zone" id="dropZoneProva">
+        <div class="drop-icon">📄</div>
+        <p>Arraste o PDF da prova aqui</p>
+        <label for="pdfProvaInput" class="btn btn-secondary">Buscar Prova</label>
+        <input type="file" id="pdfProvaInput" accept="application/pdf" class="file-input">
+      </div>
+    </div>
 
-                <!-- Gabarito PDF -->
-                <div class="drop-zone" id="drop-zone-answer">
-                    <div class="upload-icon">✅</div>
-                    <h3>PDF do Gabarito (Opcional)</h3>
-                    <p>Arraste o PDF do gabarito aqui</p>
-                    <label for="pdf-answer-input" class="btn-upload btn-secondary-upload">Buscar Gabarito</label>
-                    <input type="file" id="pdf-answer-input" accept="application/pdf" style="display: none;">
-                    <span id="answer-file-name" class="file-name"></span>
-                </div>
-            </div>
+    <div class="form-group">
+      <h2 class="section-title">PDF do Gabarito (Opcional)</h2>
+      <div class="drop-zone" id="dropZoneGabarito">
+        <div class="drop-icon">📄</div>
+        <p>Arraste o PDF do gabarito aqui</p>
+        <label for="pdfGabaritoInput" class="btn btn-secondary">Buscar Gabarito</label>
+        <input type="file" id="pdfGabaritoInput" accept="application/pdf" class="file-input">
+      </div>
+    </div>
 
-            <!-- Entrada Manual de Gabarito (Caso não tenha em PDF) -->
-            <div class="manual-gabarito-box">
-                <label for="manual-gabarito">Ou cole o gabarito em texto (Exemplo: 1-A, 2-C, 3-E, 4-B...):</label>
-                <textarea id="manual-gabarito" placeholder="1-A, 2-B, 3-C, 4-D, 5-E..."></textarea>
-            </div>
+    <div class="form-group">
+      <label for="gabaritoTexto" class="section-title">Ou cole o gabarito em texto (Exemplo: 1-A, 2-C, 3-E, 4-B...):</label>
+      <textarea id="gabaritoTexto" placeholder="1-A, 2-B, 3-C, 4-D, 5-E..."></textarea>
+    </div>
 
-            <button id="btn-start-quiz" class="btn-primary btn-large" onclick="processAndStart()">Iniciar Simulado ➔</button>
-            <div id="status-message" class="status-message"></div>
-        </section>
+    <button id="startBtn" class="btn btn-primary btn-full">Iniciar Simulado ➔</button>
+  </main>
 
-        <!-- QUIZ SECTION -->
-        <section id="quiz-section" class="card" style="display: none;">
-            <div class="question-header">
-                <div class="question-number" id="q-number">01</div>
-                <div class="question-text" id="q-text">Carregando questão...</div>
-            </div>
+  <!-- TELA 2: RESOLVER SIMULADO (QUESTÕES) -->
+  <main id="quizScreen" class="card-container hidden">
+    <div class="quiz-header">
+      <span id="questionCounter" class="question-number">Questão 1</span>
+      <span id="totalCounter" class="badge">1 de 10</span>
+    </div>
 
-            <div class="options-container" id="options-container"></div>
+    <!-- Texto de Apoio (Recolhível) -->
+    <details id="supportContainer" class="support-box">
+      <summary>📖 Texto de Referência (Clique para recolher/expandir)</summary>
+      <div id="supportText" class="support-content">
+        <!-- O texto de apoio será inserido via JavaScript -->
+      </div>
+    </details>
 
-            <div class="question-footer">
-                <div class="timer-wrapper">
-                    <div class="timer-clock" id="timer">00:00:00</div>
-                    <div class="timer-label">Tempo Decorrido</div>
-                </div>
+    <div id="questionText" class="question-text">
+      <!-- O enunciado da questão será inserido via JavaScript -->
+    </div>
 
-                <div class="nav-buttons">
-                    <button id="btn-prev" class="btn-secondary" onclick="prevQuestion()">◄ Anterior</button>
-                    <button id="btn-next" class="btn-primary" onclick="nextQuestion()">Próxima ►</button>
-                    <button id="btn-finish" class="btn-success" onclick="finishQuiz()" style="display: none;">Finalizar e Corrigir</button>
-                </div>
-            </div>
-        </section>
+    <div id="optionsList" class="options-list">
+      <!-- As alternativas serão renderizadas via JavaScript -->
+    </div>
 
-        <!-- RESULT SECTION -->
-        <section id="result-section" class="card" style="display: none;">
-            <h2>Resultado do Simulado 🎉</h2>
-            <div class="results-summary">
-                <div class="score-card">
-                    <span class="score-title">Sua Nota</span>
-                    <span class="score-value" id="score-percentage">0%</span>
-                </div>
-                <div class="details-card">
-                    <p>Acertos: <strong id="correct-count" class="txt-success">0</strong></p>
-                    <p>Erros: <strong id="incorrect-count" class="txt-danger">0</strong></p>
-                    <p>Respondidas: <strong id="answered-count">0</strong> de <strong id="total-count">0</strong></p>
-                </div>
-            </div>
+    <div class="nav-buttons">
+      <button id="prevBtn" class="btn btn-secondary" disabled>← Anterior</button>
+      <button id="nextBtn" class="btn btn-primary">Próxima →</button>
+    </div>
+  </main>
 
-            <div class="gabarito-review">
-                <h3>Revisão das Questões</h3>
-                <div id="review-list" class="review-list"></div>
-            </div>
-
-            <button class="btn-primary" onclick="location.reload()" style="margin-top: 20px;">Carregar Novo Simulado</button>
-        </section>
-
-    </main>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
