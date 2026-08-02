@@ -243,7 +243,7 @@ function toggleRevisao() {
   renderizarQuestao();
 }
 
-// 10. Resultado Final
+// 10. Função de Cálculo e Exibição do Gabarito / Correção
 function calcularResultado() {
   if (!provaOriginal || !provaOriginal.questoes) return;
 
@@ -253,9 +253,9 @@ function calcularResultado() {
   if (respondidas < total) {
     const confirmar = confirm(
       `Atenção: Você respondeu apenas ${respondidas} de ${total} questões.\n\n` +
-      `Deseja realmente finalizar o simulado agora?`
+      `Deseja realmente finalizar e ver o gabarito agora?`
     );
-    if (!confirmar) return; 
+    if (!confirmar) return;
   }
 
   let acertos = 0;
@@ -263,7 +263,6 @@ function calcularResultado() {
   provaOriginal.questoes.forEach(q => {
     const respUsuario = respostas[q.numero];
     const gabarito = q.resposta_correta;
-
     if (respUsuario && gabarito && respUsuario === gabarito) {
       acertos++;
     }
@@ -271,9 +270,116 @@ function calcularResultado() {
 
   const porcentagem = ((acertos / total) * 100).toFixed(1);
 
-  alert(
-    `Você finalizou o simulado!\n\n` +
-    `Respondidas: ${respondidas} de ${total}\n` +
-    `Acertos: ${acertos} de ${total} (${porcentagem}%)`
+  // Esconde área de prova e exibe a tela de resultado
+  document.getElementById('area-estudo').classList.add('oculto');
+  document.getElementById('tela-resultado').classList.remove('oculto');
+
+  // Preenche dados do header
+  document.getElementById('resultado-porcentagem').innerText = `${porcentagem}%`;
+  document.getElementById('resultado-detalhe-texto').innerText = `Das ${total} questões você acertou ${acertos}`;
+
+  const badgeStatus = document.getElementById('badge-desempenho');
+  if (porcentagem >= 70) {
+    badgeStatus.innerText = "Excelente Desempenho!";
+    badgeStatus.className = "status-desempenho aprovado";
+  } else {
+    badgeStatus.innerText = "Precisa Praticar Mais";
+    badgeStatus.className = "status-desempenho reprovado";
+  }
+
+  // Gera a Grid de Questões (Estilo Detran)
+  renderizarGridGabarito();
+
+  // Seleciona a primeira questão por padrão
+  carregarRevisaoQuestao(1);
+}
+
+// Renderiza a Grid de Botões Numéricos
+function renderizarGridGabarito() {
+  const container = document.getElementById('grid-numeros-gabarito');
+  container.innerHTML = '';
+
+  provaOriginal.questoes.forEach(q => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-grid-num';
+    btn.innerText = q.numero;
+    btn.id = `btn-grid-${q.numero}`;
+
+    const respUsuario = respostas[q.numero];
+    const gabarito = q.resposta_correta;
+
+    if (!respUsuario) {
+      btn.classList.add('embranco');
+    } else if (respUsuario === gabarito) {
+      btn.classList.add('correta');
+    } else {
+      btn.classList.add('incorreta');
+    }
+
+    btn.onclick = () => carregarRevisaoQuestao(q.numero);
+    container.appendChild(btn);
+  });
+}
+
+// Renderiza os detalhes da questão clicada no Gabarito
+function carregarRevisaoQuestao(numQuestao) {
+  // Destaca o botão selecionado na grid
+  document.querySelectorAll('.btn-grid-num').forEach(b => b.classList.remove('ativo'));
+  const btnAtivo = document.getElementById(`btn-grid-${numQuestao}`);
+  if (btnAtivo) btnAtivo.classList.add('ativo');
+
+  const q = provaOriginal.questoes.find(item => item.numero === numQuestao);
+  if (!q) return;
+
+  const respUsuario = respostas[q.numero];
+  const gabarito = q.resposta_correta;
+
+  let statusClasse = 'embranco';
+  let textoBanner = 'ESTA QUESTÃO NÃO FOI RESPONDIDA';
+
+  if (respUsuario) {
+    if (respUsuario === gabarito) {
+      statusClasse = 'acerto';
+      textoBanner = 'VOCÊ ACERTOU ESTA QUESTÃO!';
+    } else {
+      statusClasse = 'erro';
+      textoBanner = 'QUE PENA! VOCÊ ERROU ESTA QUESTÃO';
+    }
+  }
+
+  let htmlOpcoes = '';
+  Object.entries(q.alternativas).forEach(([letra, texto]) => {
+    let classeOpcao = 'opcao-revisao';
+
+    if (letra === gabarito) {
+      classeOpcao += ' correta';
+    } else if (respUsuario === letra && letra !== gabarito) {
+      classeOpcao += ' marcada-errada';
+    }
+
+    htmlOpcoes += `<div class="${classeOpcao}"><strong>(${letra})</strong> ${texto}</div>`;
+  });
+
+  const painel = document.getElementById('painel-revisao-questao');
+  painel.innerHTML = `
+    <div class="revisao-corpo">
+      <div class="revisao-enunciado">
+        <strong>${q.numero}.</strong> ${q.enunciado}
+      </div>
+      <div class="revisao-opcoes">
+        ${htmlOpcoes}
+      </div>
+    </div>
+    <div class="banner-feedback-rodape ${statusClasse}">
+      ${textoBanner}
+    </div>
+  `;
+}
+
+// Função para retornar à prova
+function voltarAoSimulado() {
+  document.getElementById('tela-resultado').classList.add('oculto');
+  document.getElementById('area-estudo').classList.remove('oculto');
+}
   );
 }
