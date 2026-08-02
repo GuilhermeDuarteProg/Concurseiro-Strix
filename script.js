@@ -1,12 +1,10 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-let rawPdfTextContent = "";     
-let rawGabaritoTextContent = ""; 
 let questionsData = [];
 let currentQuestionIndex = 0;
 let userAnswers = {};
 
-// 1) EXTRAÇÃO DE TEXTO DO PDF (SUPORTE A 2 COLUNAS E PDF SIMPLES)
+// 1. EXTRAÇÃO DE TEXTO DO PDF (IGNORA A CAPA DE INSTRUÇÕES)
 async function extractTextFromPDF(file) {
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -23,6 +21,15 @@ async function extractTextFromPDF(file) {
       .filter(it => it.str.trim() !== '');
 
     if (items.length === 0) continue;
+
+    const pageStr = items.map(it => it.str).join(' ');
+
+    // Se for a Página 1 e for apenas a capa/instruções sem "QUESTÃO 1", ignora a página 1
+    if (i === 1 && (pageStr.includes("CADERNO DE QUESTÕES") || pageStr.includes("INSTRUÇÕES"))) {
+      if (!/QUESTÃO\s+0?1\b/i.test(pageStr)) {
+        continue; // Descarta capa
+      }
+    }
 
     const leftCol = items.filter(it => it.x < midX);
     const rightCol = items.filter(it => it.x >= midX);
@@ -52,99 +59,97 @@ async function extractTextFromPDF(file) {
         .join('\n');
     }
 
-    const leftText = processColumn(leftCol);
-    const rightText = processColumn(rightCol);
+    fullText += processColumn(leftCol) + "\n" + processColumn(rightCol) + "\n\n";
+  }
 
-    fullText += leftText + "\n" + rightText + "\n\n";
+  // Descarta qualquer resíduo antes da QUESTÃO 1 (ou do TEXTO I anterior à Q1)
+  const q1Match = fullText.match(/QUESTÃO\s+0?1\b/i);
+  if (q1Match) {
+    const textBeforeQ1 = fullText.substring(0, q1Match.index);
+    const textoMatch = textBeforeQ1.match(/(TEXTO\s+[I|V|X\d]+[\s\S]*)/i);
+    if (textoMatch) {
+      fullText = fullText.substring(textoMatch.index);
+    } else {
+      fullText = fullText.substring(q1Match.index);
+    }
   }
 
   return fullText;
 }
 
-// 2) LIMPEZA DE TEXTO
-function cleanGarbage(text) {
-  if (!text) return '';
-  return text
-    .replace(/\r/g, '')
-    .replace(/[ \t]+/g, ' ')
-    .replace(/\n\s*\n+/g, '\n\n')
-    .trim();
-}
-
-// 3) PARSER DE QUESTÕES ULTRA-FLEXÍVEL
-function parseExamQuestions(rawText) {
-  const cleanText = cleanGarbage(rawText);
+// 2. PARSER RÍGIDO E INTELIGENTE CESGRANRIO
+function parseExamQuestions(cleanText) {
   if (!cleanText || cleanText.length < 50) return [];
 
-  // Busca cabeçalhos de questão: "QUESTÃO 1", "QUESTÃO 01", "1.", "01 -", "1)"
-  const qHeaderRegex = /(?:^|\n)\s*(?:QUESTÃO\s+(\d{1,3})|(\d{1,3})\s*[\.\)\-:]\s+)/gi;
+  // Busca estritamente a palavra "QUESTÃO X"
+  const qHeaderRegex = /(?:^|\n)\s*QUESTÃO\s+(\d{1,3})\b/gi;
   let match;
   const matches = [];
 
   while ((match = qHeaderRegex.exec(cleanText)) !== null) {
-    const numStr = match[1] || match[2];
-    const num = parseInt(numStr, 10);
+    const num = parseInt(match[1], 10);
     if (num >= 1 && num <= 120) {
-      matches.push({ number: num, index: match.index });
+      matches.push({ number: num, index: match.index, headerLen: match[0].length });
     }
   }
 
   if (matches.length === 0) return [];
 
   const questions = [];
+  let currentSupportText = "";
 
   for (let i = 0; i < matches.length; i++) {
     const current = matches[i];
     const nextIndex = matches[i + 1] ? matches[i + 1].index : cleanText.length;
-    const chunk = cleanText.substring(current.index, nextIndex).trim();
+    const chunk = cleanText.substring(current.index + current.headerLen, nextIndex).trim();
 
-    // Tenta capturar as opções A, B, C, D, E dentro do bloco da questão
-    const optRegex = /(?:^|\n|\s+)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/g;
+    // Identifica textos de apoio (ex: TEXTO I, TEXTO II)
+    const textHeaderMatch = chunk.match(/(TEXTO\s+[I|V|X\d]+[\s\S]*?)(?=\n\s*[A-Z0-9\s]{3,}\n|\n\s*QUESTÃO|\n\s*\(?[A-E]\)?)/i);
+    
+    let statementAndOptions = chunk;
+    if (textHeaderMatch) {
+      currentSupportText = textHeaderMatch[1].trim();
+      statementAndOptions = chunk.replace(textHeaderMatch[1], '').trim();
+    }
+
+    // Busca opções no formato (A), (B), (C), (D), (E)
+    const optRegex = /(?:^|\n|\s+)\(([A-E])\)\s+/g;
     let optMatch;
     const optPositions = [];
 
-    while ((optMatch = optRegex.exec(chunk)) !== null) {
-      const letter = (optMatch[1] || optMatch[2]).toUpperCase();
-      optPositions.push({ letter, index: optMatch.index, length: optMatch[0].length });
+    while ((optMatch = optRegex.exec(statementAndOptions)) !== null) {
+      optPositions.push({ letter: optMatch[1].toUpperCase(), index: optMatch.index, length: optMatch[0].length });
     }
 
-    // Organiza as opções encontradas
     const optionsMap = { A: '', B: '', C: '', D: '', E: '' };
-    let statement = chunk;
+    let statement = statementAndOptions;
 
-    // Se encontrou opções A-E
     if (optPositions.length >= 2) {
-      const firstOpt = optPositions[0];
-      statement = chunk.substring(0, firstOpt.index).trim();
+      statement = statementAndOptions.substring(0, optPositions[0].index).trim();
 
       for (let j = 0; j < optPositions.length; j++) {
         const curOpt = optPositions[j];
-        const nextOptIndex = optPositions[j + 1] ? optPositions[j + 1].index : chunk.length;
-        const optText = chunk.substring(curOpt.index + curOpt.length, nextOptIndex).trim();
+        const nextOptIndex = optPositions[j + 1] ? optPositions[j + 1].index : statementAndOptions.length;
+        const optText = statementAndOptions.substring(curOpt.index + curOpt.length, nextOptIndex).trim();
         if (optionsMap[curOpt.letter] === '') {
-          optionsMap[curOpt.letter] = cleanGarbage(optText);
+          optionsMap[curOpt.letter] = optText.replace(/\n+/g, ' ');
         }
       }
     }
 
-    // Preenche opções vazias para evitar quebrar a interface
     ['A', 'B', 'C', 'D', 'E'].forEach(l => {
-      if (!optionsMap[l]) optionsMap[l] = `(Consulte a imagem/PDF para a alternativa ${l})`;
+      if (!optionsMap[l]) optionsMap[l] = `(Verifique no PDF a opção ${l})`;
     });
-
-    // Remove o rótulo "QUESTÃO X" do enunciado
-    statement = statement.replace(/^(?:QUESTÃO\s+\d{1,3}|\d{1,3}\s*[\.\)\-:]\s+)/i, '').trim();
 
     questions.push({
       number: current.number,
-      text: statement || `Questão ${current.number}`,
-      supportText: '',
+      text: statement.replace(/\n+/g, ' ') || `Questão ${current.number}`,
+      supportText: currentSupportText,
       options: optionsMap,
       correctAnswer: null
     });
   }
 
-  // Remove duplicadas mantendo a primeira ocorrência
   const uniqueQuestions = [];
   const seen = new Set();
   for (const q of questions) {
@@ -157,83 +162,58 @@ function parseExamQuestions(rawText) {
   return uniqueQuestions.sort((a, b) => a.number - b.number);
 }
 
-// 4) PARSERS DE GABARITO
-function parseAnswerKeyFromPDF(rawText) {
-  const cleanText = cleanGarbage(rawText);
-  const keyRegex = /(\d{1,3})\s*[\.\)\-]?\s*([A-E])\b/g;
-  const answerKey = {};
-  let m;
-  while ((m = keyRegex.exec(cleanText)) !== null) {
-    const num = parseInt(m[1], 10);
-    if (num >= 1 && num <= 120 && !(num in answerKey)) {
-      answerKey[num] = m[2].toUpperCase();
-    }
-  }
-  return answerKey;
-}
-
-function parseAnswerKeyFromTextarea(rawText) {
-  const answerKey = {};
-  if (!rawText || !rawText.trim()) return answerKey;
-
-  const pairRegex = /(\d{1,3})\s*[-\.\):]?\s*([A-E])\b/gi;
-  let m;
-  while ((m = pairRegex.exec(rawText)) !== null) {
-    const num = parseInt(m[1], 10);
-    if (num >= 1 && num <= 120) {
-      answerKey[num] = m[2].toUpperCase();
-    }
-  }
-  return answerKey;
-}
-
-// 5) EXPORTAÇÃO JSON
-function buildQuizJSON(questions) {
-  return questions.map(q => ({
-    id: q.number,
-    materia: null,
-    enunciado: q.text,
-    alternativas: {
-      a: q.options.A,
-      b: q.options.B,
-      c: q.options.C,
-      d: q.options.D,
-      e: q.options.E
-    },
-    resposta_correta: q.correctAnswer ? q.correctAnswer.toLowerCase() : null
-  }));
-}
-
-function downloadJSON(data, filename = 'questoes.json') {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-// 6) EVENTOS DE UPLOAD DA PROVA
+// 3. EVENTO DE CARREGAMENTO (SUPORTA .PDF OU .JSON)
 const pdfProvaInput = document.getElementById('pdfProvaInput');
-const dropZoneProva = document.getElementById('dropZoneProva');
 const statusProva = document.getElementById('statusProva');
+let rawPdfTextContent = "";
 
 async function handleProvaFile(file) {
-  if (file && file.type === 'application/pdf') {
-    statusProva.innerText = `⏳ Lendo e extraindo texto: ${file.name}...`;
+  if (!file) return;
+
+  // ACEITA ARQUIVOS .JSON DIRETAMENTE
+  if (file.name.endsWith('.json')) {
+    statusProva.innerText = `⏳ Lendo JSON: ${file.name}...`;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target.result);
+        questionsData = json.map(q => ({
+          number: q.id || q.number,
+          text: q.enunciado || q.text,
+          supportText: q.texto_apoio || q.supportText || '',
+          options: {
+            A: q.alternativas?.a || q.options?.A || '',
+            B: q.alternativas?.b || q.options?.B || '',
+            C: q.alternativas?.c || q.options?.C || '',
+            D: q.alternativas?.d || q.options?.D || '',
+            E: q.alternativas?.e || q.options?.E || ''
+          },
+          correctAnswer: q.resposta_correta ? q.resposta_correta.toUpperCase() : null
+        }));
+        statusProva.innerText = `✅ JSON carregado! (${questionsData.length} questões encontradas)`;
+      } catch (err) {
+        statusProva.innerText = `❌ Erro ao processar o arquivo JSON.`;
+      }
+    };
+    reader.readAsText(file);
+    return;
+  }
+
+  // ACEITA PDFS E APENAS COMEÇA DA QUESTÃO 1
+  if (file.type === 'application/pdf') {
+    statusProva.innerText = `⏳ Lendo e filtrando PDF: ${file.name}...`;
     try {
       rawPdfTextContent = await extractTextFromPDF(file);
-      if (!rawPdfTextContent || rawPdfTextContent.trim().length < 50) {
-        statusProva.innerText = `⚠️ Atenção: Este PDF parece ser uma IMAGEM/ESCANEAMENTO. O leitor não encontrou texto selecionável.`;
+      questionsData = parseExamQuestions(rawPdfTextContent);
+
+      if (questionsData.length === 0) {
+        statusProva.innerText = `⚠️ Nenhuma questão foi lida. Certifique-se de que o PDF não é uma imagem/foto digitalizada.`;
       } else {
-        statusProva.innerText = `✅ Prova carregada com sucesso! (${file.name})`;
+        statusProva.innerText = `✅ Prova processada com sucesso! (${questionsData.length} questões carregadas)`;
       }
     } catch (err) {
       console.error(err);
-      statusProva.innerText = `❌ Erro ao processar arquivo PDF.`;
+      statusProva.innerText = `❌ Erro ao ler PDF.`;
     }
   }
 }
@@ -244,63 +224,32 @@ if (pdfProvaInput) {
   });
 }
 
-if (dropZoneProva) {
-  dropZoneProva.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneProva.classList.add('dragover'); });
-  dropZoneProva.addEventListener('dragleave', () => dropZoneProva.classList.remove('dragover'));
-  dropZoneProva.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZoneProva.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) handleProvaFile(e.dataTransfer.files[0]);
-  });
-}
-
-// 7) EVENTOS DE UPLOAD DO GABARITO
-const pdfGabaritoInput = document.getElementById('pdfGabaritoInput');
-const dropZoneGabarito = document.getElementById('dropZoneGabarito');
-const statusGabarito = document.getElementById('statusGabarito');
-const gabaritoTextarea = document.getElementById('gabaritoTexto');
-
-async function handleGabaritoFile(file) {
-  if (file && file.type === 'application/pdf') {
-    statusGabarito.innerText = `⏳ Lendo gabarito: ${file.name}...`;
-    try {
-      rawGabaritoTextContent = await extractTextFromPDF(file);
-      statusGabarito.innerText = `✅ Gabarito carregado! (${file.name})`;
-      if (gabaritoTextarea) gabaritoTextarea.value = '';
-    } catch (err) {
-      console.error(err);
-      statusGabarito.innerText = `❌ Erro ao ler o PDF do gabarito.`;
-    }
-  }
-}
-
-if (pdfGabaritoInput) {
-  pdfGabaritoInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) handleGabaritoFile(e.target.files[0]);
-  });
-}
-
-if (dropZoneGabarito) {
-  dropZoneGabarito.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneGabarito.classList.add('dragover'); });
-  dropZoneGabarito.addEventListener('dragleave', () => dropZoneGabarito.classList.remove('dragover'));
-  dropZoneGabarito.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZoneGabarito.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) handleGabaritoFile(e.dataTransfer.files[0]);
-  });
-}
-
-// 8) RENDERIZAÇÃO DAS QUESTÕES
+// 4. EXIBIÇÃO DAS QUESTÕES E TEXTO DE APOIO
 function renderQuestion(index) {
   if (!questionsData || !questionsData[index]) return;
 
   const q = questionsData[index];
   document.getElementById('questionCounter').innerText = `Questão ${q.number}`;
   document.getElementById('totalCounter').innerText = `${index + 1} de ${questionsData.length}`;
-  document.getElementById('questionText').innerText = q.text;
+  
+  // Renderiza caixa do Texto de Apoio / Interpretação se existir
+  let supportTextEl = document.getElementById('supportTextDisplay');
+  if (!supportTextEl) {
+    const qContainer = document.getElementById('questionText').parentElement;
+    supportTextEl = document.createElement('div');
+    supportTextEl.id = 'supportTextDisplay';
+    supportTextEl.style.cssText = 'background: #1e1b4b; border-left: 4px solid #6366f1; padding: 1rem; border-radius: 8px; margin-bottom: 1.2rem; font-size: 0.95rem; white-space: pre-wrap; color: #e0e7ff; line-height: 1.5;';
+    qContainer.insertBefore(supportTextEl, document.getElementById('questionText'));
+  }
 
-  const supportContainer = document.getElementById('supportContainer');
-  if (supportContainer) supportContainer.style.display = 'none';
+  if (q.supportText && q.supportText.trim() !== '') {
+    supportTextEl.innerText = q.supportText;
+    supportTextEl.style.display = 'block';
+  } else {
+    supportTextEl.style.display = 'none';
+  }
+
+  document.getElementById('questionText').innerText = q.text;
 
   const optionsList = document.getElementById('optionsList');
   optionsList.innerHTML = '';
@@ -327,75 +276,16 @@ function renderQuestion(index) {
   document.getElementById('nextBtn').innerText = (index === questionsData.length - 1) ? 'Finalizar' : 'Próxima →';
 }
 
-// 9) RESULTADO / FINALIZAR
-function finishQuiz() {
-  const hasAnswerKey = questionsData.some(q => q.correctAnswer);
-  const total = questionsData.length;
-  const answered = Object.keys(userAnswers).length;
-
-  document.getElementById('quizScreen').classList.add('hidden');
-  document.getElementById('resultScreen').classList.remove('hidden');
-
-  const scoreEl = document.getElementById('resultScore');
-  const listEl = document.getElementById('resultList');
-  listEl.innerHTML = '';
-
-  if (!hasAnswerKey) {
-    scoreEl.innerText = `Você respondeu ${answered} de ${total} questões. Nenhum gabarito foi fornecido.`;
-    return;
-  }
-
-  let correctCount = 0;
-
-  questionsData.forEach(q => {
-    const userAnswer = userAnswers[q.number] || null;
-    const isCorrect = q.correctAnswer && userAnswer === q.correctAnswer;
-    if (isCorrect) correctCount++;
-
-    const item = document.createElement('div');
-    item.className = `result-item ${q.correctAnswer ? (isCorrect ? 'correct' : 'wrong') : 'no-key'}`;
-    item.innerHTML = `
-      <span class="result-q-number">Q${q.number}</span>
-      <span class="result-answer">Sua resposta: <strong>${userAnswer || '—'}</strong></span>
-      <span class="result-answer">Gabarito: <strong>${q.correctAnswer || '—'}</strong></span>
-    `;
-    listEl.appendChild(item);
-  });
-
-  const gradable = questionsData.filter(q => q.correctAnswer).length;
-  const percentage = gradable > 0 ? ((correctCount / gradable) * 100).toFixed(1) : '0.0';
-  scoreEl.innerText = `Você acertou ${correctCount} de ${gradable} questões com gabarito (${percentage}%). Respondidas: ${answered} de ${total}.`;
-}
-
-// 10) INICIAR SIMULADO
+// 5. NAVEGAÇÃO
 document.getElementById('startBtn').addEventListener('click', () => {
-  if (!rawPdfTextContent) {
-    alert("Por favor, selecione ou arraste o PDF da prova antes de iniciar.");
-    return;
-  }
-
-  questionsData = parseExamQuestions(rawPdfTextContent);
-
   if (questionsData.length === 0) {
-    alert("O PDF enviado parece ser uma imagem/escaneamento. Utilize um arquivo PDF com texto selecionável ou aplique um OCR prévio no arquivo.");
+    alert("Nenhuma questão foi carregada. Escolha o PDF da prova ou um arquivo JSON.");
     return;
   }
-
-  let answerKey = {};
-  if (rawGabaritoTextContent) {
-    answerKey = parseAnswerKeyFromPDF(rawGabaritoTextContent);
-  } else if (gabaritoTextarea && gabaritoTextarea.value.trim() !== '') {
-    answerKey = parseAnswerKeyFromTextarea(gabaritoTextarea.value);
-  }
-
-  questionsData.forEach(q => {
-    q.correctAnswer = answerKey[q.number] || null;
-  });
 
   document.getElementById('setupScreen').classList.add('hidden');
   document.getElementById('quizScreen').classList.remove('hidden');
-  document.getElementById('resultScreen').classList.add('hidden');
-
+  
   currentQuestionIndex = 0;
   userAnswers = {};
   renderQuestion(0);
@@ -417,18 +307,8 @@ document.getElementById('nextBtn').addEventListener('click', () => {
   }
 });
 
-const restartBtn = document.getElementById('restartBtn');
-if (restartBtn) {
-  restartBtn.addEventListener('click', () => {
-    document.getElementById('resultScreen').classList.add('hidden');
-    document.getElementById('setupScreen').classList.remove('hidden');
-  });
-}
-
-const exportBtn = document.getElementById('exportJsonBtn');
-if (exportBtn) {
-  exportBtn.addEventListener('click', () => {
-    const json = buildQuizJSON(questionsData);
-    downloadJSON(json, 'questoes.json');
-  });
+function finishQuiz() {
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+  document.getElementById('resultScore').innerText = `Simulado concluído! Você respondeu ${Object.keys(userAnswers).length} de ${questionsData.length} questões.`;
 }
