@@ -25,7 +25,7 @@ async function carregarCatalogoProvas() {
 
     listaProvas.forEach((p, index) => {
       const option = document.createElement('option');
-      option.value = index; // Passa o índice da lista
+      option.value = index;
       option.innerText = `${p.banca} (${p.ano}) - ${p.titulo}`;
       seletor.appendChild(option);
     });
@@ -56,12 +56,11 @@ async function carregarProva(indexLista) {
         // Mapeia o gabarito para cada questão
         provaOriginal.questoes.forEach(q => {
           const numStr = String(q.numero);
-          const numPadded = numStr.padStart(2, '0'); // Garante busca por "1" ou "01"
+          const numPadded = numStr.padStart(2, '0');
 
           const respGabarito = gabaritoMap[numStr] || gabaritoMap[numPadded] || gabaritoMap[`q${numStr}`];
 
           if (respGabarito) {
-            // Padroniza para letra maiúscula sem espaços
             q.resposta_correta = String(respGabarito).trim().toUpperCase();
           } else {
             console.warn(`Atenção: Gabarito da questão ${q.numero} não encontrado no JSON.`);
@@ -86,8 +85,6 @@ async function carregarProva(indexLista) {
     renderizarQuestao();
   } catch (erro) {
     console.error("Erro ao carregar o arquivo da prova:", erro);
-  }
-}
   }
 }
 
@@ -246,32 +243,27 @@ function toggleRevisao() {
   renderizarQuestao();
 }
 
-// 10. Resultado Final (Com trava de confirmação e correção do bug)
+// 10. Resultado Final
 function calcularResultado() {
   if (!provaOriginal || !provaOriginal.questoes) return;
 
   const total = provaOriginal.questoes.length;
   const respondidas = Object.keys(respostas).length;
 
-  // 1. Trava: Avisa se ainda restarem questões sem resposta
   if (respondidas < total) {
     const confirmar = confirm(
       `Atenção: Você respondeu apenas ${respondidas} de ${total} questões.\n\n` +
       `Deseja realmente finalizar o simulado agora?`
     );
-    
-    // Se o usuário clicar em "Cancelar", interrompe a finalização
     if (!confirmar) return; 
   }
 
   let acertos = 0;
 
-  // 2. Cálculo seguro das respostas
   provaOriginal.questoes.forEach(q => {
     const respUsuario = respostas[q.numero];
     const gabarito = q.resposta_correta;
 
-    // Só pontua se o usuário respondeu E a resposta for igual ao gabarito
     if (respUsuario && gabarito && respUsuario === gabarito) {
       acertos++;
     }
