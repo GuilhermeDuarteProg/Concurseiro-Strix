@@ -21,8 +21,8 @@
     <div class="header-controls">
       <!-- Seletor de Simulado -->
       <select id="seletorProvas" onchange="carregarProva(this.value)">
-  <!-- Preenchido via JS -->
-</select>
+        <!-- Preenchido via JS -->
+      </select>
 
       <!-- Alternador de Tema (Dark Mode) -->
       <button id="btn-theme" class="btn-icon" onclick="toggleTheme()" title="Alternar Tema">
@@ -83,6 +83,36 @@
     </section>
 
   </main>
+
+  <!-- TELA DE CORREÇÃO E RESULTADO (Estilo Detran / Dark Mode) -->
+  <div id="tela-resultado" class="oculto">
+    
+    <!-- Banner Superior de Pontuação -->
+    <div class="resultado-header-card">
+      <div class="score-main">
+        <span id="resultado-porcentagem" class="porcentagem-destaque">0%</span>
+        <p id="resultado-detalhe-texto">Você acertou 0 de 0 questões</p>
+      </div>
+      <div id="badge-desempenho" class="status-desempenho">--</div>
+    </div>
+
+    <!-- Grid Numérico de Navegação pelo Gabarito -->
+    <div class="container-grid-gabarito">
+      <p class="instrucao-grid">CLIQUE SOBRE A QUESTÃO DESEJADA E CONFIRA O GABARITO</p>
+      <div id="grid-numeros-gabarito" class="grid-numeros"></div>
+    </div>
+
+    <!-- Card da Questão Selecionada no Gabarito -->
+    <div id="painel-revisao-questao" class="card-revisao">
+      <!-- Renderizado via JavaScript -->
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="acoes-resultado">
+      <button onclick="voltarAoSimulado()" class="btn-acao-secundario">← Voltar ao Simulado</button>
+    </div>
+
+  </div>
 
   <!-- Rodapé Fixado para Navegação -->
   <footer class="app-footer">
