@@ -233,16 +233,42 @@ function toggleRevisao() {
   renderizarQuestao();
 }
 
-// 10. Resultado Final
+// 10. Resultado Final (Com trava de confirmação e correção do bug)
 function calcularResultado() {
-  let acertos = 0;
-  let total = provaOriginal.questoes.length;
+  if (!provaOriginal || !provaOriginal.questoes) return;
 
+  const total = provaOriginal.questoes.length;
+  const respondidas = Object.keys(respostas).length;
+
+  // 1. Trava: Avisa se ainda restarem questões sem resposta
+  if (respondidas < total) {
+    const confirmar = confirm(
+      `Atenção: Você respondeu apenas ${respondidas} de ${total} questões.\n\n` +
+      `Deseja realmente finalizar o simulado agora?`
+    );
+    
+    // Se o usuário clicar em "Cancelar", interrompe a finalização
+    if (!confirmar) return; 
+  }
+
+  let acertos = 0;
+
+  // 2. Cálculo seguro das respostas
   provaOriginal.questoes.forEach(q => {
-    if (respostas[q.numero] === q.resposta_correta) {
+    const respUsuario = respostas[q.numero];
+    const gabarito = q.resposta_correta;
+
+    // Só pontua se o usuário respondeu E a resposta for igual ao gabarito
+    if (respUsuario && gabarito && respUsuario === gabarito) {
       acertos++;
     }
   });
 
-  alert(`Você finalizou o simulado!\n\nAcertos: ${acertos} de ${total} (${((acertos / total) * 100).toFixed(1)}%)`);
+  const porcentagem = ((acertos / total) * 100).toFixed(1);
+
+  alert(
+    `Você finalizou o simulado!\n\n` +
+    `Respondidas: ${respondidas} de ${total}\n` +
+    `Acertos: ${acertos} de ${total} (${porcentagem}%)`
+  );
 }
