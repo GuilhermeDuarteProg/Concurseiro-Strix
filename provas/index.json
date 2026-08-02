@@ -5,7 +5,7 @@
     "instituicao": "Transpetro",
     "banca": "Cesgranrio",
     "ano": 2023,
-    "arquivo": "provas/transpetro-2023-admin.json"
-    "gabarito": "./gabaritos/transpetro-2023-admin.json"
+    "arquivo": "provas/transpetro-2023-admin.json",
+    "gabarito": "gabaritos/transpetro-2023-admin.json"
   }
 ]
