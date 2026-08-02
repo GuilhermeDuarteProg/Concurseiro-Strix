@@ -1,26 +1,20 @@
 // ============================================================
-// pdf-to-quiz.js
-// Extrai questões de PDFs de provas (formato A/B/C/D/E) e gera
-// um JSON pronto para alimentar um simulado.
+// script.js — Strix Simulado
+// Extrai questões de PDF, cruza com gabarito (PDF ou texto
+// colado) e roda o simulado com correção no final.
 // ============================================================
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-let rawPdfTextContent = "";
+let rawPdfTextContent = "";     // texto extraído da prova
+let rawGabaritoTextContent = ""; // texto extraído do PDF do gabarito (se houver)
 let questionsData = [];
 let currentQuestionIndex = 0;
 let userAnswers = {};
 
 // ------------------------------------------------------------
-// 1) EXTRAÇÃO DE TEXTO DO PDF (com ordenação por posição)
+// 1) EXTRAÇÃO DE TEXTO DO PDF (ordenado por posição/linha)
 // ------------------------------------------------------------
-// Em vez de simplesmente concatenar textContent.items na ordem
-// que vêm do content stream (que pode intercalar colunas em
-// PDFs de 2 colunas), agrupamos por linha (mesma coordenada Y)
-// e ordenamos da esquerda pra direita dentro de cada linha.
-// Isso reduz — mas não elimina 100% — o risco de mistura de
-// colunas. Para provas de 2 colunas "difíceis", considere
-// pré-processar o PDF (ex: dividir em 2 PDFs de coluna única).
 async function extractTextFromPDF(file) {
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -36,8 +30,6 @@ async function extractTextFromPDF(file) {
 
     if (items.length === 0) { fullText += "\n\n"; continue; }
 
-    // Agrupa por linha (tolerância de Y para lidar com pequenas
-    // variações de baseline dentro da mesma linha visual)
     items.sort((a, b) => b.y - a.y || a.x - b.x);
     const LINE_TOLERANCE = 2.5;
     const lines = [];
@@ -78,7 +70,7 @@ function cleanGarbage(text) {
 }
 
 // ------------------------------------------------------------
-// 3) EXTRAÇÃO DE ALTERNATIVAS A-E (BUG CORRIGIDO AQUI)
+// 3) EXTRAÇÃO DE ALTERNATIVAS A-E
 // ------------------------------------------------------------
 function extractOptionsFromSlice(slice) {
   const optRegex = /(?:^|\n|\s+)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/g;
@@ -100,7 +92,6 @@ function extractOptionsFromSlice(slice) {
     } else if (item.letter === 'C' && matchB && !matchC && item.index > matchB.index) {
       matchC = item;
     } else if (item.letter === 'D' && matchC && !matchD && item.index > matchC.index) {
-      // ANTES: comparava com matchD.index (que era null) -> TypeError
       matchD = item;
     } else if (item.letter === 'E' && matchD && !matchE && item.index > matchD.index) {
       matchE = item;
@@ -111,8 +102,6 @@ function extractOptionsFromSlice(slice) {
     if ((matchE.index - matchA.index) > 2500) return { valid: false };
 
     const statement = slice.substring(0, matchA.index).trim();
-
-    // Enunciado mínimo plausível — evita "questões fantasma"
     if (statement.length < 10) return { valid: false };
 
     const optA = slice.substring(matchA.index + matchA.matchLength, matchB.index).trim();
@@ -133,7 +122,6 @@ function extractOptionsFromSlice(slice) {
       E: cleanGarbage(optE)
     };
 
-    // Todas as alternativas precisam ter conteúdo real
     if (Object.values(options).some(v => v.length < 1)) return { valid: false };
 
     return { valid: true, statement, options };
@@ -143,18 +131,11 @@ function extractOptionsFromSlice(slice) {
 }
 
 // ------------------------------------------------------------
-// 4) PARSER PRINCIPAL — identifica os cabeçalhos de questão
+// 4) PARSER PRINCIPAL DA PROVA
 // ------------------------------------------------------------
-// Filtra números soltos de instruções/tabelas exigindo que o
-// "cabeçalho" da questão esteja isolado (precedido por quebra
-// de parágrafo) e que exista pelo menos um bloco A-E válido
-// logo em seguida.
 function parseExamQuestions(rawText) {
   const cleanText = cleanGarbage(rawText);
 
-  // Corta tudo antes do início real das questões, se existir
-  // um marcador de seção (evita casar "01 -", "02 -" das
-  // instruções da capa da prova).
   const sectionMarkers = /(CONHECIMENTOS\s+B[ÁA]SICOS|CONHECIMENTOS\s+ESPEC[ÍI]FICOS|LÍNGUA\s+PORTUGUESA)/i;
   const sectionMatch = cleanText.search(sectionMarkers);
   const searchText = sectionMatch !== -1 ? cleanText.slice(sectionMatch) : cleanText;
@@ -191,12 +172,12 @@ function parseExamQuestions(rawText) {
         number: cand.number,
         text: statement || `Questão ${cand.number}`,
         supportText: activeSupportText,
-        options: parsed.options
+        options: parsed.options,
+        correctAnswer: null // preenchido depois, se houver gabarito
       });
     }
   }
 
-  // Deduplica por número, mantendo a primeira ocorrência válida
   const uniqueQuestions = [];
   const seenNumbers = new Set();
   for (const q of extracted) {
@@ -210,10 +191,10 @@ function parseExamQuestions(rawText) {
 }
 
 // ------------------------------------------------------------
-// 5) (OPCIONAL) EXTRAÇÃO DO GABARITO DE UM SEGUNDO PDF
+// 5) EXTRAÇÃO DO GABARITO
 // ------------------------------------------------------------
-// Aceita padrões comuns tipo "1 - E" ou "1-E" ou "01. E"
-function parseAnswerKey(rawText) {
+// Do PDF: aceita "1 - E", "1-E", "01. E", "1) E"
+function parseAnswerKeyFromPDF(rawText) {
   const cleanText = cleanGarbage(rawText);
   const keyRegex = /(\d{1,3})\s*[\.\)\-]\s*([A-E])\b/g;
   const answerKey = {};
@@ -227,13 +208,30 @@ function parseAnswerKey(rawText) {
   return answerKey;
 }
 
+// Do texto colado: aceita "1-A, 2-B, 3-C" (vírgula, espaço, quebra
+// de linha ou ponto e vírgula como separador)
+function parseAnswerKeyFromTextarea(rawText) {
+  const answerKey = {};
+  if (!rawText || !rawText.trim()) return answerKey;
+
+  const pairRegex = /(\d{1,3})\s*[-\.\):]\s*([A-E])\b/gi;
+  let m;
+  while ((m = pairRegex.exec(rawText)) !== null) {
+    const num = parseInt(m[1], 10);
+    if (num >= 1 && num <= 200) {
+      answerKey[num] = m[2].toUpperCase();
+    }
+  }
+  return answerKey;
+}
+
 // ------------------------------------------------------------
-// 6) EXPORTAÇÃO PARA O SCHEMA JSON DO SIMULADO
+// 6) EXPORTAÇÃO PARA JSON
 // ------------------------------------------------------------
-function buildQuizJSON(questions, answerKey = {}) {
+function buildQuizJSON(questions) {
   return questions.map(q => ({
     id: q.number,
-    materia: null, // opcional: preencher manualmente ou por faixa de número
+    materia: null,
     enunciado: q.supportText ? `${q.supportText}\n\n${q.text}` : q.text,
     alternativas: {
       a: q.options.A,
@@ -242,7 +240,7 @@ function buildQuizJSON(questions, answerKey = {}) {
       d: q.options.D,
       e: q.options.E
     },
-    resposta_correta: answerKey[q.number] ? answerKey[q.number].toLowerCase() : null
+    resposta_correta: q.correctAnswer ? q.correctAnswer.toLowerCase() : null
   }));
 }
 
@@ -259,13 +257,13 @@ function downloadJSON(data, filename = 'questoes.json') {
 }
 
 // ------------------------------------------------------------
-// 7) UI — inputs de arquivo e drag & drop (prova)
+// 7) UI — Upload da PROVA
 // ------------------------------------------------------------
 const pdfProvaInput = document.getElementById('pdfProvaInput');
 const dropZoneProva = document.getElementById('dropZoneProva');
 const statusProva = document.getElementById('statusProva');
 
-async function handleFileSelect(file) {
+async function handleProvaFile(file) {
   if (file && file.type === 'application/pdf') {
     statusProva.innerText = `⏳ Lendo arquivo: ${file.name}...`;
     try {
@@ -279,24 +277,69 @@ async function handleFileSelect(file) {
 }
 
 pdfProvaInput.addEventListener('change', (e) => {
-  if (e.target.files.length > 0) handleFileSelect(e.target.files[0]);
+  if (e.target.files.length > 0) handleProvaFile(e.target.files[0]);
 });
-
-dropZoneProva.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZoneProva.classList.add('dragover');
-});
-
+dropZoneProva.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneProva.classList.add('dragover'); });
 dropZoneProva.addEventListener('dragleave', () => dropZoneProva.classList.remove('dragover'));
-
 dropZoneProva.addEventListener('drop', (e) => {
   e.preventDefault();
   dropZoneProva.classList.remove('dragover');
-  if (e.dataTransfer.files.length > 0) handleFileSelect(e.dataTransfer.files[0]);
+  if (e.dataTransfer.files.length > 0) handleProvaFile(e.dataTransfer.files[0]);
 });
 
 // ------------------------------------------------------------
-// 8) RENDERIZAÇÃO DAS QUESTÕES
+// 8) UI — Upload do GABARITO (PDF)
+// ------------------------------------------------------------
+const pdfGabaritoInput = document.getElementById('pdfGabaritoInput');
+const dropZoneGabarito = document.getElementById('dropZoneGabarito');
+const statusGabarito = document.getElementById('statusGabarito');
+const gabaritoTextarea = document.getElementById('gabaritoTexto');
+
+async function handleGabaritoFile(file) {
+  if (file && file.type === 'application/pdf') {
+    statusGabarito.innerText = `⏳ Lendo gabarito: ${file.name}...`;
+    try {
+      rawGabaritoTextContent = await extractTextFromPDF(file);
+      statusGabarito.innerText = `✅ Gabarito carregado! (${file.name})`;
+      // Se um PDF de gabarito for enviado, ele tem prioridade
+      // sobre o texto colado — limpamos o textarea pra evitar
+      // confusão sobre qual fonte está sendo usada.
+      if (gabaritoTextarea) gabaritoTextarea.value = '';
+    } catch (err) {
+      console.error(err);
+      statusGabarito.innerText = `❌ Erro ao ler o PDF do gabarito.`;
+    }
+  }
+}
+
+if (pdfGabaritoInput) {
+  pdfGabaritoInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) handleGabaritoFile(e.target.files[0]);
+  });
+}
+if (dropZoneGabarito) {
+  dropZoneGabarito.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneGabarito.classList.add('dragover'); });
+  dropZoneGabarito.addEventListener('dragleave', () => dropZoneGabarito.classList.remove('dragover'));
+  dropZoneGabarito.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZoneGabarito.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) handleGabaritoFile(e.dataTransfer.files[0]);
+  });
+}
+
+// Se a pessoa digitar/colar algo no textarea, isso invalida o
+// PDF de gabarito enviado anteriormente (evita ambiguidade).
+if (gabaritoTextarea) {
+  gabaritoTextarea.addEventListener('input', () => {
+    if (gabaritoTextarea.value.trim() !== '') {
+      rawGabaritoTextContent = '';
+      if (statusGabarito) statusGabarito.innerText = '';
+    }
+  });
+}
+
+// ------------------------------------------------------------
+// 9) RENDERIZAÇÃO DAS QUESTÕES
 // ------------------------------------------------------------
 function renderQuestion(index) {
   if (!questionsData || !questionsData[index]) return;
@@ -342,7 +385,49 @@ function renderQuestion(index) {
 }
 
 // ------------------------------------------------------------
-// 9) EVENTOS DE CONTROLE
+// 10) TELA DE RESULTADO
+// ------------------------------------------------------------
+function finishQuiz() {
+  const hasAnswerKey = questionsData.some(q => q.correctAnswer);
+  const total = questionsData.length;
+  const answered = Object.keys(userAnswers).length;
+
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+
+  const scoreEl = document.getElementById('resultScore');
+  const listEl = document.getElementById('resultList');
+  listEl.innerHTML = '';
+
+  if (!hasAnswerKey) {
+    scoreEl.innerText = `Você respondeu ${answered} de ${total} questões. Nenhum gabarito foi fornecido, então não é possível calcular a nota — envie o PDF ou cole o gabarito para correção automática.`;
+    return;
+  }
+
+  let correctCount = 0;
+
+  questionsData.forEach(q => {
+    const userAnswer = userAnswers[q.number] || null;
+    const isCorrect = q.correctAnswer && userAnswer === q.correctAnswer;
+    if (isCorrect) correctCount++;
+
+    const item = document.createElement('div');
+    item.className = `result-item ${q.correctAnswer ? (isCorrect ? 'correct' : 'wrong') : 'no-key'}`;
+    item.innerHTML = `
+      <span class="result-q-number">Q${q.number}</span>
+      <span class="result-answer">Sua resposta: <strong>${userAnswer || '—'}</strong></span>
+      <span class="result-answer">Gabarito: <strong>${q.correctAnswer || '—'}</strong></span>
+    `;
+    listEl.appendChild(item);
+  });
+
+  const gradable = questionsData.filter(q => q.correctAnswer).length;
+  const percentage = gradable > 0 ? ((correctCount / gradable) * 100).toFixed(1) : '0.0';
+  scoreEl.innerText = `Você acertou ${correctCount} de ${gradable} questões com gabarito disponível (${percentage}%). Total de questões respondidas: ${answered} de ${total}.`;
+}
+
+// ------------------------------------------------------------
+// 11) EVENTOS DE CONTROLE
 // ------------------------------------------------------------
 document.getElementById('startBtn').addEventListener('click', () => {
   if (!rawPdfTextContent) {
@@ -357,8 +442,21 @@ document.getElementById('startBtn').addEventListener('click', () => {
     return;
   }
 
+  // Prioridade do gabarito: PDF enviado > texto colado > nenhum
+  let answerKey = {};
+  if (rawGabaritoTextContent) {
+    answerKey = parseAnswerKeyFromPDF(rawGabaritoTextContent);
+  } else if (gabaritoTextarea && gabaritoTextarea.value.trim() !== '') {
+    answerKey = parseAnswerKeyFromTextarea(gabaritoTextarea.value);
+  }
+
+  questionsData.forEach(q => {
+    q.correctAnswer = answerKey[q.number] || null;
+  });
+
   document.getElementById('setupScreen').classList.add('hidden');
   document.getElementById('quizScreen').classList.remove('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
 
   currentQuestionIndex = 0;
   userAnswers = {};
@@ -377,12 +475,18 @@ document.getElementById('nextBtn').addEventListener('click', () => {
     currentQuestionIndex++;
     renderQuestion(currentQuestionIndex);
   } else {
-    alert('Simulado finalizado!');
+    finishQuiz();
   }
 });
 
-// Exemplo de uso do botão de exportar JSON (adicione um botão
-// com id="exportJsonBtn" no seu HTML para habilitar):
+const restartBtn = document.getElementById('restartBtn');
+if (restartBtn) {
+  restartBtn.addEventListener('click', () => {
+    document.getElementById('resultScreen').classList.add('hidden');
+    document.getElementById('setupScreen').classList.remove('hidden');
+  });
+}
+
 const exportBtn = document.getElementById('exportJsonBtn');
 if (exportBtn) {
   exportBtn.addEventListener('click', () => {
