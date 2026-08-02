@@ -1,97 +1,107 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Strix Simulado</title>
+  <title>Simulador de Concursos</title>
   <link rel="stylesheet" href="style.css">
-  <!-- CDN do PDF.js para extração de texto de PDFs -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- Fonte moderna Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <!-- Cabeçalho Principal -->
   <header class="app-header">
-    <div class="brand-title">
-      <span>🦉</span> STRIX SIMULADO
+    <div class="header-brand">
+      <span class="logo-icon">🎯</span>
+      <h1>Simulado<span>Concursos</span></h1>
     </div>
-    <div class="brand-subtitle">PROVAS & GABARITOS</div>
+
+    <div class="header-controls">
+      <!-- Seletor de Simulado -->
+      <select id="seletorProvas" onchange="carregarProva(this.value)">
+        <option value="">Carregando provas...</option>
+      </select>
+
+      <!-- Alternador de Tema (Dark Mode) -->
+      <button id="btn-theme" class="btn-icon" onclick="toggleTheme()" title="Alternar Tema">
+        🌙
+      </button>
+    </div>
   </header>
 
-  <!-- TELA 1: ALIMENTAR SIMULADO (UPLOAD) -->
-  <main id="setupScreen" class="card-container">
-    <h1 class="main-heading">Alimentar Simulado</h1>
-    <p class="sub-heading">Envie o PDF da prova e (opcionalmente) o PDF ou texto do gabarito oficial para correção automática.</p>
+  <!-- Barra de Ferramentas de Estudo -->
+  <section class="toolbar">
+    <div class="toolbar-group">
+      <!-- Filtro de Disciplina -->
+      <label for="filtroDisciplina">Matéria:</label>
+      <select id="filtroDisciplina" onchange="aplicarFiltroDisciplina(this.value)">
+        <option value="todas">Todas as Disciplinas</option>
+      </select>
+    </div>
 
-    <!-- Upload Prova -->
-    <div class="form-group">
-      <h2 class="section-title">PDF da Prova</h2>
-      <div class="drop-zone" id="dropZoneProva">
-        <div class="drop-icon">📄</div>
-        <p id="labelProva">Arraste o PDF da prova aqui</p>
-        <label for="pdfProvaInput" class="btn btn-secondary">Buscar Prova</label>
-        <input type="file" id="pdfProvaInput" accept="application/pdf" class="file-input">
+    <div class="toolbar-group">
+      <!-- Alternador de Modo: Estudo vs Simulado -->
+      <label class="switch-label">
+        <input type="checkbox" id="chkModoEstudo" checked onchange="toggleModoEstudo(this.checked)">
+        <span>Modo Treino (Gabarito na Hora)</span>
+      </label>
+    </div>
+
+    <div class="toolbar-group">
+      <!-- Botão de Marcação para Revisão -->
+      <button id="btn-revisar" class="btn-revisar" onclick="toggleRevisao()">
+        🏳️ Marcar p/ Revisão
+      </button>
+    </div>
+  </section>
+
+  <!-- Área Principal do Simulado -->
+  <main id="area-estudo" class="main-container oculto">
+    
+    <!-- Painel Esquerdo: Texto de Apoio / Interpretação -->
+    <aside id="texto-apoio" class="painel-texto">
+      <!-- O texto de suporte é injetado via JS quando existir -->
+    </aside>
+
+    <!-- Painel Direito: Questão e Alternativas -->
+    <section class="painel-questao">
+      <div class="questao-header">
+        <span id="info-disciplina" class="badge-disciplina">Disciplina</span>
+        <span class="dica-mouse">💡 <i>Clique com o botão direito para riscar uma opção.</i></span>
       </div>
-      <div id="statusProva" class="file-status"></div>
-    </div>
 
-    <!-- Upload Gabarito -->
-    <div class="form-group">
-      <h2 class="section-title">PDF do Gabarito (Opcional)</h2>
-      <div class="drop-zone" id="dropZoneGabarito">
-        <div class="drop-icon">📄</div>
-        <p id="labelGabarito">Arraste o PDF do gabarito aqui</p>
-        <label for="pdfGabaritoInput" class="btn btn-secondary">Buscar Gabarito</label>
-        <input type="file" id="pdfGabaritoInput" accept="application/pdf" class="file-input">
+      <div id="enunciado" class="enunciado-texto">
+        Selecione uma prova no menu superior para começar a responder.
       </div>
-      <div id="statusGabarito" class="file-status"></div>
-    </div>
 
-    <!-- Gabarito Texto -->
-    <div class="form-group">
-      <label for="gabaritoTexto" class="section-title">Ou cole o gabarito em texto (Exemplo: 1-A, 2-C, 3-E...):</label>
-      <textarea id="gabaritoTexto" placeholder="1-A, 2-B, 3-C, 4-D, 5-E..."></textarea>
-    </div>
+      <!-- Lista de Opções -->
+      <div id="opcoes" class="opcoes-list">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </section>
 
-    <button id="startBtn" class="btn btn-primary btn-full">Iniciar Simulado ➔</button>
   </main>
 
-  <!-- TELA 2: RESOLVER SIMULADO (QUESTÕES) -->
-  <main id="quizScreen" class="card-container hidden">
-    <div class="quiz-header">
-      <span id="questionCounter" class="question-number">Questão 1</span>
-      <span id="totalCounter" class="badge">1 de 0</span>
-    </div>
-
-    <!-- Texto de Apoio (Recolhível) -->
-    <details id="supportContainer" class="support-box">
-      <summary>📖 Texto de Referência (Clique para recolher/expandir)</summary>
-      <div id="supportText" class="support-content"></div>
-    </details>
-
-    <div id="questionText" class="question-text"></div>
-
-    <div id="optionsList" class="options-list"></div>
-
-    <div class="nav-buttons">
-      <button id="prevBtn" class="btn btn-secondary" disabled>← Anterior</button>
-      <button id="nextBtn" class="btn btn-primary">Próxima →</button>
-    </div>
-  </main>
-
-  <!-- TELA 3: RESULTADO / CORREÇÃO -->
-  <main id="resultScreen" class="card-container hidden">
-    <h1 class="main-heading">Resultado do Simulado</h1>
-    <p id="resultScore" class="sub-heading"></p>
-
-    <div id="resultList" class="result-list"></div>
-
-    <div class="nav-buttons" style="margin-top: 24px;">
-      <button id="restartBtn" class="btn btn-secondary">← Novo Simulado</button>
-      <button id="exportJsonBtn" class="btn btn-primary">Exportar JSON 💾</button>
-    </div>
-  </main>
+  <!-- Rodapé Fixado para Navegação -->
+  <footer class="app-footer">
+    <button class="btn-nav" onclick="mudarQuestao(-1)">◀ Anterior</button>
+    <span id="contador-questoes">Questão 0 de 0</span>
+    <button class="btn-nav" onclick="mudarQuestao(1)">Próxima ▶</button>
+    <button class="btn-finalizar" onclick="calcularResultado()">📊 Finalizar e Ver Nota</button>
+  </footer>
 
   <script src="script.js"></script>
+  <script>
+    // Script rápido para controle de Tema (Light / Dark)
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeAtual = html.getAttribute('data-theme');
+      const novoTema = themeAtual === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', novoTema);
+      document.getElementById('btn-theme').innerText = novoTema === 'dark' ? '☀️' : '🌙';
+    }
+  </script>
 </body>
 </html>
