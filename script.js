@@ -6,7 +6,7 @@ let questionsData = [];
 let currentQuestionIndex = 0;
 let userAnswers = {};
 
-// 1) EXTRAÇÃO DE TEXTO DO PDF
+// 1) EXTRAÇÃO DE TEXTO DO PDF (SUPORTE A 2 COLUNAS - CESGRANRIO/TRANSPETRO)
 async function extractTextFromPDF(file) {
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -14,36 +14,49 @@ async function extractTextFromPDF(file) {
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 1.0 });
     const textContent = await page.getTextContent();
+    const midX = viewport.width / 2;
 
     const items = textContent.items
       .map(it => ({ str: it.str, x: it.transform[4], y: it.transform[5] }))
       .filter(it => it.str.trim() !== '');
 
-    if (items.length === 0) { fullText += "\n\n"; continue; }
+    if (items.length === 0) continue;
 
-    items.sort((a, b) => b.y - a.y || a.x - b.x);
-    const LINE_TOLERANCE = 2.5;
-    const lines = [];
-    let currentLine = [];
-    let lastY = null;
+    // Separa os itens da coluna da esquerda e da direita
+    const leftCol = items.filter(it => it.x < midX);
+    const rightCol = items.filter(it => it.x >= midX);
 
-    for (const it of items) {
-      if (lastY === null || Math.abs(it.y - lastY) <= LINE_TOLERANCE) {
-        currentLine.push(it);
-      } else {
-        lines.push(currentLine);
-        currentLine = [it];
+    function processColumn(colItems) {
+      if (colItems.length === 0) return "";
+      colItems.sort((a, b) => b.y - a.y || a.x - b.x);
+      
+      const LINE_TOLERANCE = 3;
+      const lines = [];
+      let currentLine = [];
+      let lastY = null;
+
+      for (const it of colItems) {
+        if (lastY === null || Math.abs(it.y - lastY) <= LINE_TOLERANCE) {
+          currentLine.push(it);
+        } else {
+          lines.push(currentLine);
+          currentLine = [it];
+        }
+        lastY = it.y;
       }
-      lastY = it.y;
+      if (currentLine.length) lines.push(currentLine);
+
+      return lines
+        .map(line => line.sort((a, b) => a.x - b.x).map(it => it.str).join(' '))
+        .join('\n');
     }
-    if (currentLine.length) lines.push(currentLine);
 
-    const pageText = lines
-      .map(line => line.sort((a, b) => a.x - b.x).map(it => it.str).join(' '))
-      .join('\n');
+    const leftText = processColumn(leftCol);
+    const rightText = processColumn(rightCol);
 
-    fullText += pageText + "\n\n";
+    fullText += leftText + "\n" + rightText + "\n\n";
   }
 
   return fullText;
@@ -87,10 +100,10 @@ function extractOptionsFromSlice(slice) {
   }
 
   if (matchA && matchB && matchC && matchD && matchE) {
-    if ((matchE.index - matchA.index) > 2500) return { valid: false };
+    if ((matchE.index - matchA.index) > 3000) return { valid: false };
 
     const statement = slice.substring(0, matchA.index).trim();
-    if (statement.length < 10) return { valid: false };
+    if (statement.length < 5) return { valid: false };
 
     const optA = slice.substring(matchA.index + matchA.matchLength, matchB.index).trim();
     const optB = slice.substring(matchB.index + matchB.matchLength, matchC.index).trim();
@@ -99,7 +112,7 @@ function extractOptionsFromSlice(slice) {
 
     const restE = slice.substring(matchE.index + matchE.matchLength);
     let endEOffset = restE.search(/(?:\n\s*\n|\n?\s*(?:QUESTÃO|\d{1,2}\s*[\.\)\-])|\n?\s*CONHECIMENTOS)/i);
-    if (endEOffset === -1 || endEOffset > 300) endEOffset = Math.min(restE.length, 250);
+    if (endEOffset === -1 || endEOffset > 400) endEOffset = Math.min(restE.length, 300);
     const optE = restE.substring(0, endEOffset).trim();
 
     const options = {
@@ -122,17 +135,14 @@ function extractOptionsFromSlice(slice) {
 function parseExamQuestions(rawText) {
   const cleanText = cleanGarbage(rawText);
 
-  const sectionMarkers = /(CONHECIMENTOS\s+B[ÁA]SICOS|CONHECIMENTOS\s+ESPEC[ÍI]FICOS|LÍNGUA\s+PORTUGUESA)/i;
-  const sectionMatch = cleanText.search(sectionMarkers);
-  const searchText = sectionMatch !== -1 ? cleanText.slice(sectionMatch) : cleanText;
-
+  // Procura padrão de início de questão: "QUESTÃO 1", "1.", "1 -", "1)"
   const qHeaderRegex = /(?:^|\n)\s*(?:QUESTÃO\s+)?(\d{1,3})\s*[\.\)\-]\s+/gi;
   let match;
   const candidates = [];
 
-  while ((match = qHeaderRegex.exec(searchText)) !== null) {
+  while ((match = qHeaderRegex.exec(cleanText)) !== null) {
     const num = parseInt(match[1], 10);
-    if (num >= 1 && num <= 200) {
+    if (num >= 1 && num <= 120) {
       candidates.push({ number: num, index: match.index, contentIndex: match.index + match[0].length });
     }
   }
@@ -142,8 +152,8 @@ function parseExamQuestions(rawText) {
 
   for (let i = 0; i < candidates.length; i++) {
     const cand = candidates[i];
-    const nextIndex = candidates[i + 1] ? candidates[i + 1].index : cand.contentIndex + 2500;
-    const searchSlice = searchText.substring(cand.contentIndex, Math.min(cand.contentIndex + 2500, nextIndex));
+    const nextIndex = candidates[i + 1] ? candidates[i + 1].index : cand.contentIndex + 3000;
+    const searchSlice = cleanText.substring(cand.contentIndex, Math.min(cand.contentIndex + 3000, nextIndex));
     const parsed = extractOptionsFromSlice(searchSlice);
 
     if (parsed.valid) {
@@ -176,15 +186,15 @@ function parseExamQuestions(rawText) {
   return uniqueQuestions.sort((a, b) => a.number - b.number);
 }
 
-// 5) EXTRAÇÃO DO GABARITO
+// 5) PARSERS DE GABARITO
 function parseAnswerKeyFromPDF(rawText) {
   const cleanText = cleanGarbage(rawText);
-  const keyRegex = /(\d{1,3})\s*[\.\)\-]\s*([A-E])\b/g;
+  const keyRegex = /(\d{1,3})\s*[\.\)\-]?\s*([A-E])\b/g;
   const answerKey = {};
   let m;
   while ((m = keyRegex.exec(cleanText)) !== null) {
     const num = parseInt(m[1], 10);
-    if (num >= 1 && num <= 200 && !(num in answerKey)) {
+    if (num >= 1 && num <= 120 && !(num in answerKey)) {
       answerKey[num] = m[2].toUpperCase();
     }
   }
@@ -195,11 +205,11 @@ function parseAnswerKeyFromTextarea(rawText) {
   const answerKey = {};
   if (!rawText || !rawText.trim()) return answerKey;
 
-  const pairRegex = /(\d{1,3})\s*[-\.\):]\s*([A-E])\b/gi;
+  const pairRegex = /(\d{1,3})\s*[-\.\):]?\s*([A-E])\b/gi;
   let m;
   while ((m = pairRegex.exec(rawText)) !== null) {
     const num = parseInt(m[1], 10);
-    if (num >= 1 && num <= 200) {
+    if (num >= 1 && num <= 120) {
       answerKey[num] = m[2].toUpperCase();
     }
   }
@@ -235,36 +245,41 @@ function downloadJSON(data, filename = 'questoes.json') {
   URL.revokeObjectURL(url);
 }
 
-// 7) UPLOAD DA PROVA
+// 7) EVENTOS DE UPLOAD DA PROVA
 const pdfProvaInput = document.getElementById('pdfProvaInput');
 const dropZoneProva = document.getElementById('dropZoneProva');
 const statusProva = document.getElementById('statusProva');
 
 async function handleProvaFile(file) {
   if (file && file.type === 'application/pdf') {
-    statusProva.innerText = `⏳ Lendo arquivo: ${file.name}...`;
+    statusProva.innerText = `⏳ Lendo e organizando arquivo: ${file.name}...`;
     try {
       rawPdfTextContent = await extractTextFromPDF(file);
       statusProva.innerText = `✅ Prova carregada com sucesso! (${file.name})`;
     } catch (err) {
       console.error(err);
-      statusProva.innerText = `❌ Erro ao ler o PDF. Certifique-se de que é um PDF com texto selecionável.`;
+      statusProva.innerText = `❌ Erro ao ler o PDF. Certifique-se de que não é uma imagem digitalizada.`;
     }
   }
 }
 
-pdfProvaInput.addEventListener('change', (e) => {
-  if (e.target.files.length > 0) handleProvaFile(e.target.files[0]);
-});
-dropZoneProva.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneProva.classList.add('dragover'); });
-dropZoneProva.addEventListener('dragleave', () => dropZoneProva.classList.remove('dragover'));
-dropZoneProva.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropZoneProva.classList.remove('dragover');
-  if (e.dataTransfer.files.length > 0) handleProvaFile(e.dataTransfer.files[0]);
-});
+if (pdfProvaInput) {
+  pdfProvaInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) handleProvaFile(e.target.files[0]);
+  });
+}
 
-// 8) UPLOAD DO GABARITO (PDF)
+if (dropZoneProva) {
+  dropZoneProva.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneProva.classList.add('dragover'); });
+  dropZoneProva.addEventListener('dragleave', () => dropZoneProva.classList.remove('dragover'));
+  dropZoneProva.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZoneProva.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) handleProvaFile(e.dataTransfer.files[0]);
+  });
+}
+
+// 8) EVENTOS DE UPLOAD DO GABARITO
 const pdfGabaritoInput = document.getElementById('pdfGabaritoInput');
 const dropZoneGabarito = document.getElementById('dropZoneGabarito');
 const statusGabarito = document.getElementById('statusGabarito');
@@ -289,6 +304,7 @@ if (pdfGabaritoInput) {
     if (e.target.files.length > 0) handleGabaritoFile(e.target.files[0]);
   });
 }
+
 if (dropZoneGabarito) {
   dropZoneGabarito.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneGabarito.classList.add('dragover'); });
   dropZoneGabarito.addEventListener('dragleave', () => dropZoneGabarito.classList.remove('dragover'));
@@ -296,15 +312,6 @@ if (dropZoneGabarito) {
     e.preventDefault();
     dropZoneGabarito.classList.remove('dragover');
     if (e.dataTransfer.files.length > 0) handleGabaritoFile(e.dataTransfer.files[0]);
-  });
-}
-
-if (gabaritoTextarea) {
-  gabaritoTextarea.addEventListener('input', () => {
-    if (gabaritoTextarea.value.trim() !== '') {
-      rawGabaritoTextContent = '';
-      if (statusGabarito) statusGabarito.innerText = '';
-    }
   });
 }
 
@@ -352,7 +359,7 @@ function renderQuestion(index) {
   document.getElementById('nextBtn').innerText = (index === questionsData.length - 1) ? 'Finalizar' : 'Próxima →';
 }
 
-// 10) TELA DE RESULTADO
+// 10) RESULTADO / FINALIZAR
 function finishQuiz() {
   const hasAnswerKey = questionsData.some(q => q.correctAnswer);
   const total = questionsData.length;
@@ -366,7 +373,7 @@ function finishQuiz() {
   listEl.innerHTML = '';
 
   if (!hasAnswerKey) {
-    scoreEl.innerText = `Você respondeu ${answered} de ${total} questões. Nenhum gabarito foi fornecido para autocorreção.`;
+    scoreEl.innerText = `Você respondeu ${answered} de ${total} questões. Nenhum gabarito foi fornecido.`;
     return;
   }
 
@@ -392,7 +399,7 @@ function finishQuiz() {
   scoreEl.innerText = `Você acertou ${correctCount} de ${gradable} questões com gabarito (${percentage}%). Respondidas: ${answered} de ${total}.`;
 }
 
-// 11) EVENTOS DE CONTROLE
+// 11) INICIAR SIMULADO
 document.getElementById('startBtn').addEventListener('click', () => {
   if (!rawPdfTextContent) {
     alert("Por favor, selecione ou arraste o PDF da prova antes de iniciar.");
@@ -402,7 +409,7 @@ document.getElementById('startBtn').addEventListener('click', () => {
   questionsData = parseExamQuestions(rawPdfTextContent);
 
   if (questionsData.length === 0) {
-    alert("Nenhuma questão foi detectada. Verifique se o arquivo PDF contém texto selecionável (não pode ser uma imagem digitalizada).");
+    alert("Nenhuma questão em texto foi detectada. Verifique se o arquivo PDF contém texto selecionável (se for um PDF escaneado/foto, ele não funciona).");
     return;
   }
 
