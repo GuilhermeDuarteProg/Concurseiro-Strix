@@ -18,6 +18,9 @@ window.addEventListener('DOMContentLoaded', async () => {
 async function carregarCatalogoProvas() {
   try {
     const resposta = await fetch('./provas/index.json');
+    if (!resposta.ok) {
+      throw new Error(`Erro ao buscar índice de provas: Status ${resposta.status}`);
+    }
     listaProvas = await resposta.json();
 
     const seletor = document.getElementById('seletorProvas');
@@ -41,7 +44,6 @@ async function carregarProva(indexLista) {
   const itemProva = listaProvas[indexLista];
 
   try {
-    // Garante o caminho relativo correto
     const caminhoProva = itemProva.arquivo.startsWith('./') ? itemProva.arquivo : `./${itemProva.arquivo}`;
     const resProva = await fetch(caminhoProva);
     provaOriginal = await resProva.json();
@@ -121,7 +123,7 @@ function renderizarQuestao() {
 
   const num = q.numero;
 
-  // --- RENDEREIZAÇÃO DO TEXTO DE APOIO ---
+  // --- RENDERIZAÇÃO DO TEXTO DE APOIO ---
   const painelTexto = document.getElementById('texto-apoio');
   painelTexto.innerHTML = '';
 
@@ -380,6 +382,4 @@ function carregarRevisaoQuestao(numQuestao) {
 function voltarAoSimulado() {
   document.getElementById('tela-resultado').classList.add('oculto');
   document.getElementById('area-estudo').classList.remove('oculto');
-}
-  );
 }
