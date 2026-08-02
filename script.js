@@ -24,29 +24,6 @@ async function carregarCatalogoProvas() {
     listaProvas = await resposta.json();
 
     const seletor = document.getElementById('seletorProvas');
-    seletor.innerHTML = '<option value="">-- Escolha um Simulado --</option>';
-
-    listaProvas.forEach((p, index) => {
-      const option = document.createElement('option');
-      option.value = index;
-      option.innerText = `${p.banca} (${p.ano}) - ${p.titulo}`;
-      seletor.appendChild(option);
-    });
-  } catch (erro) {
-    console.error("Erro ao carregar o catálogo de provas:", erro);
-  }
-}
-
-// 2. Carrega a prova selecionada e vincula o Gabarito com tratamento de erros
-async function carregarCatalogoProvas() {
-  try {
-    const resposta = await fetch('./provas/index.json');
-    if (!resposta.ok) {
-      throw new Error(`Erro ao buscar índice de provas: Status ${resposta.status}`);
-    }
-    listaProvas = await resposta.json();
-
-    const seletor = document.getElementById('seletorProvas');
     if (seletor) {
       seletor.innerHTML = '<option value="">-- Escolha um Simulado --</option>';
 
@@ -58,7 +35,7 @@ async function carregarCatalogoProvas() {
       });
     }
 
-    // Carrega a primeira prova automaticamente se houver alguma na lista
+    // Carrega a primeira prova automaticamente se houver itens no catálogo
     if (listaProvas.length > 0) {
       if (seletor) seletor.value = "0";
       await carregarProva(0);
@@ -67,12 +44,66 @@ async function carregarCatalogoProvas() {
     console.error("Erro ao carregar o catálogo de provas:", erro);
   }
 }
+
+// 2. Carrega a prova selecionada e vincula o Gabarito com tratamento de erros
+async function carregarProva(indexLista) {
+  if (indexLista === "" || indexLista === undefined) return;
+
+  const itemProva = listaProvas[indexLista];
+
+  try {
+    const caminhoProva = itemProva.arquivo.startsWith('./') ? itemProva.arquivo : `./${itemProva.arquivo}`;
+    const resProva = await fetch(caminhoProva);
+    provaOriginal = await resProva.json();
+
+    // Carrega e vincula o Gabarito
+    if (itemProva.gabarito) {
+      try {
+        const caminhoGabarito = itemProva.gabarito.startsWith('./') ? itemProva.gabarito : `./${itemProva.gabarito}`;
+        const resGabarito = await fetch(caminhoGabarito);
+        const gabaritoMap = await resGabarito.json();
+
+        // Mapeia o gabarito para cada questão
+        provaOriginal.questoes.forEach(q => {
+          const numStr = String(q.numero);
+          const numPadded = numStr.padStart(2, '0');
+
+          const respGabarito = gabaritoMap[numStr] || gabaritoMap[numPadded] || gabaritoMap[`q${numStr}`];
+
+          if (respGabarito) {
+            q.resposta_correta = String(respGabarito).trim().toUpperCase();
+          } else {
+            console.warn(`Atenção: Gabarito da questão ${q.numero} não encontrado no JSON.`);
+          }
+        });
+      } catch (eGab) {
+        console.error("Erro ao carregar o arquivo de gabarito:", eGab);
+      }
+    }
+
+    // Reseta estados do simulado
+    respostas = {};
+    eliminadas = {};
+    paraRevisar.clear();
+
+    atualizarFiltroDisciplinas();
+
+    provaFiltrada = [...provaOriginal.questoes];
+    indexAtual = 0;
+
+    const areaEstudo = document.getElementById('area-estudo');
+    if (areaEstudo) areaEstudo.classList.remove('oculto');
+    renderizarQuestao();
+  } catch (erro) {
+    console.error("Erro ao carregar o arquivo da prova:", erro);
   }
 }
 
 // 3. Preenche as matérias no filtro superior
 function atualizarFiltroDisciplinas() {
   const selectDisc = document.getElementById('filtroDisciplina');
+  if (!selectDisc || !provaOriginal) return;
+
   selectDisc.innerHTML = '<option value="todas">Todas as Disciplinas</option>';
 
   const disciplinas = [...new Set(provaOriginal.questoes.map(q => q.disciplina))];
@@ -87,6 +118,8 @@ function atualizarFiltroDisciplinas() {
 
 // 4. Filtrar por Disciplina
 function aplicarFiltroDisciplina(disciplinaSelecionada) {
+  if (!provaOriginal) return;
+
   if (!disciplinaSelecionada || disciplinaSelecionada === "todas") {
     provaFiltrada = [...provaOriginal.questoes];
   } else {
@@ -99,10 +132,13 @@ function aplicarFiltroDisciplina(disciplinaSelecionada) {
 // 5. Renderizar Questão na Tela
 function renderizarQuestao() {
   if (!provaFiltrada || provaFiltrada.length === 0) {
-    document.getElementById('contador-questoes').innerText = "Questão 0 de 0";
-    document.getElementById('enunciado').innerText = "Nenhuma questão disponível. Por favor, selecione um simulado.";
+    const contador = document.getElementById('contador-questoes');
+    const enunciado = document.getElementById('enunciado');
+    if (contador) contador.innerText = "Questão 0 de 0";
+    if (enunciado) enunciado.innerText = "Nenhuma questão disponível. Por favor, selecione um simulado.";
     return;
   }
+
   const q = provaFiltrada[indexAtual];
   if (!q) return;
 
@@ -110,53 +146,61 @@ function renderizarQuestao() {
 
   // --- RENDERIZAÇÃO DO TEXTO DE APOIO ---
   const painelTexto = document.getElementById('texto-apoio');
-  painelTexto.innerHTML = '';
+  if (painelTexto) {
+    painelTexto.innerHTML = '';
 
-  if (provaOriginal.textos_suporte && provaOriginal.textos_suporte.length > 0) {
-    let textoEncontrado = null;
+    if (provaOriginal.textos_suporte && provaOriginal.textos_suporte.length > 0) {
+      let textoEncontrado = null;
 
-    if (q.disciplina === "Língua Portuguesa") {
-      textoEncontrado = provaOriginal.textos_suporte.find(t => t.id === "texto_portugues");
-    } else if (q.disciplina === "Língua Inglesa") {
-      textoEncontrado = provaOriginal.textos_suporte.find(t => t.id === "texto_ingles");
-    }
+      if (q.disciplina === "Língua Portuguesa") {
+        textoEncontrado = provaOriginal.textos_suporte.find(t => t.id === "texto_portugues");
+      } else if (q.disciplina === "Língua Inglesa") {
+        textoEncontrado = provaOriginal.textos_suporte.find(t => t.id === "texto_ingles");
+      }
 
-    if (textoEncontrado) {
-      painelTexto.classList.remove('oculto');
-      let html = `<h3>${textoEncontrado.titulo}</h3>`;
-      if (textoEncontrado.autor) html += `<p><strong>${textoEncontrado.autor}</strong></p>`;
-      if (textoEncontrado.referencia) html += `<p><small><i>${textoEncontrado.referencia}</i></small></p><br>`;
-      
-      textoEncontrado.paragrafos.forEach(p => {
-        html += `<p style="margin-bottom: 0.6rem;">${p}</p>`;
-      });
-      painelTexto.innerHTML = html;
+      if (textoEncontrado) {
+        painelTexto.classList.remove('oculto');
+        let html = `<h3>${textoEncontrado.titulo}</h3>`;
+        if (textoEncontrado.autor) html += `<p><strong>${textoEncontrado.autor}</strong></p>`;
+        if (textoEncontrado.referencia) html += `<p><small><i>${textoEncontrado.referencia}</i></small></p><br>`;
+        
+        textoEncontrado.paragrafos.forEach(p => {
+          html += `<p style="margin-bottom: 0.6rem;">${p}</p>`;
+        });
+        painelTexto.innerHTML = html;
+      } else {
+        painelTexto.classList.add('oculto');
+      }
     } else {
       painelTexto.classList.add('oculto');
     }
-  } else {
-    painelTexto.classList.add('oculto');
   }
 
   // Contador e Disciplina
-  document.getElementById('contador-questoes').innerText = `Questão ${indexAtual + 1} de ${provaFiltrada.length}`;
-  document.getElementById('info-disciplina').innerText = q.disciplina;
+  const elContador = document.getElementById('contador-questoes');
+  const elDisciplina = document.getElementById('info-disciplina');
+  if (elContador) elContador.innerText = `Questão ${indexAtual + 1} de ${provaFiltrada.length}`;
+  if (elDisciplina) elDisciplina.innerText = q.disciplina;
 
   // Botão de Revisão
   const btnRevisar = document.getElementById('btn-revisar');
-  if (paraRevisar.has(num)) {
-    btnRevisar.classList.add('em-revisao');
-    btnRevisar.innerText = '🚩 Marcada p/ Revisão';
-  } else {
-    btnRevisar.classList.remove('em-revisao');
-    btnRevisar.innerText = '🏳️ Marcar p/ Revisão';
+  if (btnRevisar) {
+    if (paraRevisar.has(num)) {
+      btnRevisar.classList.add('em-revisao');
+      btnRevisar.innerText = '🚩 Marcada p/ Revisão';
+    } else {
+      btnRevisar.classList.remove('em-revisao');
+      btnRevisar.innerText = '🏳️ Marcar p/ Revisão';
+    }
   }
 
   // Enunciado
-  document.getElementById('enunciado').innerText = `${q.numero}. ${q.enunciado}`;
+  const elEnunciado = document.getElementById('enunciado');
+  if (elEnunciado) elEnunciado.innerText = `${q.numero}. ${q.enunciado}`;
 
   // Alternativas
   const container = document.getElementById('opcoes');
+  if (!container) return;
   container.innerHTML = '';
 
   Object.entries(q.alternativas).forEach(([letra, texto]) => {
@@ -221,6 +265,7 @@ function toggleModoEstudo(checked) {
 
 // 9. Marcação para revisão
 function toggleRevisao() {
+  if (!provaFiltrada[indexAtual]) return;
   const q = provaFiltrada[indexAtual];
   if (paraRevisar.has(q.numero)) {
     paraRevisar.delete(q.numero);
@@ -258,23 +303,29 @@ function calcularResultado() {
   const porcentagem = ((acertos / total) * 100).toFixed(1);
 
   // Esconde área de prova e exibe a tela de resultado
-  document.getElementById('area-estudo').classList.add('oculto');
-  document.getElementById('tela-resultado').classList.remove('oculto');
+  const areaEstudo = document.getElementById('area-estudo');
+  const telaResultado = document.getElementById('tela-resultado');
+  if (areaEstudo) areaEstudo.classList.add('oculto');
+  if (telaResultado) telaResultado.classList.remove('oculto');
 
   // Preenche dados do header
-  document.getElementById('resultado-porcentagem').innerText = `${porcentagem}%`;
-  document.getElementById('resultado-detalhe-texto').innerText = `Das ${total} questões você acertou ${acertos}`;
+  const elPorcentagem = document.getElementById('resultado-porcentagem');
+  const elDetalhe = document.getElementById('resultado-detalhe-texto');
+  if (elPorcentagem) elPorcentagem.innerText = `${porcentagem}%`;
+  if (elDetalhe) elDetalhe.innerText = `Das ${total} questões você acertou ${acertos}`;
 
   const badgeStatus = document.getElementById('badge-desempenho');
-  if (porcentagem >= 70) {
-    badgeStatus.innerText = "Excelente Desempenho!";
-    badgeStatus.className = "status-desempenho aprovado";
-  } else {
-    badgeStatus.innerText = "Precisa Praticar Mais";
-    badgeStatus.className = "status-desempenho reprovado";
+  if (badgeStatus) {
+    if (porcentagem >= 70) {
+      badgeStatus.innerText = "Excelente Desempenho!";
+      badgeStatus.className = "status-desempenho aprovado";
+    } else {
+      badgeStatus.innerText = "Precisa Praticar Mais";
+      badgeStatus.className = "status-desempenho reprovado";
+    }
   }
 
-  // Gera a Grid de Questões (Estilo Detran)
+  // Gera a Grid de Questões
   renderizarGridGabarito();
 
   // Seleciona a primeira questão por padrão
@@ -284,6 +335,7 @@ function calcularResultado() {
 // Renderiza a Grid de Botões Numéricos
 function renderizarGridGabarito() {
   const container = document.getElementById('grid-numeros-gabarito');
+  if (!container || !provaOriginal) return;
   container.innerHTML = '';
 
   provaOriginal.questoes.forEach(q => {
@@ -348,23 +400,27 @@ function carregarRevisaoQuestao(numQuestao) {
   });
 
   const painel = document.getElementById('painel-revisao-questao');
-  painel.innerHTML = `
-    <div class="revisao-corpo">
-      <div class="revisao-enunciado">
-        <strong>${q.numero}.</strong> ${q.enunciado}
+  if (painel) {
+    painel.innerHTML = `
+      <div class="revisao-corpo">
+        <div class="revisao-enunciado">
+          <strong>${q.numero}.</strong> ${q.enunciado}
+        </div>
+        <div class="revisao-opcoes">
+          ${htmlOpcoes}
+        </div>
       </div>
-      <div class="revisao-opcoes">
-        ${htmlOpcoes}
+      <div class="banner-feedback-rodape ${statusClasse}">
+        ${textoBanner}
       </div>
-    </div>
-    <div class="banner-feedback-rodape ${statusClasse}">
-      ${textoBanner}
-    </div>
-  `;
+    `;
+  }
 }
 
 // Função para retornar à prova
 function voltarAoSimulado() {
-  document.getElementById('tela-resultado').classList.add('oculto');
-  document.getElementById('area-estudo').classList.remove('oculto');
+  const telaResultado = document.getElementById('tela-resultado');
+  const areaEstudo = document.getElementById('area-estudo');
+  if (telaResultado) telaResultado.classList.add('oculto');
+  if (areaEstudo) areaEstudo.classList.remove('oculto');
 }
