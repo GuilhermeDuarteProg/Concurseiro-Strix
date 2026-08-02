@@ -1,236 +1,111 @@
-// Estado global da aplicação
-let questionsData = [];
-let currentQuestionIndex = 0;
-let userAnswers = {};
-
-// Função auxiliar para limpeza de ruídos no texto
-function cleanGarbage(text) {
-    if (!text) return '';
-    return text
-        .replace(/\r/g, '')
-        .replace(/[ \t]+/g, ' ')
-        .replace(/\n\s*\n+/g, '\n\n')
-        .trim();
-}
-
-// Escapa HTML para prevenir problemas de renderização
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.innerText = text;
-    return div.innerHTML;
-}
-
-// Extrai opções (A, B, C, D, E) e o enunciado de uma fatia de texto
-function extractOptionsFromSlice(slice) {
-    const optRegex = /(?:^|\n|\s+)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/g;
-    
-    const matches = [];
-    let m;
-    while ((m = optRegex.exec(slice)) !== null) {
-        const letter = (m[1] || m[2]).toUpperCase();
-        matches.push({
-            letter: letter,
-            index: m.index,
-            matchLength: m[0].length
-        });
+// Dados demonstrativos de teste
+const mockQuestions = [
+  {
+    number: 1,
+    supportText: "O texto a seguir serve de base para a questão.\nA transformação digital no setor público vem acelerando os processos administrativos através do uso de IA e automações...",
+    text: "Com base no texto de referência, assinale a alternativa que indica a principal vantagem da transformação digital:",
+    options: {
+      A: "Aumento de custos com infraestrutura física.",
+      B: "Otimização de processos e resposta mais rápida ao cidadão.",
+      C: "Substituição total de todos os servidores públicos por robôs.",
+      D: "Redução no nível de transparência das decisões.",
+      E: "Eliminação da necessidade de segurança da informação."
     }
-
-    let matchA = null, matchB = null, matchC = null, matchD = null, matchE = null;
-
-    for (let item of matches) {
-        if (item.letter === 'A' && !matchA) matchA = item;
-        else if (item.letter === 'B' && matchA && !matchB && item.index > matchA.index) matchB = item;
-        else if (item.letter === 'C' && matchB && !matchC && item.index > matchB.index) matchC = item;
-        else if (item.letter === 'D' && matchC && !matchD && item.index > matchD.index) matchD = item;
-        else if (item.letter === 'E' && matchD && !matchE && item.index > matchD.index) matchE = item;
+  },
+  {
+    number: 2,
+    supportText: "",
+    text: "De acordo com a Lei de Acesso à Informação, os órgãos públicos devem garantir a transparência passiva e ativa. Assinale a opção correta:",
+    options: {
+      A: "A informação pessoal tem acesso irrestrito a qualquer cidadão.",
+      B: "O cidadão precisa justificar o motivo da solicitação de informação pública.",
+      C: "A divulgação de informações de interesse público independe de solicitações na transparência ativa.",
+      D: "Informações classificadas como ultra-secretas têm prazo de sigilo de 10 anos.",
+      E: "Não há canal digital obrigatório para pedidos de acesso."
     }
+  }
+];
 
-    if (matchA && matchB && matchC && matchD && matchE) {
-        if ((matchE.index - matchA.index) > 2500) return { valid: false };
+let currentIndex = 0;
+let selectedAnswers = {};
 
-        const statement = slice.substring(0, matchA.index).trim();
-        const optA = slice.substring(matchA.index + matchA.matchLength, matchB.index).trim();
-        const optB = slice.substring(matchB.index + matchB.matchLength, matchC.index).trim();
-        const optC = slice.substring(matchC.index + matchC.matchLength, matchD.index).trim();
-        const optD = slice.substring(matchD.index + matchD.matchLength, matchE.index).trim();
+// Elementos da DOM
+const setupScreen = document.getElementById('setupScreen');
+const quizScreen = document.getElementById('quizScreen');
+const startBtn = document.getElementById('startBtn');
 
-        const restE = slice.substring(matchE.index + matchE.matchLength);
-        
-        // Isola e corta a Opção E para não invadir a questão seguinte
-        let endEOffset = restE.search(/(?:\n\s*\n|\n?\s*(?:QUESTÃO|\d{1,2}\s*[\.\)\-])|\n?\s*CONHECIMENTOS)/i);
-        if (endEOffset === -1 || endEOffset > 300) {
-            endEOffset = Math.min(restE.length, 250);
-        }
-        const optE = restE.substring(0, endEOffset).trim();
+const questionCounter = document.getElementById('questionCounter');
+const totalCounter = document.getElementById('totalCounter');
+const supportContainer = document.getElementById('supportContainer');
+const supportText = document.getElementById('supportText');
+const questionText = document.getElementById('questionText');
+const optionsList = document.getElementById('optionsList');
 
-        return {
-            valid: true,
-            statement: statement,
-            options: {
-                A: cleanGarbage(optA),
-                B: cleanGarbage(optB),
-                C: cleanGarbage(optC),
-                D: cleanGarbage(optD),
-                E: cleanGarbage(optE)
-            }
-        };
-    }
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
 
-    return { valid: false };
-}
+// Alternar para a tela do simulado
+startBtn.addEventListener('click', () => {
+  setupScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  renderQuestion(0);
+});
 
-// Analisa e estrutura o texto da prova
-function parseExamQuestions(rawText) {
-    const cleanText = cleanGarbage(rawText);
-    const extracted = [];
-
-    // Busca apenas por números de questões estruturados no início de linha
-    const qHeaderRegex = /(?:^|\n)\s*(?:QUESTÃO\s+)?(\d{1,2})\s*[\.\)\-]\s+/gi;
-    let match;
-    const candidates = [];
-
-    while ((match = qHeaderRegex.exec(cleanText)) !== null) {
-        const num = parseInt(match[1], 10);
-        if (num >= 1 && num <= 120) {
-            candidates.push({
-                number: num,
-                index: match.index,
-                contentIndex: match.index + match[0].length
-            });
-        }
-    }
-
-    let activeSupportText = ''; 
-
-    for (let i = 0; i < candidates.length; i++) {
-        const cand = candidates[i];
-        const nextIndex = candidates[i + 1] ? candidates[i + 1].index : cand.contentIndex + 2500;
-        const searchSlice = cleanText.substring(cand.contentIndex, Math.min(cand.contentIndex + 2500, nextIndex));
-        
-        const parsed = extractOptionsFromSlice(searchSlice);
-
-        if (parsed.valid) {
-            let statement = parsed.statement;
-
-            // Extrai o texto de apoio apenas quando ele surge antes das questões
-            const textHeaderMatch = statement.match(/(?:\bTEXTO\s+[I|V|X\d]*|\bREAD\s+THE\s+TEXT|\bLEIA\s+O\s+TEXTO)/i);
-            if (textHeaderMatch) {
-                const headerIdx = textHeaderMatch.index;
-                activeSupportText = statement.substring(headerIdx).trim();
-                statement = statement.substring(0, headerIdx).trim();
-            }
-
-            extracted.push({
-                number: cand.number,
-                text: statement || `Questão ${cand.number}`,
-                supportText: activeSupportText, 
-                options: parsed.options
-            });
-        }
-    }
-
-    // Filtra duplicatas mantendo apenas a primeira leitura válida de cada questão
-    const uniqueQuestions = [];
-    const seenNumbers = new Set();
-
-    for (const q of extracted) {
-        if (!seenNumbers.has(q.number)) {
-            seenNumbers.add(q.number);
-            uniqueQuestions.push(q);
-        }
-    }
-
-    return uniqueQuestions.sort((a, b) => a.number - b.number);
-}
-
-// Renderiza a questão atual na tela
+// Renderizar a questão atual
 function renderQuestion(index) {
-    if (!questionsData || questionsData.length === 0 || !questionsData[index]) return;
+  const q = mockQuestions[index];
+  
+  questionCounter.textContent = `Questão ${q.number}`;
+  totalCounter.textContent = `${index + 1} de ${mockQuestions.length}`;
+  questionText.textContent = q.text;
 
-    const q = questionsData[index];
+  // Texto de apoio
+  if (q.supportText && q.supportText.trim() !== '') {
+    supportText.textContent = q.supportText;
+    supportContainer.style.display = 'block';
+  } else {
+    supportContainer.style.display = 'none';
+  }
 
-    // 1. Atualizar Número da Questão
-    const qNumEl = document.getElementById('questionNumber');
-    if (qNumEl) qNumEl.innerText = `Questão ${q.number}`;
+  // Alternativas
+  optionsList.innerHTML = '';
+  Object.keys(q.options).forEach(letter => {
+    const isSelected = selectedAnswers[q.number] === letter;
+    
+    const optDiv = document.createElement('div');
+    optDiv.className = `option-item ${isSelected ? 'selected' : ''}`;
+    optDiv.onclick = () => selectOption(q.number, letter);
 
-    // 2. Tratar Texto de Apoio (Caixa Retrátil)
-    const supportContainer = document.getElementById('supportContainer');
-    if (supportContainer) {
-        // Exibe o texto de apoio apenas se ele existir e for relevante (ex: questões de interpretação 1 a 10)
-        if (q.supportText && q.supportText.trim() !== '' && q.number <= 10) {
-            supportContainer.innerHTML = `
-                <details class="support-box" open>
-                    <summary>📖 Texto de Referência (Clique para expandir/recolher)</summary>
-                    <div class="support-content">${escapeHtml(q.supportText)}</div>
-                </details>
-            `;
-            supportContainer.style.display = 'block';
-        } else {
-            supportContainer.innerHTML = '';
-            supportContainer.style.display = 'none';
-        }
-    }
+    optDiv.innerHTML = `
+      <span class="option-letter">${letter})</span>
+      <span class="option-text">${q.options[letter]}</span>
+    `;
 
-    // 3. Atualizar Enunciado
-    const qTextEl = document.getElementById('questionText');
-    if (qTextEl) qTextEl.innerText = q.text;
+    optionsList.appendChild(optDiv);
+  });
 
-    // 4. Renderizar Opções (A, B, C, D, E)
-    const optionsListEl = document.getElementById('optionsList');
-    if (optionsListEl) {
-        optionsListEl.innerHTML = '';
-        const selectedOpt = userAnswers[q.number];
-
-        ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
-            if (q.options && q.options[letter]) {
-                const isSelected = selectedOpt === letter;
-                const optDiv = document.createElement('div');
-                optDiv.className = `option-item ${isSelected ? 'selected' : ''}`;
-                optDiv.onclick = () => selectOption(q.number, letter);
-
-                optDiv.innerHTML = `
-                    <span class="option-letter">${letter})</span>
-                    <span class="option-text">${escapeHtml(q.options[letter])}</span>
-                `;
-                optionsListEl.appendChild(optDiv);
-            }
-        });
-    }
-
-    // 5. Atualizar Estados dos Botões de Navegação
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    if (prevBtn) prevBtn.disabled = (index === 0);
-    if (nextBtn) nextBtn.disabled = (index === questionsData.length - 1);
+  // Atualizar botões de navegação
+  prevBtn.disabled = index === 0;
+  nextBtn.textContent = index === mockQuestions.length - 1 ? 'Finalizar' : 'Próxima →';
 }
 
-// Selecionar uma opção
-function selectOption(questionNum, letter) {
-    userAnswers[questionNum] = letter;
-    renderQuestion(currentQuestionIndex);
+function selectOption(qNum, letter) {
+  selectedAnswers[qNum] = letter;
+  renderQuestion(currentIndex);
 }
 
-// Funções de navegação
-function nextQuestion() {
-    if (currentQuestionIndex < questionsData.length - 1) {
-        currentQuestionIndex++;
-        renderQuestion(currentQuestionIndex);
-    }
-}
+prevBtn.addEventListener('click', () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion(currentIndex);
+  }
+});
 
-function prevQuestion() {
-    if (currentQuestionIndex > 0) {
-        currentQuestionIndex--;
-        renderQuestion(currentQuestionIndex);
-    }
-}
-
-// Inicialização com o texto extraído do PDF
-function loadParsedText(rawPdfText) {
-    questionsData = parseExamQuestions(rawPdfText);
-    currentQuestionIndex = 0;
-    userAnswers = {};
-    if (questionsData.length > 0) {
-        renderQuestion(0);
-    }
-}
+nextBtn.addEventListener('click', () => {
+  if (currentIndex < mockQuestions.length - 1) {
+    currentIndex++;
+    renderQuestion(currentIndex);
+  } else {
+    alert('Simulado finalizado! Veja seu gabarito.');
+  }
+});
