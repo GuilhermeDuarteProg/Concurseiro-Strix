@@ -1,20 +1,16 @@
-/* ==========================================================================
-   Estilos do Strix Simulado - Tema Dark Moderno (Upload + Simulado)
-   ========================================================================== */
-
 :root {
-  --bg-color: #0f172a;
-  --card-bg: #1e293b;
+  --bg-color: #090d16;
+  --card-bg: #131b2e;
+  --border-color: #1e293b;
   --accent-color: #8b5cf6;
   --accent-hover: #7c3aed;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --border-color: #334155;
-  --drop-zone-bg: #0f172a;
-  --option-bg: #1e293b;
-  --option-hover: #334155;
+  --drop-zone-bg: #0b1120;
+  --option-bg: #172036;
+  --option-hover: #1e2942;
   --option-selected: #2e1065;
-  --option-border-selected: #c084fc;
+  --option-border-selected: #a855f7;
 }
 
 * {
@@ -26,85 +22,96 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-main);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
+  padding: 30px 16px;
 }
 
-/* --- Cabeçalho Global --- */
-header, .app-header {
+/* Header */
+.app-header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .brand-title {
-  font-size: 0.9rem;
-  letter-spacing: 1.5px;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--accent-color);
+  color: var(--text-muted);
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 6px;
+}
+
+.brand-subtitle {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* Card Container */
+.card-container {
+  width: 100%;
+  max-width: 720px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
 .main-heading {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--text-main);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
 .sub-heading {
   color: var(--text-muted);
   font-size: 0.95rem;
-  margin-top: 8px;
+  line-height: 1.5;
+  margin-bottom: 28px;
 }
 
-/* --- Containers Principais --- */
-.container, .setup-card, .quiz-container {
-  width: 100%;
-  max-width: 760px;
-  background: var(--card-bg);
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border-color);
-}
-
-/* --- Tela de Upload (Alimentar Simulado) --- */
+/* Formulário e Drag & Drop */
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .section-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin-bottom: 10px;
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 8px;
   color: var(--text-main);
 }
 
 .drop-zone {
-  background: var(--drop-zone-bg);
+  background-color: var(--drop-zone-bg);
   border: 2px dashed var(--border-color);
   border-radius: 12px;
   padding: 24px;
   text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  transition: border-color 0.2s;
 }
 
-.drop-zone:hover, .drop-zone.dragover {
+.drop-zone:hover {
   border-color: var(--accent-color);
-  background: rgba(139, 92, 246, 0.05);
+}
+
+.drop-icon {
+  font-size: 1.8rem;
 }
 
 .drop-zone p {
@@ -116,72 +123,90 @@ header, .app-header {
   display: none;
 }
 
-textarea, .text-input {
+textarea {
   width: 100%;
-  background: var(--drop-zone-bg);
+  height: 70px;
+  background-color: var(--drop-zone-bg);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: 12px;
   color: var(--text-main);
   font-family: inherit;
   font-size: 0.9rem;
   resize: vertical;
-  min-height: 80px;
   outline: none;
-  transition: border-color 0.2s;
 }
 
-textarea:focus, .text-input:focus {
+textarea:focus {
   border-color: var(--accent-color);
 }
 
-/* --- Botões --- */
+/* Botões */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: none;
+  padding: 10px 20px;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
+  border: none;
   transition: all 0.2s ease;
   text-decoration: none;
 }
 
 .btn-primary {
-  background: var(--accent-color);
+  background-color: var(--accent-color);
   color: #ffffff;
-  width: 100%;
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
-  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+  background-color: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
 .btn-secondary {
-  background: var(--border-color);
+  background-color: var(--border-color);
   color: var(--text-main);
-  padding: 8px 16px;
-  font-size: 0.85rem;
 }
 
 .btn-secondary:hover {
-  background: #475569;
+  background-color: #334155;
 }
 
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.btn-full {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  margin-top: 10px;
 }
 
-/* --- Caixa Retrátil do Texto de Apoio --- */
+/* Tela de Questões */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.question-number {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.badge {
+  background-color: var(--border-color);
+  color: var(--text-muted);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
 .support-box {
-  background: #0f172a;
-  border: 1px solid #3b82f6;
+  background-color: var(--drop-zone-bg);
+  border: 1px solid #2563eb;
   border-radius: 8px;
   margin-bottom: 20px;
   overflow: hidden;
@@ -189,105 +214,77 @@ textarea:focus, .text-input:focus {
 
 .support-box summary {
   padding: 12px 16px;
-  background: rgba(59, 130, 246, 0.12);
+  background: rgba(37, 99, 235, 0.15);
   color: #60a5fa;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
-  user-select: none;
-  outline: none;
-}
-
-.support-box summary:hover {
-  background: rgba(59, 130, 246, 0.22);
 }
 
 .support-content {
   padding: 16px;
-  max-height: 280px;
-  overflow-y: auto;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.6;
-  color: #cbd5e1;
-  white-space: pre-wrap;
+  color: var(--text-muted);
   border-top: 1px solid var(--border-color);
-}
-
-/* --- Tela do Simulado (Questões) --- */
-.question-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 12px;
-}
-
-.question-number {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--accent-color);
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .question-text {
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 24px;
-  white-space: pre-wrap;
 }
 
 .options-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  margin-bottom: 28px;
 }
 
 .option-item {
   display: flex;
   align-items: flex-start;
+  gap: 12px;
   padding: 14px 16px;
-  background: var(--option-bg);
-  border: 1.5px solid var(--border-color);
+  background-color: var(--option-bg);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.15s ease-in-out;
+  transition: all 0.2s ease;
 }
 
 .option-item:hover {
-  background: var(--option-hover);
-  border-color: #64748b;
+  background-color: var(--option-hover);
+  border-color: #334155;
 }
 
 .option-item.selected {
-  background: var(--option-selected);
+  background-color: var(--option-selected);
   border-color: var(--option-border-selected);
 }
 
 .option-letter {
   font-weight: 700;
   color: var(--accent-color);
-  margin-right: 12px;
-  min-width: 24px;
-  font-size: 1rem;
 }
 
 .option-text {
   font-size: 0.95rem;
-  line-height: 1.5;
   color: var(--text-main);
-  word-break: break-word;
+  line-height: 1.4;
 }
 
 .nav-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color);
   gap: 12px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
 }
 
-/* Utilitário para alternar telas */
 .hidden {
   display: none !important;
 }
