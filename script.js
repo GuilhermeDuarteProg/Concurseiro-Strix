@@ -6,7 +6,7 @@ let questionsData = [];
 let currentQuestionIndex = 0;
 let userAnswers = {};
 
-// 1) EXTRAÇÃO DE TEXTO DO PDF (SUPORTE A 2 COLUNAS)
+// 1) EXTRAÇÃO DE TEXTO DO PDF (SUPORTE A 2 COLUNAS E PDF SIMPLES)
 async function extractTextFromPDF(file) {
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -24,7 +24,6 @@ async function extractTextFromPDF(file) {
 
     if (items.length === 0) continue;
 
-    // Separa as colunas esquerda e direita
     const leftCol = items.filter(it => it.x < midX);
     const rightCol = items.filter(it => it.x >= midX);
 
@@ -72,112 +71,85 @@ function cleanGarbage(text) {
     .trim();
 }
 
-// 3) EXTRAÇÃO DE ALTERNATIVAS (A, B, C, D, E)
-function extractOptionsFromSlice(slice) {
-  // Aceita (A), A), A., A -
-  const optRegex = /(?:^|\s|\n)(?:\(([A-E])\)|([A-E])\s*[\.\)\-])\s+/g;
-  const matches = [];
-  let m;
-
-  while ((m = optRegex.exec(slice)) !== null) {
-    const letter = (m[1] || m[2]).toUpperCase();
-    matches.push({ letter, index: m.index, matchLength: m[0].length });
-  }
-
-  let matchA = null, matchB = null, matchC = null, matchD = null, matchE = null;
-
-  for (const item of matches) {
-    if (item.letter === 'A' && !matchA) {
-      matchA = item;
-    } else if (item.letter === 'B' && matchA && !matchB && item.index > matchA.index) {
-      matchB = item;
-    } else if (item.letter === 'C' && matchB && !matchC && item.index > matchB.index) {
-      matchC = item;
-    } else if (item.letter === 'D' && matchC && !matchD && item.index > matchD.index) {
-      matchD = item;
-    } else if (item.letter === 'E' && matchD && !matchE && item.index > matchD.index) {
-      matchE = item;
-    }
-  }
-
-  if (matchA && matchB && matchC && matchD && matchE) {
-    const statement = slice.substring(0, matchA.index).trim();
-
-    const optA = slice.substring(matchA.index + matchA.matchLength, matchB.index).trim();
-    const optB = slice.substring(matchB.index + matchB.matchLength, matchC.index).trim();
-    const optC = slice.substring(matchC.index + matchC.matchLength, matchD.index).trim();
-    const optD = slice.substring(matchD.index + matchD.matchLength, matchE.index).trim();
-
-    const restE = slice.substring(matchE.index + matchE.matchLength);
-    let endEOffset = restE.search(/(?:\n\s*\n|\n?\s*(?:QUESTÃO|\d{1,3}\s*[\.\)\-])|\n?\s*CONHECIMENTOS)/i);
-    if (endEOffset === -1 || endEOffset > 500) endEOffset = Math.min(restE.length, 400);
-    const optE = restE.substring(0, endEOffset).trim();
-
-    return {
-      valid: true,
-      statement,
-      options: {
-        A: cleanGarbage(optA) || "Opção A",
-        B: cleanGarbage(optB) || "Opção B",
-        C: cleanGarbage(optC) || "Opção C",
-        D: cleanGarbage(optD) || "Opção D",
-        E: cleanGarbage(optE) || "Opção E"
-      }
-    };
-  }
-
-  return { valid: false };
-}
-
-// 4) PARSER DA PROVA (FLEXÍVEL PARA CESGRANRIO)
+// 3) PARSER DE QUESTÕES ULTRA-FLEXÍVEL
 function parseExamQuestions(rawText) {
   const cleanText = cleanGarbage(rawText);
+  if (!cleanText || cleanText.length < 50) return [];
 
-  // Reconhece "QUESTÃO 1", "QUESTÃO 01", "1.", "1)", "1 -"
+  // Busca cabeçalhos de questão: "QUESTÃO 1", "QUESTÃO 01", "1.", "01 -", "1)"
   const qHeaderRegex = /(?:^|\n)\s*(?:QUESTÃO\s+(\d{1,3})|(\d{1,3})\s*[\.\)\-:]\s+)/gi;
   let match;
-  const candidates = [];
+  const matches = [];
 
   while ((match = qHeaderRegex.exec(cleanText)) !== null) {
     const numStr = match[1] || match[2];
     const num = parseInt(numStr, 10);
     if (num >= 1 && num <= 120) {
-      candidates.push({ number: num, index: match.index, contentIndex: match.index + match[0].length });
+      matches.push({ number: num, index: match.index });
     }
   }
 
-  const extracted = [];
-  let activeSupportText = '';
+  if (matches.length === 0) return [];
 
-  for (let i = 0; i < candidates.length; i++) {
-    const cand = candidates[i];
-    const nextIndex = candidates[i + 1] ? candidates[i + 1].index : cand.contentIndex + 4000;
-    const searchSlice = cleanText.substring(cand.contentIndex, Math.min(cand.contentIndex + 4000, nextIndex));
-    const parsed = extractOptionsFromSlice(searchSlice);
+  const questions = [];
 
-    if (parsed.valid) {
-      let statement = parsed.statement;
-      const textHeaderMatch = statement.match(/(?:\bTEXTO\s+[I|V|X\d]*|\bREAD\s+THE\s+TEXT|\bLEIA\s+O\s+TEXTO)/i);
-      if (textHeaderMatch) {
-        activeSupportText = statement.substring(textHeaderMatch.index).trim();
-        statement = statement.substring(0, textHeaderMatch.index).trim();
+  for (let i = 0; i < matches.length; i++) {
+    const current = matches[i];
+    const nextIndex = matches[i + 1] ? matches[i + 1].index : cleanText.length;
+    const chunk = cleanText.substring(current.index, nextIndex).trim();
+
+    // Tenta capturar as opções A, B, C, D, E dentro do bloco da questão
+    const optRegex = /(?:^|\n|\s+)(?:\(([A-E])\)|([A-E])[\.\)\-])\s+/g;
+    let optMatch;
+    const optPositions = [];
+
+    while ((optMatch = optRegex.exec(chunk)) !== null) {
+      const letter = (optMatch[1] || optMatch[2]).toUpperCase();
+      optPositions.push({ letter, index: optMatch.index, length: optMatch[0].length });
+    }
+
+    // Organiza as opções encontradas
+    const optionsMap = { A: '', B: '', C: '', D: '', E: '' };
+    let statement = chunk;
+
+    // Se encontrou opções A-E
+    if (optPositions.length >= 2) {
+      const firstOpt = optPositions[0];
+      statement = chunk.substring(0, firstOpt.index).trim();
+
+      for (let j = 0; j < optPositions.length; j++) {
+        const curOpt = optPositions[j];
+        const nextOptIndex = optPositions[j + 1] ? optPositions[j + 1].index : chunk.length;
+        const optText = chunk.substring(curOpt.index + curOpt.length, nextOptIndex).trim();
+        if (optionsMap[curOpt.letter] === '') {
+          optionsMap[curOpt.letter] = cleanGarbage(optText);
+        }
       }
-
-      extracted.push({
-        number: cand.number,
-        text: statement || `Questão ${cand.number}`,
-        supportText: activeSupportText,
-        options: parsed.options,
-        correctAnswer: null
-      });
     }
+
+    // Preenche opções vazias para evitar quebrar a interface
+    ['A', 'B', 'C', 'D', 'E'].forEach(l => {
+      if (!optionsMap[l]) optionsMap[l] = `(Consulte a imagem/PDF para a alternativa ${l})`;
+    });
+
+    // Remove o rótulo "QUESTÃO X" do enunciado
+    statement = statement.replace(/^(?:QUESTÃO\s+\d{1,3}|\d{1,3}\s*[\.\)\-:]\s+)/i, '').trim();
+
+    questions.push({
+      number: current.number,
+      text: statement || `Questão ${current.number}`,
+      supportText: '',
+      options: optionsMap,
+      correctAnswer: null
+    });
   }
 
+  // Remove duplicadas mantendo a primeira ocorrência
   const uniqueQuestions = [];
-  const seenNumbers = new Set();
-  for (const q of extracted) {
-    if (!seenNumbers.has(q.number)) {
-      seenNumbers.add(q.number);
+  const seen = new Set();
+  for (const q of questions) {
+    if (!seen.has(q.number)) {
+      seen.add(q.number);
       uniqueQuestions.push(q);
     }
   }
@@ -185,7 +157,7 @@ function parseExamQuestions(rawText) {
   return uniqueQuestions.sort((a, b) => a.number - b.number);
 }
 
-// 5) PARSERS DE GABARITO
+// 4) PARSERS DE GABARITO
 function parseAnswerKeyFromPDF(rawText) {
   const cleanText = cleanGarbage(rawText);
   const keyRegex = /(\d{1,3})\s*[\.\)\-]?\s*([A-E])\b/g;
@@ -215,12 +187,12 @@ function parseAnswerKeyFromTextarea(rawText) {
   return answerKey;
 }
 
-// 6) EXPORTAÇÃO JSON
+// 5) EXPORTAÇÃO JSON
 function buildQuizJSON(questions) {
   return questions.map(q => ({
     id: q.number,
     materia: null,
-    enunciado: q.supportText ? `${q.supportText}\n\n${q.text}` : q.text,
+    enunciado: q.text,
     alternativas: {
       a: q.options.A,
       b: q.options.B,
@@ -244,20 +216,24 @@ function downloadJSON(data, filename = 'questoes.json') {
   URL.revokeObjectURL(url);
 }
 
-// 7) EVENTOS DE UPLOAD DA PROVA
+// 6) EVENTOS DE UPLOAD DA PROVA
 const pdfProvaInput = document.getElementById('pdfProvaInput');
 const dropZoneProva = document.getElementById('dropZoneProva');
 const statusProva = document.getElementById('statusProva');
 
 async function handleProvaFile(file) {
   if (file && file.type === 'application/pdf') {
-    statusProva.innerText = `⏳ Lendo e organizando arquivo: ${file.name}...`;
+    statusProva.innerText = `⏳ Lendo e extraindo texto: ${file.name}...`;
     try {
       rawPdfTextContent = await extractTextFromPDF(file);
-      statusProva.innerText = `✅ Prova carregada com sucesso! (${file.name})`;
+      if (!rawPdfTextContent || rawPdfTextContent.trim().length < 50) {
+        statusProva.innerText = `⚠️ Atenção: Este PDF parece ser uma IMAGEM/ESCANEAMENTO. O leitor não encontrou texto selecionável.`;
+      } else {
+        statusProva.innerText = `✅ Prova carregada com sucesso! (${file.name})`;
+      }
     } catch (err) {
       console.error(err);
-      statusProva.innerText = `❌ Erro ao ler o PDF. Certifique-se de que não é uma imagem digitalizada.`;
+      statusProva.innerText = `❌ Erro ao processar arquivo PDF.`;
     }
   }
 }
@@ -278,7 +254,7 @@ if (dropZoneProva) {
   });
 }
 
-// 8) EVENTOS DE UPLOAD DO GABARITO
+// 7) EVENTOS DE UPLOAD DO GABARITO
 const pdfGabaritoInput = document.getElementById('pdfGabaritoInput');
 const dropZoneGabarito = document.getElementById('dropZoneGabarito');
 const statusGabarito = document.getElementById('statusGabarito');
@@ -314,7 +290,7 @@ if (dropZoneGabarito) {
   });
 }
 
-// 9) RENDERIZAÇÃO DAS QUESTÕES
+// 8) RENDERIZAÇÃO DAS QUESTÕES
 function renderQuestion(index) {
   if (!questionsData || !questionsData[index]) return;
 
@@ -324,14 +300,7 @@ function renderQuestion(index) {
   document.getElementById('questionText').innerText = q.text;
 
   const supportContainer = document.getElementById('supportContainer');
-  const supportText = document.getElementById('supportText');
-
-  if (q.supportText && q.supportText.trim() !== '') {
-    supportText.innerText = q.supportText;
-    supportContainer.style.display = 'block';
-  } else {
-    supportContainer.style.display = 'none';
-  }
+  if (supportContainer) supportContainer.style.display = 'none';
 
   const optionsList = document.getElementById('optionsList');
   optionsList.innerHTML = '';
@@ -358,7 +327,7 @@ function renderQuestion(index) {
   document.getElementById('nextBtn').innerText = (index === questionsData.length - 1) ? 'Finalizar' : 'Próxima →';
 }
 
-// 10) RESULTADO / FINALIZAR
+// 9) RESULTADO / FINALIZAR
 function finishQuiz() {
   const hasAnswerKey = questionsData.some(q => q.correctAnswer);
   const total = questionsData.length;
@@ -398,7 +367,7 @@ function finishQuiz() {
   scoreEl.innerText = `Você acertou ${correctCount} de ${gradable} questões com gabarito (${percentage}%). Respondidas: ${answered} de ${total}.`;
 }
 
-// 11) INICIAR SIMULADO
+// 10) INICIAR SIMULADO
 document.getElementById('startBtn').addEventListener('click', () => {
   if (!rawPdfTextContent) {
     alert("Por favor, selecione ou arraste o PDF da prova antes de iniciar.");
@@ -408,7 +377,7 @@ document.getElementById('startBtn').addEventListener('click', () => {
   questionsData = parseExamQuestions(rawPdfTextContent);
 
   if (questionsData.length === 0) {
-    alert("Nenhuma questão em texto foi detectada. Verifique se o arquivo PDF contém texto selecionável (se for um PDF escaneado/foto, ele não funciona).");
+    alert("O PDF enviado parece ser uma imagem/escaneamento. Utilize um arquivo PDF com texto selecionável ou aplique um OCR prévio no arquivo.");
     return;
   }
 
