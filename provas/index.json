@@ -6,13 +6,5 @@
     "banca": "Cesgranrio",
     "ano": 2023,
     "arquivo": "provas/transpetro-2023-admin.json"
-  },
-  {
-    "id": "caixa-2024-ti",
-    "titulo": "Caixa Econômica 2024 - Tecnologia da Informação",
-    "instituicao": "Caixa",
-    "banca": "Cesgranrio",
-    "ano": 2024,
-    "arquivo": "provas/caixa-2024-ti.json"
   }
 ]
