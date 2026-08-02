@@ -1,3 +1,70 @@
+let listaProvas = [];
+let provaOriginal = null;
+let provaFiltrada = [];
+let indexAtual = 0;
+
+// 1. Assim que o site abre, busca o catálogo de provas em 'provas/index.json'
+window.addEventListener('DOMContentLoaded', async () => {
+  await carregarCatalogoProvas();
+});
+
+async function carregarCatalogoProvas() {
+  try {
+    const resposta = await fetch('./provas/index.json');
+    listaProvas = await resposta.json();
+
+    const seletor = document.getElementById('seletorProvas');
+    seletor.innerHTML = '<option value="">-- Escolha um Simulado --</option>';
+
+    // Preenche as opções do <select> dinamicamente
+    listaProvas.forEach(p => {
+      const option = document.createElement('option');
+      option.value = p.arquivo; // Guarda o caminho do arquivo (ex: provas/transpetro-2023-admin.json)
+      option.innerText = `${p.banca} (${p.ano}) - ${p.titulo}`;
+      seletor.appendChild(option);
+    });
+  } catch (erro) {
+    console.error("Erro ao carregar o catálogo de provas:", erro);
+  }
+}
+
+// 2. Quando você seleciona uma prova no menu, ela é baixada e exibida na tela
+async function carregarProva(caminhoArquivo) {
+  if (!caminhoArquivo) return;
+
+  try {
+    const resposta = await fetch(caminhoArquivo);
+    provaOriginal = await resposta.json();
+    
+    // Atualiza as disciplinas no filtro
+    atualizarFiltroDisciplinas();
+    
+    // Reseta filtros e renderiza a primeira questão
+    provaFiltrada = [...provaOriginal.questoes];
+    indexAtual = 0;
+    
+    document.getElementById('area-estudo').classList.remove('oculto');
+    renderizarQuestao();
+  } catch (erro) {
+    console.error("Erro ao carregar o arquivo da prova:", erro);
+  }
+}
+
+// Preenche o filtro de disciplinas de acordo com a prova atual
+function atualizarFiltroDisciplinas() {
+  const selectDisc = document.getElementById('filtroDisciplina');
+  selectDisc.innerHTML = '<option value="todas">Todas as Disciplinas</option>';
+
+  // Extrai disciplinas únicas da prova selecionada
+  const disciplinas = [...new Set(provaOriginal.questoes.map(q => q.disciplina))];
+  
+  disciplinas.forEach(disc => {
+    const opt = document.createElement('option');
+    opt.value = disc;
+    opt.innerText = disc;
+    selectDisc.appendChild(opt);
+  });
+}
 let provaOriginal = null;     // Guarda a prova completa
 let provaFiltrada = [];       // Guarda as questões do filtro atual
 let indexAtual = 0;
