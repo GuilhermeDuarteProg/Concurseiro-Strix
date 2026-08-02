@@ -6,9 +6,9 @@ let indexAtual = 0;
 
 // Estados do Usuário
 let respostas = {};           // Ex: { 1: "A" }
-let eliminadas = {};          // Ex: { 1: ["B", "D"] } -> opções riscadas
-let paraRevisar = new Set();  // Guardar números das questões marcadas com dúvida
-let modoEstudoDireto = true;  // Modo Treino (true) vs Simulado (false)
+let eliminadas = {};          // Ex: { 1: ["B", "D"] }
+let paraRevisar = new Set();  
+let modoEstudoDireto = true;  
 
 // 1. Ao carregar a página, busca o catálogo master de provas
 window.addEventListener('DOMContentLoaded', async () => {
@@ -23,9 +23,9 @@ async function carregarCatalogoProvas() {
     const seletor = document.getElementById('seletorProvas');
     seletor.innerHTML = '<option value="">-- Escolha um Simulado --</option>';
 
-    listaProvas.forEach(p => {
+    listaProvas.forEach((p, index) => {
       const option = document.createElement('option');
-      option.value = p.arquivo;
+      option.value = index; // Passa o índice da lista
       option.innerText = `${p.banca} (${p.ano}) - ${p.titulo}`;
       seletor.appendChild(option);
     });
@@ -34,24 +34,43 @@ async function carregarCatalogoProvas() {
   }
 }
 
-// 2. Carrega a prova selecionada no menu suspenso
-async function carregarProva(caminhoArquivo) {
-  if (!caminhoArquivo) return;
+// 2. Carrega a prova selecionada e mescla com o Gabarito
+async function carregarProva(indexLista) {
+  if (indexLista === "" || indexLista === undefined) return;
+
+  const itemProva = listaProvas[indexLista];
 
   try {
-    const resposta = await fetch(caminhoArquivo);
-    provaOriginal = await resposta.json();
-    
-    // Reseta estados anteriores
+    // Carrega arquivo da prova
+    const resProva = await fetch(itemProva.arquivo);
+    provaOriginal = await resProva.json();
+
+    // Carrega o gabarito e vincula às questões
+    if (itemProva.gabarito) {
+      try {
+        const resGabarito = await fetch(itemProva.gabarito);
+        const gabaritoMap = await resGabarito.json();
+
+        provaOriginal.questoes.forEach(q => {
+          if (gabaritoMap[q.numero]) {
+            q.resposta_correta = gabaritoMap[q.numero];
+          }
+        });
+      } catch (eGab) {
+        console.warn("Gabarito não localizado ou não carregado:", eGab);
+      }
+    }
+
+    // Reseta estados
     respostas = {};
     eliminadas = {};
     paraRevisar.clear();
-    
+
     atualizarFiltroDisciplinas();
-    
+
     provaFiltrada = [...provaOriginal.questoes];
     indexAtual = 0;
-    
+
     document.getElementById('area-estudo').classList.remove('oculto');
     renderizarQuestao();
   } catch (erro) {
@@ -65,7 +84,7 @@ function atualizarFiltroDisciplinas() {
   selectDisc.innerHTML = '<option value="todas">Todas as Disciplinas</option>';
 
   const disciplinas = [...new Set(provaOriginal.questoes.map(q => q.disciplina))];
-  
+
   disciplinas.forEach(disc => {
     const opt = document.createElement('option');
     opt.value = disc;
@@ -91,14 +110,42 @@ function renderizarQuestao() {
   if (!q) return;
 
   const num = q.numero;
-  
-  // Atualiza Contador do Rodapé (ex: Questão 1 de 70)
-  document.getElementById('contador-questoes').innerText = `Questão ${indexAtual + 1} de ${provaFiltrada.length}`;
 
-  // Atualiza Badge de Disciplina
+  // --- RENDEREIZAÇÃO DO TEXTO DE APOIO ---
+  const painelTexto = document.getElementById('texto-apoio');
+  painelTexto.innerHTML = '';
+
+  if (provaOriginal.textos_suporte && provaOriginal.textos_suporte.length > 0) {
+    let textoEncontrado = null;
+
+    if (q.disciplina === "Língua Portuguesa") {
+      textoEncontrado = provaOriginal.textos_suporte.find(t => t.id === "texto_portugues");
+    } else if (q.disciplina === "Língua Inglesa") {
+      textoEncontrado = provaOriginal.textos_suporte.find(t => t.id === "texto_ingles");
+    }
+
+    if (textoEncontrado) {
+      painelTexto.classList.remove('oculto');
+      let html = `<h3>${textoEncontrado.titulo}</h3>`;
+      if (textoEncontrado.autor) html += `<p><strong>${textoEncontrado.autor}</strong></p>`;
+      if (textoEncontrado.referencia) html += `<p><small><i>${textoEncontrado.referencia}</i></small></p><br>`;
+      
+      textoEncontrado.paragrafos.forEach(p => {
+        html += `<p style="margin-bottom: 0.6rem;">${p}</p>`;
+      });
+      painelTexto.innerHTML = html;
+    } else {
+      painelTexto.classList.add('oculto');
+    }
+  } else {
+    painelTexto.classList.add('oculto');
+  }
+
+  // Contador e Disciplina
+  document.getElementById('contador-questoes').innerText = `Questão ${indexAtual + 1} de ${provaFiltrada.length}`;
   document.getElementById('info-disciplina').innerText = q.disciplina;
 
-  // Atualiza Botão de Revisão
+  // Botão de Revisão
   const btnRevisar = document.getElementById('btn-revisar');
   if (paraRevisar.has(num)) {
     btnRevisar.classList.add('em-revisao');
@@ -108,10 +155,10 @@ function renderizarQuestao() {
     btnRevisar.innerText = '🏳️ Marcar p/ Revisão';
   }
 
-  // Renderiza Enunciado
+  // Enunciado
   document.getElementById('enunciado').innerText = `${q.numero}. ${q.enunciado}`;
-  
-  // Renderiza Alternativas
+
+  // Alternativas
   const container = document.getElementById('opcoes');
   container.innerHTML = '';
 
@@ -125,7 +172,7 @@ function renderizarQuestao() {
     if (foiMarcada) div.classList.add('selecionada');
     if (foiEliminada) div.classList.add('riscada');
 
-    // Modo Treino: destaca verde/vermelho se já respondeu
+    // Modo Treino (Gabarito imediato ao responder)
     if (modoEstudoDireto && respostas[num]) {
       if (letra === q.resposta_correta) div.classList.add('correta');
       else if (foiMarcada && letra !== q.resposta_correta) div.classList.add('incorreta');
@@ -133,13 +180,11 @@ function renderizarQuestao() {
 
     div.innerHTML = `<strong>(${letra})</strong> ${texto}`;
 
-    // Clique Esquerdo: Seleciona alternativa
     div.onclick = () => {
       respostas[num] = letra;
       renderizarQuestao();
     };
 
-    // Clique Direito: Risca a alternativa
     div.oncontextmenu = (e) => {
       e.preventDefault();
       toggleEliminarOpcao(num, letra);
@@ -149,7 +194,7 @@ function renderizarQuestao() {
   });
 }
 
-// 6. Navegar entre as questões (Anterior / Próxima)
+// 6. Navegação
 function mudarQuestao(direcao) {
   const novoIndex = indexAtual + direcao;
   if (novoIndex >= 0 && novoIndex < provaFiltrada.length) {
@@ -158,10 +203,10 @@ function mudarQuestao(direcao) {
   }
 }
 
-// 7. Riscar / Desriscar Opção
+// 7. Eliminar / Riscar opção
 function toggleEliminarOpcao(numQuestao, letra) {
   if (!eliminadas[numQuestao]) eliminadas[numQuestao] = [];
-  
+
   const index = eliminadas[numQuestao].indexOf(letra);
   if (index > -1) {
     eliminadas[numQuestao].splice(index, 1);
@@ -171,13 +216,13 @@ function toggleEliminarOpcao(numQuestao, letra) {
   renderizarQuestao();
 }
 
-// 8. Alternar Modo Treino / Modo Simulado
+// 8. Trocar modo de estudo
 function toggleModoEstudo(checked) {
   modoEstudoDireto = checked;
   renderizarQuestao();
 }
 
-// 9. Alternar Marcação de Revisão
+// 9. Marcação para revisão
 function toggleRevisao() {
   const q = provaFiltrada[indexAtual];
   if (paraRevisar.has(q.numero)) {
@@ -188,7 +233,7 @@ function toggleRevisao() {
   renderizarQuestao();
 }
 
-// 10. Finalizar e Mostrar Desempenho
+// 10. Resultado Final
 function calcularResultado() {
   let acertos = 0;
   let total = provaOriginal.questoes.length;
@@ -199,5 +244,5 @@ function calcularResultado() {
     }
   });
 
-  alert(`Você finalizou o simulado!\n\nAcertos: ${acertos} de ${total} (${((acertos/total)*100).toFixed(1)}%)`);
+  alert(`Você finalizou o simulado!\n\nAcertos: ${acertos} de ${total} (${((acertos / total) * 100).toFixed(1)}%)`);
 }
