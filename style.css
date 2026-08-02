@@ -321,3 +321,206 @@ select {
     display: none; /* Oculta a dica de clique direito em telas de toque */
   }
 }
+/* --- TELA DE RESULTADO & CORREÇÃO --- */
+#tela-resultado {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header do Resultado */
+.resultado-header-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.porcentagem-destaque {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #f8fafc;
+  line-height: 1;
+}
+
+#resultado-detalhe-texto {
+  color: #94a3b8;
+  margin-top: 8px;
+  font-size: 1.05rem;
+}
+
+.status-desempenho {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+
+.status-desempenho.aprovado {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid #10b981;
+}
+
+.status-desempenho.reprovado {
+  background: rgba(244, 63, 94, 0.2);
+  color: #f87171;
+  border: 1px solid #f43f5e;
+}
+
+/* Grid de Navegação do Gabarito */
+.container-grid-gabarito {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.instrucao-grid {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.grid-numeros {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: 8px;
+}
+
+.btn-grid-num {
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: #f8fafc;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-grid-num:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+}
+
+.btn-grid-num.correta {
+  background: #065f46;
+  border-color: #10b981;
+  color: #a7f3d0;
+}
+
+.btn-grid-num.incorreta {
+  background: #881337;
+  border-color: #f43f5e;
+  color: #fecdd3;
+}
+
+.btn-grid-num.embranco {
+  background: #334155;
+  border-color: #64748b;
+  color: #94a3b8;
+}
+
+.btn-grid-num.ativo {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+/* Card de Revisão da Questão */
+.card-revisao {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.revisao-corpo {
+  padding: 24px;
+}
+
+.revisao-enunciado {
+  font-size: 1.1rem;
+  color: #f8fafc;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.revisao-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.opcao-revisao {
+  padding: 14px 18px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #cbd5e1;
+}
+
+.opcao-revisao.correta {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+  color: #6ee7b7;
+  font-weight: 600;
+}
+
+.opcao-revisao.marcada-errada {
+  background: rgba(244, 63, 94, 0.15);
+  border-color: #f43f5e;
+  color: #fca5a5;
+  text-decoration: line-through;
+}
+
+/* Banner de Feedback Inferior */
+.banner-feedback-rodape {
+  padding: 14px 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.banner-feedback-rodape.acerto {
+  background: #10b981;
+  color: #022c22;
+}
+
+.banner-feedback-rodape.erro {
+  background: #f43f5e;
+  color: #4c0519;
+}
+
+.banner-feedback-rodape.embranco {
+  background: #64748b;
+  color: #0f172a;
+}
+
+/* Botão Voltar */
+.btn-acao-secundario {
+  background: #334155;
+  color: #f8fafc;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-acao-secundario:hover {
+  background: #475569;
+}
