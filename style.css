@@ -290,6 +290,50 @@ textarea:focus {
   padding-top: 20px;
 }
 
+/* Lista de Resultados */
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 350px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: var(--drop-zone-bg);
+  border: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.result-item.correct {
+  border-color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.result-item.wrong {
+  border-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.result-item.no-key {
+  border-color: var(--border-color);
+}
+
+.result-q-number {
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.result-answer {
+  color: var(--text-main);
+}
+
 .hidden {
   display: none !important;
 }
