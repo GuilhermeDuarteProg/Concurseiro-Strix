@@ -1,9 +1,20 @@
+// --- ESTADOS DA APLICAÇÃO ---
 let listaProvas = [];
-let provaOriginal = null;
-let provaFiltrada = [];
+let provaOriginal = null;     // Guarda a prova completa
+let provaFiltrada = [];       // Guarda as questões do filtro atual
 let indexAtual = 0;
 
+// Estados do Usuário
+let respostas = {};           // Ex: { 1: "A" }
+let eliminadas = {};          // Ex: { 1: ["B", "D"] } -> opções riscadas
+let paraRevisar = new Set();  // Guardar números das questões marcadas com dúvida
+let modoEstudoDireto = true;  // Modo Treino (true) vs Simulado (false)
+
 // 1. Ao carregar a página, busca o catálogo master de provas
+window.addEventListener('DOMContentLoaded', async () => {
+  await carregarCatalogoProvas();
+});
+
 async function carregarCatalogoProvas() {
   try {
     const resposta = await fetch('./provas/index.json');
@@ -12,9 +23,9 @@ async function carregarCatalogoProvas() {
     const seletor = document.getElementById('seletorProvas');
     seletor.innerHTML = '<option value="">-- Escolha um Simulado --</option>';
 
-    listaProvas.forEach((p, index) => {
+    listaProvas.forEach(p => {
       const option = document.createElement('option');
-      option.value = index; // Passa o índice da prova na lista
+      option.value = p.arquivo;
       option.innerText = `${p.banca} (${p.ano}) - ${p.titulo}`;
       seletor.appendChild(option);
     });
@@ -23,52 +34,36 @@ async function carregarCatalogoProvas() {
   }
 }
 
-// 2. Carrega a prova e une com o arquivo de gabarito
-async function carregarProva(indexLista) {
-  if (indexLista === "" || indexLista === undefined) return;
-
-  const itemProva = listaProvas[indexLista];
+// 2. Carrega a prova selecionada no menu suspenso
+async function carregarProva(caminhoArquivo) {
+  if (!caminhoArquivo) return;
 
   try {
-    // Busca a prova e o gabarito simultaneamente
-    const [resProva, resGabarito] = await Promise.all([
-      fetch(itemProva.arquivo),
-      fetch(itemProva.gabarito)
-    ]);
-
-    provaOriginal = await resProva.json();
-    const gabaritoMap = await resGabarito.json();
-
-    // Mescla o gabarito dentro de cada questão da prova
-    provaOriginal.questoes.forEach(q => {
-      if (gabaritoMap[q.numero]) {
-        q.resposta_correta = gabaritoMap[q.numero];
-      }
-    });
-
+    const resposta = await fetch(caminhoArquivo);
+    provaOriginal = await resposta.json();
+    
     // Reseta estados anteriores
     respostas = {};
     eliminadas = {};
     paraRevisar.clear();
-
+    
     atualizarFiltroDisciplinas();
-
+    
     provaFiltrada = [...provaOriginal.questoes];
     indexAtual = 0;
-
+    
     document.getElementById('area-estudo').classList.remove('oculto');
     renderizarQuestao();
   } catch (erro) {
-    console.error("Erro ao carregar os dados da prova ou gabarito:", erro);
+    console.error("Erro ao carregar o arquivo da prova:", erro);
   }
 }
 
-// Preenche o filtro de disciplinas de acordo com a prova atual
+// 3. Preenche as matérias no filtro superior
 function atualizarFiltroDisciplinas() {
   const selectDisc = document.getElementById('filtroDisciplina');
   selectDisc.innerHTML = '<option value="todas">Todas as Disciplinas</option>';
 
-  // Extrai disciplinas únicas da prova selecionada
   const disciplinas = [...new Set(provaOriginal.questoes.map(q => q.disciplina))];
   
   disciplinas.forEach(disc => {
@@ -78,19 +73,8 @@ function atualizarFiltroDisciplinas() {
     selectDisc.appendChild(opt);
   });
 }
-let provaOriginal = null;     // Guarda a prova completa
-let provaFiltrada = [];       // Guarda as questões do filtro atual
-let indexAtual = 0;
 
-// Estados do Usuário
-let respostas = {};           // Ex: { 1: "A" }
-let eliminadas = {};          // Ex: { 1: ["B", "D"] } -> opções riscadas
-let paraRevisar = new Set();  // Guardar números das questões marcadas com dúvida
-
-// Modo de Estudo: true = mostra resposta na hora | false = modo simulado
-let modoEstudoDireto = true; 
-
-// 1. Filtrar por Disciplina (Ex: Apenas "Língua Portuguesa")
+// 4. Filtrar por Disciplina
 function aplicarFiltroDisciplina(disciplinaSelecionada) {
   if (!disciplinaSelecionada || disciplinaSelecionada === "todas") {
     provaFiltrada = [...provaOriginal.questoes];
@@ -101,14 +85,20 @@ function aplicarFiltroDisciplina(disciplinaSelecionada) {
   renderizarQuestao();
 }
 
-// 2. Renderizar Questão com Recursos Avançados
+// 5. Renderizar Questão na Tela
 function renderizarQuestao() {
   const q = provaFiltrada[indexAtual];
   if (!q) return;
 
   const num = q.numero;
   
-  // Atualiza botão de "Marcar para Revisão"
+  // Atualiza Contador do Rodapé (ex: Questão 1 de 70)
+  document.getElementById('contador-questoes').innerText = `Questão ${indexAtual + 1} de ${provaFiltrada.length}`;
+
+  // Atualiza Badge de Disciplina
+  document.getElementById('info-disciplina').innerText = q.disciplina;
+
+  // Atualiza Botão de Revisão
   const btnRevisar = document.getElementById('btn-revisar');
   if (paraRevisar.has(num)) {
     btnRevisar.classList.add('em-revisao');
@@ -118,9 +108,10 @@ function renderizarQuestao() {
     btnRevisar.innerText = '🏳️ Marcar p/ Revisão';
   }
 
+  // Renderiza Enunciado
   document.getElementById('enunciado').innerText = `${q.numero}. ${q.enunciado}`;
   
-  // Renderizar Alternativas com suporte a Riscar / Selecionar
+  // Renderiza Alternativas
   const container = document.getElementById('opcoes');
   container.innerHTML = '';
 
@@ -128,14 +119,13 @@ function renderizarQuestao() {
     const div = document.createElement('div');
     div.className = 'opcao-item';
 
-    // Checa se a opção está marcada ou eliminada
     const foiMarcada = respostas[num] === letra;
     const foiEliminada = (eliminadas[num] || []).includes(letra);
 
     if (foiMarcada) div.classList.add('selecionada');
     if (foiEliminada) div.classList.add('riscada');
 
-    // Se estiver no Modo Estudo e já respondeu, destaca Certo/Errado
+    // Modo Treino: destaca verde/vermelho se já respondeu
     if (modoEstudoDireto && respostas[num]) {
       if (letra === q.resposta_correta) div.classList.add('correta');
       else if (foiMarcada && letra !== q.resposta_correta) div.classList.add('incorreta');
@@ -143,15 +133,15 @@ function renderizarQuestao() {
 
     div.innerHTML = `<strong>(${letra})</strong> ${texto}`;
 
-    // Clique Normal: Marcar a resposta
+    // Clique Esquerdo: Seleciona alternativa
     div.onclick = () => {
       respostas[num] = letra;
       renderizarQuestao();
     };
 
-    // Clique com Botão Direito: Riscar / Desriscar a alternativa
+    // Clique Direito: Risca a alternativa
     div.oncontextmenu = (e) => {
-      e.preventDefault(); // Impede o menu do navegador de abrir
+      e.preventDefault();
       toggleEliminarOpcao(num, letra);
     };
 
@@ -159,20 +149,35 @@ function renderizarQuestao() {
   });
 }
 
-// 3. Função para Alternar a Eliminação (Riscar) de uma opção
+// 6. Navegar entre as questões (Anterior / Próxima)
+function mudarQuestao(direcao) {
+  const novoIndex = indexAtual + direcao;
+  if (novoIndex >= 0 && novoIndex < provaFiltrada.length) {
+    indexAtual = novoIndex;
+    renderizarQuestao();
+  }
+}
+
+// 7. Riscar / Desriscar Opção
 function toggleEliminarOpcao(numQuestao, letra) {
   if (!eliminadas[numQuestao]) eliminadas[numQuestao] = [];
   
   const index = eliminadas[numQuestao].indexOf(letra);
   if (index > -1) {
-    eliminadas[numQuestao].splice(index, 1); // Remove o risco
+    eliminadas[numQuestao].splice(index, 1);
   } else {
-    eliminadas[numQuestao].push(letra);      // Adiciona o risco
+    eliminadas[numQuestao].push(letra);
   }
   renderizarQuestao();
 }
 
-// 4. Alternar Dúvida / Revisão
+// 8. Alternar Modo Treino / Modo Simulado
+function toggleModoEstudo(checked) {
+  modoEstudoDireto = checked;
+  renderizarQuestao();
+}
+
+// 9. Alternar Marcação de Revisão
 function toggleRevisao() {
   const q = provaFiltrada[indexAtual];
   if (paraRevisar.has(q.numero)) {
@@ -183,22 +188,16 @@ function toggleRevisao() {
   renderizarQuestao();
 }
 
-// 5. Finalizar e Calcular Nota por Disciplina
+// 10. Finalizar e Mostrar Desempenho
 function calcularResultado() {
-  let acertosPorMateria = {};
-  let totalPorMateria = {};
+  let acertos = 0;
+  let total = provaOriginal.questoes.length;
 
   provaOriginal.questoes.forEach(q => {
-    const disc = q.disciplina;
-    const resp = respostas[q.numero];
-    
-    totalPorMateria[disc] = (totalPorMateria[disc] || 0) + 1;
-    
-    if (resp && resp === q.resposta_correta) {
-      acertosPorMateria[disc] = (acertosPorMateria[disc] || 0) + 1;
+    if (respostas[q.numero] === q.resposta_correta) {
+      acertos++;
     }
   });
 
-  console.log("Resumo do Desempenho:", acertosPorMateria, totalPorMateria);
-  // Aqui você pode abrir um modal mostrando a % de acerto em Português, Inglês, etc.
+  alert(`Você finalizou o simulado!\n\nAcertos: ${acertos} de ${total} (${((acertos/total)*100).toFixed(1)}%)`);
 }
