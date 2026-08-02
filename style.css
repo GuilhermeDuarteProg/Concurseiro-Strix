@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VARIAVEIS DE CORES & TEMAS (LIGHT / DARK)
+   VARIÁVEIS DE CORES & TEMAS (LIGHT / DARK)
    ========================================================================== */
 :root {
   --bg-app: #f8fafc;
@@ -305,23 +305,7 @@ select {
   cursor: pointer;
 }
 
-/* ==========================================================================
-   RESPONSIVIDADE (DISPOSITIVOS MÓVEIS)
-   ========================================================================== */
-@media (max-width: 900px) {
-  .main-container {
-    grid-template-columns: 1fr; /* Coluna única no celular */
-  }
-  
-  .painel-texto {
-    max-height: 300px; /* Reduz altura do texto de apoio em telas pequenas */
-  }
-
-  .dica-mouse {
-    display: none; /* Oculta a dica de clique direito em telas de toque */
-  }
-}
-/* --- TELA DE RESULTADO & CORREÇÃO --- */
+/* TELA DE RESULTADO & CORREÇÃO */
 #tela-resultado {
   max-width: 1000px;
   margin: 0 auto;
@@ -329,12 +313,12 @@ select {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
 }
 
-/* Header do Resultado */
 .resultado-header-card {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
   display: flex;
@@ -347,12 +331,12 @@ select {
 .porcentagem-destaque {
   font-size: 3.5rem;
   font-weight: 800;
-  color: #f8fafc;
+  color: var(--text-main);
   line-height: 1;
 }
 
 #resultado-detalhe-texto {
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-top: 8px;
   font-size: 1.05rem;
 }
@@ -377,16 +361,15 @@ select {
   border: 1px solid #f43f5e;
 }
 
-/* Grid de Navegação do Gabarito */
 .container-grid-gabarito {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 20px;
 }
 
 .instrucao-grid {
-  color: #cbd5e1;
+  color: var(--text-muted);
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -403,9 +386,9 @@ select {
 .btn-grid-num {
   height: 40px;
   border-radius: 6px;
-  border: 1px solid #475569;
-  background: #0f172a;
-  color: #f8fafc;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-main);
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -413,7 +396,7 @@ select {
 
 .btn-grid-num:hover {
   transform: translateY(-2px);
-  filter: brightness(1.2);
+  filter: brightness(1.1);
 }
 
 .btn-grid-num.correta {
@@ -429,20 +412,19 @@ select {
 }
 
 .btn-grid-num.embranco {
-  background: #334155;
-  border-color: #64748b;
-  color: #94a3b8;
+  background: var(--bg-subtle);
+  border-color: var(--border-color);
+  color: var(--text-muted);
 }
 
 .btn-grid-num.ativo {
-  outline: 2px solid #38bdf8;
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-/* Card de Revisão da Questão */
 .card-revisao {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -453,7 +435,7 @@ select {
 
 .revisao-enunciado {
   font-size: 1.1rem;
-  color: #f8fafc;
+  color: var(--text-main);
   margin-bottom: 20px;
   line-height: 1.6;
 }
@@ -467,26 +449,25 @@ select {
 .opcao-revisao {
   padding: 14px 18px;
   border-radius: 8px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: #cbd5e1;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-main);
 }
 
 .opcao-revisao.correta {
   background: rgba(16, 185, 129, 0.15);
   border-color: #10b981;
-  color: #6ee7b7;
+  color: #059669;
   font-weight: 600;
 }
 
 .opcao-revisao.marcada-errada {
   background: rgba(244, 63, 94, 0.15);
   border-color: #f43f5e;
-  color: #fca5a5;
+  color: #dc2626;
   text-decoration: line-through;
 }
 
-/* Banner de Feedback Inferior */
 .banner-feedback-rodape {
   padding: 14px 20px;
   font-weight: 800;
@@ -498,29 +479,41 @@ select {
 
 .banner-feedback-rodape.acerto {
   background: #10b981;
-  color: #022c22;
+  color: #ffffff;
 }
 
 .banner-feedback-rodape.erro {
   background: #f43f5e;
-  color: #4c0519;
+  color: #ffffff;
 }
 
 .banner-feedback-rodape.embranco {
   background: #64748b;
-  color: #0f172a;
+  color: #ffffff;
 }
 
-/* Botão Voltar */
 .btn-acao-secundario {
-  background: #334155;
-  color: #f8fafc;
-  border: none;
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
 }
+
 .btn-acao-secundario:hover {
-  background: #475569;
+  background: var(--border-color);
+}
+
+@media (max-width: 900px) {
+  .main-container {
+    grid-template-columns: 1fr;
+  }
+  .painel-texto {
+    max-height: 300px;
+  }
+  .dica-mouse {
+    display: none;
+  }
 }
