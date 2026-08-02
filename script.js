@@ -3,11 +3,7 @@ let provaOriginal = null;
 let provaFiltrada = [];
 let indexAtual = 0;
 
-// 1. Assim que o site abre, busca o catálogo de provas em 'provas/index.json'
-window.addEventListener('DOMContentLoaded', async () => {
-  await carregarCatalogoProvas();
-});
-
+// 1. Ao carregar a página, busca o catálogo master de provas
 async function carregarCatalogoProvas() {
   try {
     const resposta = await fetch('./provas/index.json');
@@ -16,10 +12,9 @@ async function carregarCatalogoProvas() {
     const seletor = document.getElementById('seletorProvas');
     seletor.innerHTML = '<option value="">-- Escolha um Simulado --</option>';
 
-    // Preenche as opções do <select> dinamicamente
-    listaProvas.forEach(p => {
+    listaProvas.forEach((p, index) => {
       const option = document.createElement('option');
-      option.value = p.arquivo; // Guarda o caminho do arquivo (ex: provas/transpetro-2023-admin.json)
+      option.value = index; // Passa o índice da prova na lista
       option.innerText = `${p.banca} (${p.ano}) - ${p.titulo}`;
       seletor.appendChild(option);
     });
@@ -28,25 +23,43 @@ async function carregarCatalogoProvas() {
   }
 }
 
-// 2. Quando você seleciona uma prova no menu, ela é baixada e exibida na tela
-async function carregarProva(caminhoArquivo) {
-  if (!caminhoArquivo) return;
+// 2. Carrega a prova e une com o arquivo de gabarito
+async function carregarProva(indexLista) {
+  if (indexLista === "" || indexLista === undefined) return;
+
+  const itemProva = listaProvas[indexLista];
 
   try {
-    const resposta = await fetch(caminhoArquivo);
-    provaOriginal = await resposta.json();
-    
-    // Atualiza as disciplinas no filtro
+    // Busca a prova e o gabarito simultaneamente
+    const [resProva, resGabarito] = await Promise.all([
+      fetch(itemProva.arquivo),
+      fetch(itemProva.gabarito)
+    ]);
+
+    provaOriginal = await resProva.json();
+    const gabaritoMap = await resGabarito.json();
+
+    // Mescla o gabarito dentro de cada questão da prova
+    provaOriginal.questoes.forEach(q => {
+      if (gabaritoMap[q.numero]) {
+        q.resposta_correta = gabaritoMap[q.numero];
+      }
+    });
+
+    // Reseta estados anteriores
+    respostas = {};
+    eliminadas = {};
+    paraRevisar.clear();
+
     atualizarFiltroDisciplinas();
-    
-    // Reseta filtros e renderiza a primeira questão
+
     provaFiltrada = [...provaOriginal.questoes];
     indexAtual = 0;
-    
+
     document.getElementById('area-estudo').classList.remove('oculto');
     renderizarQuestao();
   } catch (erro) {
-    console.error("Erro ao carregar o arquivo da prova:", erro);
+    console.error("Erro ao carregar os dados da prova ou gabarito:", erro);
   }
 }
 
