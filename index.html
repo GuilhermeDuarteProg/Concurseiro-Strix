@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Strix Simulado</title>
   <link rel="stylesheet" href="style.css">
+  <!-- CDN do PDF.js para extração de texto de PDFs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -21,28 +23,33 @@
     <h1 class="main-heading">Alimentar Simulado</h1>
     <p class="sub-heading">Envie o PDF da prova e (opcionalmente) o PDF ou texto do gabarito oficial para correção automática.</p>
 
+    <!-- Upload Prova -->
     <div class="form-group">
       <h2 class="section-title">PDF da Prova</h2>
       <div class="drop-zone" id="dropZoneProva">
         <div class="drop-icon">📄</div>
-        <p>Arraste o PDF da prova aqui</p>
+        <p id="labelProva">Arraste o PDF da prova aqui</p>
         <label for="pdfProvaInput" class="btn btn-secondary">Buscar Prova</label>
         <input type="file" id="pdfProvaInput" accept="application/pdf" class="file-input">
       </div>
+      <div id="statusProva" class="file-status"></div>
     </div>
 
+    <!-- Upload Gabarito -->
     <div class="form-group">
       <h2 class="section-title">PDF do Gabarito (Opcional)</h2>
       <div class="drop-zone" id="dropZoneGabarito">
         <div class="drop-icon">📄</div>
-        <p>Arraste o PDF do gabarito aqui</p>
+        <p id="labelGabarito">Arraste o PDF do gabarito aqui</p>
         <label for="pdfGabaritoInput" class="btn btn-secondary">Buscar Gabarito</label>
         <input type="file" id="pdfGabaritoInput" accept="application/pdf" class="file-input">
       </div>
+      <div id="statusGabarito" class="file-status"></div>
     </div>
 
+    <!-- Gabarito Texto -->
     <div class="form-group">
-      <label for="gabaritoTexto" class="section-title">Ou cole o gabarito em texto (Exemplo: 1-A, 2-C, 3-E, 4-B...):</label>
+      <label for="gabaritoTexto" class="section-title">Ou cole o gabarito em texto (Exemplo: 1-A, 2-C, 3-E...):</label>
       <textarea id="gabaritoTexto" placeholder="1-A, 2-B, 3-C, 4-D, 5-E..."></textarea>
     </div>
 
@@ -53,24 +60,18 @@
   <main id="quizScreen" class="card-container hidden">
     <div class="quiz-header">
       <span id="questionCounter" class="question-number">Questão 1</span>
-      <span id="totalCounter" class="badge">1 de 10</span>
+      <span id="totalCounter" class="badge">1 de 0</span>
     </div>
 
     <!-- Texto de Apoio (Recolhível) -->
     <details id="supportContainer" class="support-box">
       <summary>📖 Texto de Referência (Clique para recolher/expandir)</summary>
-      <div id="supportText" class="support-content">
-        <!-- O texto de apoio será inserido via JavaScript -->
-      </div>
+      <div id="supportText" class="support-content"></div>
     </details>
 
-    <div id="questionText" class="question-text">
-      <!-- O enunciado da questão será inserido via JavaScript -->
-    </div>
+    <div id="questionText" class="question-text"></div>
 
-    <div id="optionsList" class="options-list">
-      <!-- As alternativas serão renderizadas via JavaScript -->
-    </div>
+    <div id="optionsList" class="options-list"></div>
 
     <div class="nav-buttons">
       <button id="prevBtn" class="btn btn-secondary" disabled>← Anterior</button>
