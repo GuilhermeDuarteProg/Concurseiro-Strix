@@ -34,34 +34,45 @@ async function carregarCatalogoProvas() {
   }
 }
 
-// 2. Carrega a prova selecionada e mescla com o Gabarito
+// 2. Carrega a prova selecionada e vincula o Gabarito com tratamento de erros
 async function carregarProva(indexLista) {
   if (indexLista === "" || indexLista === undefined) return;
 
   const itemProva = listaProvas[indexLista];
 
   try {
-    // Carrega arquivo da prova
-    const resProva = await fetch(itemProva.arquivo);
+    // Garante o caminho relativo correto
+    const caminhoProva = itemProva.arquivo.startsWith('./') ? itemProva.arquivo : `./${itemProva.arquivo}`;
+    const resProva = await fetch(caminhoProva);
     provaOriginal = await resProva.json();
 
-    // Carrega o gabarito e vincula às questões
+    // Carrega e vincula o Gabarito
     if (itemProva.gabarito) {
       try {
-        const resGabarito = await fetch(itemProva.gabarito);
+        const caminhoGabarito = itemProva.gabarito.startsWith('./') ? itemProva.gabarito : `./${itemProva.gabarito}`;
+        const resGabarito = await fetch(caminhoGabarito);
         const gabaritoMap = await resGabarito.json();
 
+        // Mapeia o gabarito para cada questão
         provaOriginal.questoes.forEach(q => {
-          if (gabaritoMap[q.numero]) {
-            q.resposta_correta = gabaritoMap[q.numero];
+          const numStr = String(q.numero);
+          const numPadded = numStr.padStart(2, '0'); // Garante busca por "1" ou "01"
+
+          const respGabarito = gabaritoMap[numStr] || gabaritoMap[numPadded] || gabaritoMap[`q${numStr}`];
+
+          if (respGabarito) {
+            // Padroniza para letra maiúscula sem espaços
+            q.resposta_correta = String(respGabarito).trim().toUpperCase();
+          } else {
+            console.warn(`Atenção: Gabarito da questão ${q.numero} não encontrado no JSON.`);
           }
         });
       } catch (eGab) {
-        console.warn("Gabarito não localizado ou não carregado:", eGab);
+        console.error("Erro ao carregar o arquivo de gabarito:", eGab);
       }
     }
 
-    // Reseta estados
+    // Reseta estados do simulado
     respostas = {};
     eliminadas = {};
     paraRevisar.clear();
@@ -75,6 +86,8 @@ async function carregarProva(indexLista) {
     renderizarQuestao();
   } catch (erro) {
     console.error("Erro ao carregar o arquivo da prova:", erro);
+  }
+}
   }
 }
 
