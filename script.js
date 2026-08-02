@@ -38,55 +38,35 @@ async function carregarCatalogoProvas() {
 }
 
 // 2. Carrega a prova selecionada e vincula o Gabarito com tratamento de erros
-async function carregarProva(indexLista) {
-  if (indexLista === "" || indexLista === undefined) return;
-
-  const itemProva = listaProvas[indexLista];
-
+async function carregarCatalogoProvas() {
   try {
-    const caminhoProva = itemProva.arquivo.startsWith('./') ? itemProva.arquivo : `./${itemProva.arquivo}`;
-    const resProva = await fetch(caminhoProva);
-    provaOriginal = await resProva.json();
+    const resposta = await fetch('./provas/index.json');
+    if (!resposta.ok) {
+      throw new Error(`Erro ao buscar índice de provas: Status ${resposta.status}`);
+    }
+    listaProvas = await resposta.json();
 
-    // Carrega e vincula o Gabarito
-    if (itemProva.gabarito) {
-      try {
-        const caminhoGabarito = itemProva.gabarito.startsWith('./') ? itemProva.gabarito : `./${itemProva.gabarito}`;
-        const resGabarito = await fetch(caminhoGabarito);
-        const gabaritoMap = await resGabarito.json();
+    const seletor = document.getElementById('seletorProvas');
+    if (seletor) {
+      seletor.innerHTML = '<option value="">-- Escolha um Simulado --</option>';
 
-        // Mapeia o gabarito para cada questão
-        provaOriginal.questoes.forEach(q => {
-          const numStr = String(q.numero);
-          const numPadded = numStr.padStart(2, '0');
-
-          const respGabarito = gabaritoMap[numStr] || gabaritoMap[numPadded] || gabaritoMap[`q${numStr}`];
-
-          if (respGabarito) {
-            q.resposta_correta = String(respGabarito).trim().toUpperCase();
-          } else {
-            console.warn(`Atenção: Gabarito da questão ${q.numero} não encontrado no JSON.`);
-          }
-        });
-      } catch (eGab) {
-        console.error("Erro ao carregar o arquivo de gabarito:", eGab);
-      }
+      listaProvas.forEach((p, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.innerText = `${p.banca} (${p.ano}) - ${p.titulo}`;
+        seletor.appendChild(option);
+      });
     }
 
-    // Reseta estados do simulado
-    respostas = {};
-    eliminadas = {};
-    paraRevisar.clear();
-
-    atualizarFiltroDisciplinas();
-
-    provaFiltrada = [...provaOriginal.questoes];
-    indexAtual = 0;
-
-    document.getElementById('area-estudo').classList.remove('oculto');
-    renderizarQuestao();
+    // Carrega a primeira prova automaticamente se houver alguma na lista
+    if (listaProvas.length > 0) {
+      if (seletor) seletor.value = "0";
+      await carregarProva(0);
+    }
   } catch (erro) {
-    console.error("Erro ao carregar o arquivo da prova:", erro);
+    console.error("Erro ao carregar o catálogo de provas:", erro);
+  }
+}
   }
 }
 
@@ -118,6 +98,11 @@ function aplicarFiltroDisciplina(disciplinaSelecionada) {
 
 // 5. Renderizar Questão na Tela
 function renderizarQuestao() {
+  if (!provaFiltrada || provaFiltrada.length === 0) {
+    document.getElementById('contador-questoes').innerText = "Questão 0 de 0";
+    document.getElementById('enunciado').innerText = "Nenhuma questão disponível. Por favor, selecione um simulado.";
+    return;
+  }
   const q = provaFiltrada[indexAtual];
   if (!q) return;
 
