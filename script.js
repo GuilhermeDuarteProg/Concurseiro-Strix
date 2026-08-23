@@ -203,4 +203,34 @@ function downloadJSON() {
   a.href = url;
   a.download = 'questoes_concurso.json';
   a.click();
+}// Carrega o catálogo assim que o site abre
+document.addEventListener('DOMContentLoaded', () => {
+  carregarCatalogoProvas();
+});
+
+// Lê o arquivo provas/index.json
+async function carregarCatalogoProvas() {
+  const selectProvas = document.getElementById('select-prova');
+  if (!selectProvas) return;
+
+  try {
+    const response = await fetch('provas/index.json');
+    if (!response.ok) throw new Error('Não foi possível ler o index.json');
+
+    const provas = await response.json();
+    
+    // Limpa as opções padrão
+    selectProvas.innerHTML = '<option value="">Selecione uma prova disponível...</option>';
+
+    // Preenche com as provas cadastradas
+    provas.forEach(prova => {
+      const option = document.createElement('option');
+      option.value = prova.arquivo;
+      option.textContent = `${prova.orgao} (${prova.ano}) - ${prova.titulo} [${prova.banca}]`;
+      selectProvas.appendChild(option);
+    });
+  } catch (erro) {
+    console.error('Erro ao carregar catálogo de provas:', erro);
+    selectProvas.innerHTML = '<option value="">Erro ao carregar provas</option>';
+  }
 }
