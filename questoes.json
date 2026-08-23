@@ -1,0 +1,3782 @@
+[
+  {
+    "id": 1,
+    "numero": 1,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "Com base na leitura do texto, entende-se que o desabafo\nde Lobo Neves ao longo do texto deve-se à sua insatisfação com a(o)",
+    "opcoes": [
+      "vida pública",
+      "sua família",
+      "seu casamento",
+      "teatro da época",
+      "glamour da sociedade"
+    ],
+    "alternativas": [
+      "vida pública",
+      "sua família",
+      "seu casamento",
+      "teatro da época",
+      "glamour da sociedade"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 2,
+    "numero": 2,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "Em “Como adorasse a mulher, não se vexava de mo dizer\nmuitas vezes” (. 2-3), o conector como estabelece, com\na oração seguinte, uma relação semântica de",
+    "opcoes": [
+      "causa",
+      "condição",
+      "contraste",
+      "comparação",
+      "consequência"
+    ],
+    "alternativas": [
+      "causa",
+      "condição",
+      "contraste",
+      "comparação",
+      "consequência"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 3,
+    "numero": 3,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "A palavra carcoma foi empregada metaforicamente no\ntrecho “Um dia confessou-me que trazia uma triste carcoma na existência” (. 7-8).\nUm outro exemplo de metáfora empregada no texto é:",
+    "opcoes": [
+      "“Lobo Neves, a princípio, metia-me grandes sustos”\n(. 1-2)",
+      "“De fresta que era, chegou a porta escancarada” (. 6-7)",
+      "“Evidentemente havia aí uma crise de melancolia; tratei de combatê-la” (. 17-18)",
+      "“Entrei na política por gosto, por família, por ambição,\ne um pouco por vaidade” (. 21-23)",
+      "“Lobo Neves recebeu-os com alegria” (. 43)"
+    ],
+    "alternativas": [
+      "“Lobo Neves, a princípio, metia-me grandes sustos”\n(. 1-2)",
+      "“De fresta que era, chegou a porta escancarada” (. 6-7)",
+      "“Evidentemente havia aí uma crise de melancolia; tratei de combatê-la” (. 17-18)",
+      "“Entrei na política por gosto, por família, por ambição,\ne um pouco por vaidade” (. 21-23)",
+      "“Lobo Neves recebeu-os com alegria” (. 43)"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 4,
+    "numero": 4,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "A partir da leitura do fragmento do texto: “que ele ouviu\ncom aquela unção religiosa de um desejo que não quer\nacabar de morrer” (. 10-11), infere-se que Lobo Neves",
+    "opcoes": [
+      "estava prestes a morrer.",
+      "era extremamente religioso.",
+      "tinha o desejo de ir para bem longe dali.",
+      "esperava ainda ter uma atuação política satisfatória.",
+      "estava sofrendo de uma gravíssima crise de depressão."
+    ],
+    "alternativas": [
+      "estava prestes a morrer.",
+      "era extremamente religioso.",
+      "tinha o desejo de ir para bem longe dali.",
+      "esperava ainda ter uma atuação política satisfatória.",
+      "estava sofrendo de uma gravíssima crise de depressão."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 5,
+    "numero": 5,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "O trecho do texto “Vira o teatro pelo lado da plateia; e,\npalavra, que era bonito!” (. 25-26) faz referência ao fato\nde Lobo Neves",
+    "opcoes": [
+      "misturar política e lazer.",
+      "ter uma vida social muito intensa.",
+      "poder deslumbrar-se com o teatro.",
+      "estar saudoso de sua vida como ator.",
+      "ter ignorado as dificuldades da atividade política."
+    ],
+    "alternativas": [
+      "misturar política e lazer.",
+      "ter uma vida social muito intensa.",
+      "poder deslumbrar-se com o teatro.",
+      "estar saudoso de sua vida como ator.",
+      "ter ignorado as dificuldades da atividade política."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 6,
+    "numero": 6,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "Os sinais de pontuação contribuem para a construção dos\nsentidos dos textos.\nNo fragmento do texto “Escriturei-me; deram-me um\npapel que... mas para que o estou a fatigar com isso?\nDeixe-me ficar com as minhas amofinações” (. 28-30),\nas reticências são usadas para demarcar a",
+    "opcoes": [
+      "interrupção de uma ideia.",
+      "insinuação de uma ameaça.",
+      "hesitação comum na oralidade.",
+      "continuidade de uma ação ou fato.",
+      "omissão proposital de algo que se devia dizer."
+    ],
+    "alternativas": [
+      "interrupção de uma ideia.",
+      "insinuação de uma ameaça.",
+      "hesitação comum na oralidade.",
+      "continuidade de uma ação ou fato.",
+      "omissão proposital de algo que se devia dizer."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 7,
+    "numero": 7,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "O fragmento no qual a regência do verbo em destaque é\na mesma do verbo referir no trecho “que não referisse a\nninguém o que se passara entre nós” (. 40-41) é",
+    "opcoes": [
+      "“Como adorasse a mulher” (. 2)",
+      "“Virgília era a perfeição mesma” (. 3-4)",
+      "“Um dia confessou-me que trazia uma triste carcoma\nna existência” (. 7-8)",
+      "“Mas para que o estou a fatigar com isto?” (. 28-29)",
+      "“Entraram dois deputados e um chefe político da paróquia” (. 42-43)"
+    ],
+    "alternativas": [
+      "“Como adorasse a mulher” (. 2)",
+      "“Virgília era a perfeição mesma” (. 3-4)",
+      "“Um dia confessou-me que trazia uma triste carcoma\nna existência” (. 7-8)",
+      "“Mas para que o estou a fatigar com isto?” (. 28-29)",
+      "“Entraram dois deputados e um chefe político da paróquia” (. 42-43)"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 8,
+    "numero": 8,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "O pronome oblíquo átono está empregado de acordo com\no que prevê a variedade formal da norma-padrão da língua em:",
+    "opcoes": [
+      "Poucos dar-lhe-iam a atenção merecida.",
+      "Lobo Neves nunca se afastara da vida pública.",
+      "Diria-lhe para evitar a carreira política se perguntasse.",
+      "Ele tinha um problema que mantinha-o preocupado\ntodo o tempo.",
+      "Se atormentou com aquela crise de melancolia que\nparecia não ter fim."
+    ],
+    "alternativas": [
+      "Poucos dar-lhe-iam a atenção merecida.",
+      "Lobo Neves nunca se afastara da vida pública.",
+      "Diria-lhe para evitar a carreira política se perguntasse.",
+      "Ele tinha um problema que mantinha-o preocupado\ntodo o tempo.",
+      "Se atormentou com aquela crise de melancolia que\nparecia não ter fim."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 9,
+    "numero": 9,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "Em português, o acento grave indica a contração de dois\n“a” em um só, em um processo chamado crase, e está\ncorretamente empregado em:",
+    "opcoes": [
+      "Verei a política de outra forma à partir daquela conversa.",
+      "Daqui à duas horas Lobo Neves receberá os amigos\ncom alegria.",
+      "Assistimos à apresentações inflamadas de alguns deputados e senadores.",
+      "Em referência àqueles pensamentos, Lobo Neves\ncalou-os rapidamente.",
+      "A política, à qual não quero mais em minha vida, causou-me muitos problemas."
+    ],
+    "alternativas": [
+      "Verei a política de outra forma à partir daquela conversa.",
+      "Daqui à duas horas Lobo Neves receberá os amigos\ncom alegria.",
+      "Assistimos à apresentações inflamadas de alguns deputados e senadores.",
+      "Em referência àqueles pensamentos, Lobo Neves\ncalou-os rapidamente.",
+      "A política, à qual não quero mais em minha vida, causou-me muitos problemas."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 10,
+    "numero": 10,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "O período que atende plenamente às exigências da concordância verbal na norma-padrão da língua portuguesa é:",
+    "opcoes": [
+      "Mais de um mandato foram exercidos por Lobo\nNeves.",
+      "Fazem quinze anos que ele conseguiu entrar para a\nvida pública.",
+      "Necessita-se de políticos mais compromissados com\na população.",
+      "Com certeza, haviam mais de trinta deputados no plenário naquele dia.",
+      "Reeleger-se-á, somente, os políticos com um histórico\nde trabalho honesto.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "Mais de um mandato foram exercidos por Lobo\nNeves.",
+      "Fazem quinze anos que ele conseguiu entrar para a\nvida pública.",
+      "Necessita-se de políticos mais compromissados com\na população.",
+      "Com certeza, haviam mais de trinta deputados no plenário naquele dia.",
+      "Reeleger-se-á, somente, os políticos com um histórico\nde trabalho honesto.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 11,
+    "numero": 11,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The main purpose of the text is to",
+    "opcoes": [
+      "explain the reasons for the sudden increase in the\nprice of oil in 2018.",
+      "speculate on matters that may affect the global energy\nmarket in 2018.",
+      "provide precise answers to the most relevant\nquestions on global energy.",
+      "forecast changes in trade and energy production in\nAsia and the Middle East.",
+      "measure the devastating impact of renewable industry\non coal and natural gas."
+    ],
+    "alternativas": [
+      "explain the reasons for the sudden increase in the\nprice of oil in 2018.",
+      "speculate on matters that may affect the global energy\nmarket in 2018.",
+      "provide precise answers to the most relevant\nquestions on global energy.",
+      "forecast changes in trade and energy production in\nAsia and the Middle East.",
+      "measure the devastating impact of renewable industry\non coal and natural gas."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 12,
+    "numero": 12,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Saudi Arabia and Iran are mentioned in paragraphs 2 and 3\n(lines 8-20) because they",
+    "opcoes": [
+      "are latent enemies about to engage in violent strife.",
+      "produce more than 40 per cent of the world’s crude oil.",
+      "should spread their influence over the other Gulf\nStates.",
+      "can be considered the most stable countries in the\nMiddle East.",
+      "might affect oil production and trade if they engage in\nan open conflict."
+    ],
+    "alternativas": [
+      "are latent enemies about to engage in violent strife.",
+      "produce more than 40 per cent of the world’s crude oil.",
+      "should spread their influence over the other Gulf\nStates.",
+      "can be considered the most stable countries in the\nMiddle East.",
+      "might affect oil production and trade if they engage in\nan open conflict."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 13,
+    "numero": 13,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "In the fragment “The threat to stability is all the greater\ngiven that Iran is likely to win any such clash and to\ntreat the result as a licence to reassert its influence in the\nregion” (lines 17-20), given that can be replaced, without\nchange in meaning, by",
+    "opcoes": [
+      "even so",
+      "even though",
+      "despite the fact that",
+      "because of the fact that",
+      "taking into account that"
+    ],
+    "alternativas": [
+      "even so",
+      "even though",
+      "despite the fact that",
+      "because of the fact that",
+      "taking into account that"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 14,
+    "numero": 14,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The production of oil from shale rock in the US is\nmentioned in paragraph 4 (lines 21-29) because in 2018 it",
+    "opcoes": [
+      "can rapidly achieve the record level of 6 million barrels\na day.",
+      "will certainly reach higher levels than those announced\nin 2017.",
+      "will make output from America’s producing areas\ncommercially viable in 2018.",
+      "might compensate for present OPEC production cuts\nand cause a decrease in oil prices.",
+      "is going to have devastating effects on the drilling\nactivity in the country in the near future.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "can rapidly achieve the record level of 6 million barrels\na day.",
+      "will certainly reach higher levels than those announced\nin 2017.",
+      "will make output from America’s producing areas\ncommercially viable in 2018.",
+      "might compensate for present OPEC production cuts\nand cause a decrease in oil prices.",
+      "is going to have devastating effects on the drilling\nactivity in the country in the near future.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 15,
+    "numero": 15,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The phrase that shift (line 46) refers to the change in\nChina from a",
+    "opcoes": [
+      "heavy industry fuelled by coal to a service-based\nindustry using a more varied mix.",
+      "large consumption of the world’s fossil fuels to lower\nconsumption levels.",
+      "limited demand for oil, gas and coal to an increasing\ndemand.",
+      "low-fossil-fuel economy to a pollution-based economy.",
+      "fast-growing economy to a receding one."
+    ],
+    "alternativas": [
+      "heavy industry fuelled by coal to a service-based\nindustry using a more varied mix.",
+      "large consumption of the world’s fossil fuels to lower\nconsumption levels.",
+      "limited demand for oil, gas and coal to an increasing\ndemand.",
+      "low-fossil-fuel economy to a pollution-based economy.",
+      "fast-growing economy to a receding one."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 16,
+    "numero": 16,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "In the fragments “some recent data suggests that as\neconomic growth has picked up” (lines 47-48) and\n“Beijing has high ambitions for a much cleaner energy\neconomy, driven not least by the levels of air pollution in\nmany of the major cities” (lines 49-51), picked up and\ndriven by mean, respectively,",
+    "opcoes": [
+      "declined – guided by",
+      "increased – delayed by",
+      "deteriorated – caused by",
+      "improved – motivated by",
+      "stabilized – hindered by"
+    ],
+    "alternativas": [
+      "declined – guided by",
+      "increased – delayed by",
+      "deteriorated – caused by",
+      "improved – motivated by",
+      "stabilized – hindered by"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 17,
+    "numero": 17,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "In terms of numerical reference, one concludes that",
+    "opcoes": [
+      "“over 40 per cent” (lines 16-17) refers to the percentage\nof global oil produced by Iran and Saudi.",
+      "“70 per cent” (line 62) refers to the percentage\ndecrease in solar energy costs since 2010.",
+      "“60 per cent” (line 64) refers to the total percentage of\nsolar cells commercialized in China.",
+      "“5 per cent” (line 68) refers to the percentage of global\nenergy generated by hydroelectric plants.",
+      "“50 per cent” (line 70) refers to the percentage\ndecrease in solar photovoltaic capacity in 2016."
+    ],
+    "alternativas": [
+      "“over 40 per cent” (lines 16-17) refers to the percentage\nof global oil produced by Iran and Saudi.",
+      "“70 per cent” (line 62) refers to the percentage\ndecrease in solar energy costs since 2010.",
+      "“60 per cent” (line 64) refers to the total percentage of\nsolar cells commercialized in China.",
+      "“5 per cent” (line 68) refers to the percentage of global\nenergy generated by hydroelectric plants.",
+      "“50 per cent” (line 70) refers to the percentage\ndecrease in solar photovoltaic capacity in 2016."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 18,
+    "numero": 18,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Based on the meanings of the words in the text, it can be\nsaid that",
+    "opcoes": [
+      "“rife” (line 11) and scarce express similar ideas.",
+      "“claimed” (line 34) can be replaced by hidden.",
+      "“flat” (line 43) and high express similar ideas.",
+      "“thriving” (line 61) and developing are synonyms.",
+      "“surge” (line 87) and increase are antonyms.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "“rife” (line 11) and scarce express similar ideas.",
+      "“claimed” (line 34) can be replaced by hidden.",
+      "“flat” (line 43) and high express similar ideas.",
+      "“thriving” (line 61) and developing are synonyms.",
+      "“surge” (line 87) and increase are antonyms.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 19,
+    "numero": 19,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Concerning the renewable energy industry, the author\naffirms that it",
+    "opcoes": [
+      "has become highly competitive without subsidies or\ngovernment support.",
+      "has been growing dramatically because of the threat\nposed by climate change.",
+      "needs to go through a profound change to become\nglobal and more competitive.",
+      "will provide most of the global electric supply through\nsolar, wind and hydropower.",
+      "has been expanding faster than personal computing\nand mobile phones in the 1990s and 2000s."
+    ],
+    "alternativas": [
+      "has become highly competitive without subsidies or\ngovernment support.",
+      "has been growing dramatically because of the threat\nposed by climate change.",
+      "needs to go through a profound change to become\nglobal and more competitive.",
+      "will provide most of the global electric supply through\nsolar, wind and hydropower.",
+      "has been expanding faster than personal computing\nand mobile phones in the 1990s and 2000s."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 20,
+    "numero": 20,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "According to the last paragraph, the author believes that the",
+    "opcoes": [
+      "future of the energy business is uncertain and difficult\nto anticipate.",
+      "recent increase in oil prices is definitely a long-lasting\nphenomenon.",
+      "four questions presented in the article will be answered\nsooner than we imagine.",
+      "energy business is definitely facing a moment of\nstability, growth and prosperity.",
+      "inevitable conflict in the Middle East will solve the\nimbalance between energy supply and demand.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "future of the energy business is uncertain and difficult\nto anticipate.",
+      "recent increase in oil prices is definitely a long-lasting\nphenomenon.",
+      "four questions presented in the article will be answered\nsooner than we imagine.",
+      "energy business is definitely facing a moment of\nstability, growth and prosperity.",
+      "inevitable conflict in the Middle East will solve the\nimbalance between energy supply and demand.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 21,
+    "numero": 21,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Uma empresa encomenda uma pesquisa de mercado que\nutilize o método de amostragem aleatória simples.\nEsse é um caso de amostra probabilística em que cada\nentrevistado",
+    "opcoes": [
+      "define o seu grau de satisfação com os serviços prestados pela companhia.",
+      "é conhecido dos entrevistadores e dos diretores da\norganização.",
+      "está presente numa lista segmentada por renda, faixa\netária e sexo.",
+      "indica outro entrevistado e assim sucessivamente até\no preenchimento da amostra.",
+      "tem a mesma chance, entre o universo da pesquisa,\nde ser abordado."
+    ],
+    "alternativas": [
+      "define o seu grau de satisfação com os serviços prestados pela companhia.",
+      "é conhecido dos entrevistadores e dos diretores da\norganização.",
+      "está presente numa lista segmentada por renda, faixa\netária e sexo.",
+      "indica outro entrevistado e assim sucessivamente até\no preenchimento da amostra.",
+      "tem a mesma chance, entre o universo da pesquisa,\nde ser abordado."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 22,
+    "numero": 22,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Um diretor de empresa identifica a necessidade de recorrer à prática do benchmark.\nNesse sentido, ordena a seus gerentes que",
+    "opcoes": [
+      "atendam às necessidades e aos desejos dos funcionários e dos fornecedores.",
+      "estudem as práticas empregadas pelas melhores empresas do seu setor.",
+      "identifiquem os concorrentes que faliram nos últimos\nanos de atuação.",
+      "reforcem os atributos intangíveis da marca nas campanhas de propaganda.",
+      "treinem incansavelmente a equipe de vendas e de\natendimento ao cliente."
+    ],
+    "alternativas": [
+      "atendam às necessidades e aos desejos dos funcionários e dos fornecedores.",
+      "estudem as práticas empregadas pelas melhores empresas do seu setor.",
+      "identifiquem os concorrentes que faliram nos últimos\nanos de atuação.",
+      "reforcem os atributos intangíveis da marca nas campanhas de propaganda.",
+      "treinem incansavelmente a equipe de vendas e de\natendimento ao cliente."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 23,
+    "numero": 23,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Se o gerente comercial de uma companhia de transportes\né orientado a pesquisar um novo nicho de mercado, ele\ndeverá levantar dados sobre um",
+    "opcoes": [
+      "grupo restrito de consumidores com necessidades\nbem específicas.",
+      "mercado de massa que necessite dos produtos da\nempresa.",
+      "mix de clientes selecionados por características\niguais.",
+      "público-alvo com características amplas e indefinidas.",
+      "segmento de mercado com diversos concorrentes."
+    ],
+    "alternativas": [
+      "grupo restrito de consumidores com necessidades\nbem específicas.",
+      "mercado de massa que necessite dos produtos da\nempresa.",
+      "mix de clientes selecionados por características\niguais.",
+      "público-alvo com características amplas e indefinidas.",
+      "segmento de mercado com diversos concorrentes."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 24,
+    "numero": 24,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Um plano de marketing abrange dois níveis: o estratégico,\nque estabelece a proposta de valor para o mercado, e o\ntático, que especifica as ações relacionadas à",
+    "opcoes": [
+      "definição dos benefícios proporcionados aos clientes.",
+      "identificação das oportunidades de mercado.",
+      "missão e a valores definidos pela direção.",
+      "promoção, à praça, ao produto e ao preço.",
+      "visão de longo prazo da companhia."
+    ],
+    "alternativas": [
+      "definição dos benefícios proporcionados aos clientes.",
+      "identificação das oportunidades de mercado.",
+      "missão e a valores definidos pela direção.",
+      "promoção, à praça, ao produto e ao preço.",
+      "visão de longo prazo da companhia."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 25,
+    "numero": 25,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O brand equity de uma organização como a Transpetro\nse refere ao",
+    "opcoes": [
+      "compromisso intangível da direção com os stakeholders.",
+      "segmento de mercado em que sua marca se destaca.",
+      "valor agregado pela marca a seus bens e serviços.",
+      "comportamento ético de seus colaboradores.",
+      "custo de logística e distribuição dos produtos."
+    ],
+    "alternativas": [
+      "compromisso intangível da direção com os stakeholders.",
+      "segmento de mercado em que sua marca se destaca.",
+      "valor agregado pela marca a seus bens e serviços.",
+      "comportamento ético de seus colaboradores.",
+      "custo de logística e distribuição dos produtos."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 26,
+    "numero": 26,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O marketing direto é uma importante ferramenta de comunicação, que pode ser exemplificada pelas ações de",
+    "opcoes": [
+      "merchandising",
+      "mobile marketing",
+      "promoção de vendas",
+      "propaganda na internet",
+      "relações públicas"
+    ],
+    "alternativas": [
+      "merchandising",
+      "mobile marketing",
+      "promoção de vendas",
+      "propaganda na internet",
+      "relações públicas"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 27,
+    "numero": 27,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O sistema harmonizado é um método utilizado nas transações de importação e exportação, com base em uma\nconvenção internacional que",
+    "opcoes": [
+      "atua como elemento agregador especificamente dos\npaíses que atuam em blocos econômicos.",
+      "equilibra as relações institucionais de compra e venda\nentre países que se encontram em guerra.",
+      "funciona como fiador nas pendências econômicas e\njudiciais de nações em desenvolvimento.",
+      "ordena os produtos e os classifica em seus diversos\naspectos inerentes ao comércio exterior.",
+      "orienta as disputas jurídicas entre as empresas no\nâmbito da Organização Mundial do Comércio."
+    ],
+    "alternativas": [
+      "atua como elemento agregador especificamente dos\npaíses que atuam em blocos econômicos.",
+      "equilibra as relações institucionais de compra e venda\nentre países que se encontram em guerra.",
+      "funciona como fiador nas pendências econômicas e\njudiciais de nações em desenvolvimento.",
+      "ordena os produtos e os classifica em seus diversos\naspectos inerentes ao comércio exterior.",
+      "orienta as disputas jurídicas entre as empresas no\nâmbito da Organização Mundial do Comércio."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 28,
+    "numero": 28,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Uma empresa avalia a compra de uma máquina junto a\ndois fornecedores, os quais, apesar de venderem com o\nmesmo preço inicial de 2 milhões de reais, ofereceram\nplanos de pagamento diferentes. O fornecedor A ofereceu um desconto de 10% e prazo para pagamento único\nexatamente após 1 mês da data da compra; o fornecedor\nB ofereceu um desconto de 12% para pagamento à vista.\nConsiderando-se uma taxa de 5% ao mês para o custo\ndo dinheiro que será usado nessa operação, a economia,\nem milhares de reais, que pode ser feita se o comprador\nescolher a decisão mais econômica, baseada na equivalência de capitais, pertence ao intervalo",
+    "opcoes": [
+      "[45; 46[",
+      "[46; 47[",
+      "[47; 48[",
+      "[48; 49[",
+      "[49; 50]"
+    ],
+    "alternativas": [
+      "[45; 46[",
+      "[46; 47[",
+      "[47; 48[",
+      "[48; 49[",
+      "[49; 50]"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 29,
+    "numero": 29,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Um certo time de vôlei possui 15 jogadores: 4 meios de\nrede, 5 ponteiros, 3 opostos e 3 levantadores. Desses\njogadores, 12 devem ser relacionados para uma partida,\nsendo que, dentre os jogadores relacionados, deve haver,\npelo menos, 1 levantador, 1 oposto, 2 ponteiros e 2 meios\nde rede para compor o time titular. O treinador deve especificar na súmula quem serão os jogadores titulares e\nquem serão os reservas.\nDe quantas formas ele pode fazer isso?",
+    "opcoes": [
+      "540",
+      "6480",
+      "12960",
+      "45360",
+      "62370"
+    ],
+    "alternativas": [
+      "540",
+      "6480",
+      "12960",
+      "45360",
+      "62370"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 30,
+    "numero": 30,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Em uma progressão aritmética, o décimo termo é o quádruplo do terceiro.\nSe o sétimo termo é igual a 19, então o segundo termo é\nigual a",
+    "opcoes": [
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "alternativas": [
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 31,
+    "numero": 31,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O gráfico de uma função f: R→R é uma parábola cujo x do\nvértice é igual a 5.\nSe x ϵ R é tal que f(x) = f(x4), então x é igual a",
+    "opcoes": [
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "alternativas": [
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 32,
+    "numero": 32,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Em um modelo integrado de orçamento empresarial, o orçamento de",
+    "opcoes": [
+      "caixa deve ser a primeira etapa no processo de elaboração do modelo.",
+      "caixa é o principal instrumento de orientação da alocação eficiente de investimentos em novos projetos.",
+      "caixa deve ser elaborado em um maior número de intervalos, quanto mais sazonais e incertos são os negócios.",
+      "capital deve ser elaborado em regime misto de caixa\ne competência, de modo a possibilitar a análise de lucros, prejuízos e disponibilidades em um período projetado.",
+      "investimentos determina o excesso ou eventual necessidade de recursos financeiros para as operações\nda empresa."
+    ],
+    "alternativas": [
+      "caixa deve ser a primeira etapa no processo de elaboração do modelo.",
+      "caixa é o principal instrumento de orientação da alocação eficiente de investimentos em novos projetos.",
+      "caixa deve ser elaborado em um maior número de intervalos, quanto mais sazonais e incertos são os negócios.",
+      "capital deve ser elaborado em regime misto de caixa\ne competência, de modo a possibilitar a análise de lucros, prejuízos e disponibilidades em um período projetado.",
+      "investimentos determina o excesso ou eventual necessidade de recursos financeiros para as operações\nda empresa."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 33,
+    "numero": 33,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "De forma geral, a atividade empresarial cria quatro tipos\nde valor em produtos ou serviços: forma, tempo, lugar e\nposse.\nDentre esses, dois são criados e controlados pela logística/cadeia de suprimentos:",
+    "opcoes": [
+      "forma e tempo",
+      "lugar e posse",
+      "tempo e posse",
+      "tempo e lugar",
+      "forma e posse"
+    ],
+    "alternativas": [
+      "forma e tempo",
+      "lugar e posse",
+      "tempo e posse",
+      "tempo e lugar",
+      "forma e posse"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 34,
+    "numero": 34,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Na filosofia/programação de suprimentos just-in-time, a(o)",
+    "opcoes": [
+      "seu caráter de prontidão apresenta a necessidade de\naltas capacidades de estoques de processamento.",
+      "tamanho dos lotes e as quantidades de compras são\ndeterminados por economias de escala, em detrimento da necessidade imediata.",
+      "tempo de reposição longo não se constitui um problema.",
+      "qualidade precária e os defeitos são tolerados no sentido de se manter a prontidão de suprimentos.",
+      "fornecedor é um parceiro ativo que se encarrega de\nsuprir as necessidades dos clientes, sendo estes tratados como uma extensão da empresa."
+    ],
+    "alternativas": [
+      "seu caráter de prontidão apresenta a necessidade de\naltas capacidades de estoques de processamento.",
+      "tamanho dos lotes e as quantidades de compras são\ndeterminados por economias de escala, em detrimento da necessidade imediata.",
+      "tempo de reposição longo não se constitui um problema.",
+      "qualidade precária e os defeitos são tolerados no sentido de se manter a prontidão de suprimentos.",
+      "fornecedor é um parceiro ativo que se encarrega de\nsuprir as necessidades dos clientes, sendo estes tratados como uma extensão da empresa."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 35,
+    "numero": 35,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "As necessidades de produtos e componentes de uma manufatura normalmente apresentam amplas variações por\ndiversas razões, como, por exemplo, cancelamento de\nfornecedores e mudanças na programação de produção,\nocasionando uma demanda irregular.\nNos casos de demanda irregular, um sistema de MRP\n(materials requirements planning) inicialmente deve",
+    "opcoes": [
+      "ser impactado por estimativas imprecisas dos níveis\nde estoques de segurança.",
+      "efetuar automaticamente a correção dos níveis de estoques mínimo e máximo de forma linear para os itens\ncom demanda irregular.",
+      "alterar os programas de produção e os parâmetros\nquantitativos das equipes de fábrica para a realidade\nde estoques atual e, em seguida, disparar os pedidos\nde ajustes de estoques para os fornecedores.",
+      "realizar ajustes nos limites de capacidades dos equipamentos de fábrica e reprogramar a produção.",
+      "alterar a estrutura dos produtos com reconhecida\nocorrência de demanda irregular."
+    ],
+    "alternativas": [
+      "ser impactado por estimativas imprecisas dos níveis\nde estoques de segurança.",
+      "efetuar automaticamente a correção dos níveis de estoques mínimo e máximo de forma linear para os itens\ncom demanda irregular.",
+      "alterar os programas de produção e os parâmetros\nquantitativos das equipes de fábrica para a realidade\nde estoques atual e, em seguida, disparar os pedidos\nde ajustes de estoques para os fornecedores.",
+      "realizar ajustes nos limites de capacidades dos equipamentos de fábrica e reprogramar a produção.",
+      "alterar a estrutura dos produtos com reconhecida\nocorrência de demanda irregular."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 36,
+    "numero": 36,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A função de cálculo do lote econômico de compras (LEC)\né derivada de duas equações.\nEssas equações são as de custos",
+    "opcoes": [
+      "de estocar e do capital de giro",
+      "de estocar e do pedido",
+      "do pedido e do capital de giro",
+      "do lote e da unidade",
+      "do capital de giro e de custo médio de estoque"
+    ],
+    "alternativas": [
+      "de estocar e do capital de giro",
+      "de estocar e do pedido",
+      "do pedido e do capital de giro",
+      "do lote e da unidade",
+      "do capital de giro e de custo médio de estoque"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 37,
+    "numero": 37,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A nova realidade da demanda global e da percepção do\nconsumidor conduziu partes do setor de manufatura para\num modelo de negócios que busca reduzir ou eliminar a\ndependência das previsões por meio do planejamento\nconjunto e da troca rápida de informações entre os participantes da cadeia de suprimentos. Nesse cenário, o\nprocesso de manufatura, de forma geral, inicia-se a partir\nde uma venda, em detrimento dos antigos sistemas fundamentados na previsão. Além disso, verificam-se processos de produção mais curtos com menos etapas, com\num tempo de execução mais rápido e maior potencial de\ncustomização para o cliente.\nEssa nova realidade está mais próxima dos sistemas de\nprodução",
+    "opcoes": [
+      "alavancados",
+      "empurrados",
+      "puxados",
+      "especializados",
+      "contínua"
+    ],
+    "alternativas": [
+      "alavancados",
+      "empurrados",
+      "puxados",
+      "especializados",
+      "contínua"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 38,
+    "numero": 38,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Os sistemas tradicionais de custeio têm como objetivos\nprincipais avaliar de forma acurada os estoques e o custo\ndos produtos vendidos com foco na produção de informações externas.\nTodavia, outro sistema se dedica a municiar os gerentes\npara as decisões estratégicas, com foco na rentabilidade\ndos produtos e dos clientes.\nTrata-se do sistema de custos",
+    "opcoes": [
+      "padrões",
+      "por processo",
+      "por ordem de produção",
+      "baseado em atividades",
+      "controláveis e não controláveis"
+    ],
+    "alternativas": [
+      "padrões",
+      "por processo",
+      "por ordem de produção",
+      "baseado em atividades",
+      "controláveis e não controláveis"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 39,
+    "numero": 39,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Considere os números apurados após a venda de uma\nunidade de produto:\nDados: $\nVenda de uma unidade 10.000\nDespesas Variáveis 6.000\nDespesas Fixas 3.500\nLucro(+)/Prejuízo() 500\nA margem de contribuição percentual apurada foi de aproximadamente",
+    "opcoes": [
+      "5,0%",
+      "8,3%",
+      "4,3%",
+      "60,0%",
+      "40,0%"
+    ],
+    "alternativas": [
+      "5,0%",
+      "8,3%",
+      "4,3%",
+      "60,0%",
+      "40,0%"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 40,
+    "numero": 40,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "O risco de um título pode ser medido pelo Modelo de Precificação de Ativos Financeiros (CAPM, do inglês Capital\nAsset Pricing Model).\nNesse modelo, o coeficiente beta () é uma medida relativa de risco",
+    "opcoes": [
+      "não diversificável, relacionado à conjuntura econômica ou de mercado, variáveis ambientais não controláveis pela empresa.",
+      "não diversificável, relacionada às contingências da\nempresa, como por exemplo, greves e redução da\ncarteira de clientes.",
+      "diversificável, relacionado à conjuntura econômica\nou de mercado, variáveis ambientais não controláveis\npela empresa.",
+      "diversificável, relacionada às contingências da empresa, como por exemplo, greves e redução da carteira\nde clientes.",
+      "total, que soma os coeficientes de riscos não diversificáveis e diversificáveis."
+    ],
+    "alternativas": [
+      "não diversificável, relacionado à conjuntura econômica ou de mercado, variáveis ambientais não controláveis pela empresa.",
+      "não diversificável, relacionada às contingências da\nempresa, como por exemplo, greves e redução da\ncarteira de clientes.",
+      "diversificável, relacionado à conjuntura econômica\nou de mercado, variáveis ambientais não controláveis\npela empresa.",
+      "diversificável, relacionada às contingências da empresa, como por exemplo, greves e redução da carteira\nde clientes.",
+      "total, que soma os coeficientes de riscos não diversificáveis e diversificáveis."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 41,
+    "numero": 41,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "O Comitê de Pronunciamentos Contábeis emitiu o pronunciamento técnico CPC 26 (R1), que define a base para\na apresentação das demonstrações contábeis no Brasil.\nO pronunciamento estabelece requisitos gerais, diretrizes\npara a sua estrutura e os requisitos mínimos para seu\nconteúdo.\nComo parte dessas bases e requisitos, o pronunciamento técnico define o conjunto completo de demonstrações\ncontábeis, que inclui a demonstração",
+    "opcoes": [
+      "do valor adicionado e o balanço social",
+      "do valor adicionado e as notas explicativas",
+      "do resultado abrangente do período e o balanço social",
+      "das mutações do patrimônio líquido do período e o\nbalanço ambiental",
+      "das origens e aplicações de recursos e as informações comparativas com o período anterior"
+    ],
+    "alternativas": [
+      "do valor adicionado e o balanço social",
+      "do valor adicionado e as notas explicativas",
+      "do resultado abrangente do período e o balanço social",
+      "das mutações do patrimônio líquido do período e o\nbalanço ambiental",
+      "das origens e aplicações de recursos e as informações comparativas com o período anterior"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 42,
+    "numero": 42,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "No que se refere à estrutura de capital de uma entidade,\na equação que divide as obrigações financeiras relacionadas ao capital de terceiros pelo patrimônio líquido aponta\no grau de",
+    "opcoes": [
+      "imobilização do capital",
+      "alavancagem financeira",
+      "endividamento",
+      "liquidez imediata",
+      "imobilização de recursos"
+    ],
+    "alternativas": [
+      "imobilização do capital",
+      "alavancagem financeira",
+      "endividamento",
+      "liquidez imediata",
+      "imobilização de recursos"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 43,
+    "numero": 43,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Quanto aos investimentos realizados em uma entidade\npor terceiros e pelos acionistas, verifica-se, de forma geral, que o(a)",
+    "opcoes": [
+      "capital de terceiros contribui de forma positiva para o\nretorno do acionista, quando o custo da dívida supera\no retorno proporcionado.",
+      "capital próprio é mais barato que o capital de terceiros, sob quaisquer circunstâncias.",
+      "risco assumido pelo financiador externo (capital de\nterceiros) é maior em relação ao risco assumido pelo\nfinanciador interno (capital próprio).",
+      "capital de terceiros apresenta exigibilidade líquida e\ncerta.",
+      "taxa de retorno do capital de terceiros investido é incerta."
+    ],
+    "alternativas": [
+      "capital de terceiros contribui de forma positiva para o\nretorno do acionista, quando o custo da dívida supera\no retorno proporcionado.",
+      "capital próprio é mais barato que o capital de terceiros, sob quaisquer circunstâncias.",
+      "risco assumido pelo financiador externo (capital de\nterceiros) é maior em relação ao risco assumido pelo\nfinanciador interno (capital próprio).",
+      "capital de terceiros apresenta exigibilidade líquida e\ncerta.",
+      "taxa de retorno do capital de terceiros investido é incerta."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 44,
+    "numero": 44,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Uma reconhecida sistemática de obtenção de capital de\nlongo prazo relacionada à base de capitais de terceiros\nno balanço é a(o)",
+    "opcoes": [
+      "emissão de ações ordinárias.",
+      "emissão de ações preferenciais.",
+      "retenção de lucros, em que se adia o pagamento de\njuros sobre o capital.",
+      "adiamento da distribuição de dividendos.",
+      "emissão de debêntures não conversíveis."
+    ],
+    "alternativas": [
+      "emissão de ações ordinárias.",
+      "emissão de ações preferenciais.",
+      "retenção de lucros, em que se adia o pagamento de\njuros sobre o capital.",
+      "adiamento da distribuição de dividendos.",
+      "emissão de debêntures não conversíveis."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 45,
+    "numero": 45,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Uma das características dos itens que compõem o capital\nde giro (circulante) é",
+    "opcoes": [
+      "estarem mais expostos à perda de valor em relação\naos itens que compõem o capital fixo (não circulante).",
+      "oferecerem maior rentabilidade em relação aos itens\nde capital fixo (não circulante), principalmente na atividade manufatureira.",
+      "serem de aplicação restrita, já que participam apenas\nde um ciclo operacional em um determinado período.",
+      "serem de aplicação restrita, uma vez que seu ciclo se\nencerra no momento da realização da venda.",
+      "estarem isentos de ser afetados pelas incertezas do\nnegócio."
+    ],
+    "alternativas": [
+      "estarem mais expostos à perda de valor em relação\naos itens que compõem o capital fixo (não circulante).",
+      "oferecerem maior rentabilidade em relação aos itens\nde capital fixo (não circulante), principalmente na atividade manufatureira.",
+      "serem de aplicação restrita, já que participam apenas\nde um ciclo operacional em um determinado período.",
+      "serem de aplicação restrita, uma vez que seu ciclo se\nencerra no momento da realização da venda.",
+      "estarem isentos de ser afetados pelas incertezas do\nnegócio."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 46,
+    "numero": 46,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Para executar uma estratégia de concentração (consolidação) de volumes, o departamento de compras deverá",
+    "opcoes": [
+      "eliminar os riscos de fornecimento.",
+      "utilizar uma quantidade reduzida de fornecedores.",
+      "dispensar a manutenção de planos de contingência\npara o fornecimento.",
+      "trocar constantemente de fornecedor.",
+      "terceirizar suas funções."
+    ],
+    "alternativas": [
+      "eliminar os riscos de fornecimento.",
+      "utilizar uma quantidade reduzida de fornecedores.",
+      "dispensar a manutenção de planos de contingência\npara o fornecimento.",
+      "trocar constantemente de fornecedor.",
+      "terceirizar suas funções."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 47,
+    "numero": 47,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Considere o trecho abaixo.\nSachs, como um dos consultores do grupo que assessorou o secretário-geral da Conferência das Nações\nUnidas de Estocolmo (1972) e a do Rio de Janeiro\n(1992), vem defendendo desde 1970 a prioridade de\numa agenda mundial que contemple a correlação entre\npauperismo e crise ambiental nos países do Sul.\nDisponível em: <http://www.scielo.br/pdf/rae/v34n2/\na11v34n2.pdf>. Acesso em: 10 fev. 2018. Adaptado.\nO texto reflete uma preocupação que, atualmente, é um\ndos principais pilares do Desenvolvimento Sustentável,\nem que a noção de crescimento econômico deve levar\nem consideração a(o)",
+    "opcoes": [
+      "inclusão social e a proteção ambiental.",
+      "inclusão econômica e o crescimento social.",
+      "inclusão internacional e mudanças ambientais.",
+      "crescimento populacional e mudanças climáticas.",
+      "crescimento industrial e as mudanças sociais."
+    ],
+    "alternativas": [
+      "inclusão social e a proteção ambiental.",
+      "inclusão econômica e o crescimento social.",
+      "inclusão internacional e mudanças ambientais.",
+      "crescimento populacional e mudanças climáticas.",
+      "crescimento industrial e as mudanças sociais."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 48,
+    "numero": 48,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Mesmo que as perspectivas da tomada de decisão racional já existam há décadas, alguns especialistas recentemente chamaram a atenção para um novo enfoque da\nracionalidade.\nEsse novo enfoque refere-se ao comprometimento em\nidentificar e utilizar a melhor teoria e informações disponíveis para tomar decisões e tem sido chamado de gestão\nbaseada em",
+    "opcoes": [
+      "alternativas",
+      "metas",
+      "problemas",
+      "contingências",
+      "evidências"
+    ],
+    "alternativas": [
+      "alternativas",
+      "metas",
+      "problemas",
+      "contingências",
+      "evidências"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 49,
+    "numero": 49,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "É uma ferramenta de lean manufacturing que auxilia o\ncontrole da produção e consiste na utilização de sinais\nsonoros ou luminosos com o intuito de avisar o operador\nda ocorrência de uma falha na linha de produção.\nEssa ferramenta é denominada",
+    "opcoes": [
+      "Andon",
+      "Kaizen",
+      "Just-in-time",
+      "Just-in-sequence",
+      "Poka-Yoke"
+    ],
+    "alternativas": [
+      "Andon",
+      "Kaizen",
+      "Just-in-time",
+      "Just-in-sequence",
+      "Poka-Yoke"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 50,
+    "numero": 50,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Considere uma determinada atividade logística que consiste na transferência de cargas de um veículo maior para\nveículos de menor capacidade, sem que haja necessidade de armazenamento e que ocorre em um local público\n(por exemplo, um posto de gasolina, um terreno vazio, às\nmargens de uma rodovia).\nEsta atividade logística é denominada",
+    "opcoes": [
+      "cross-docking",
+      "transit point",
+      "fracionamento",
+      "transbordo",
+      "unitização"
+    ],
+    "alternativas": [
+      "cross-docking",
+      "transit point",
+      "fracionamento",
+      "transbordo",
+      "unitização"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 51,
+    "numero": 51,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Considere um método ou ferramenta que avalia a complexidade para a compra de um determinado produto, bem\nou serviço e realiza uma comparação com relação ao impacto que este possui no negócio.\nTal método ou ferramenta refere-se a",
+    "opcoes": [
+      "Local Sourcing",
+      "Follow Sourcing",
+      "Single Sourcing",
+      "Strategic Sourcing",
+      "Global Sourcing"
+    ],
+    "alternativas": [
+      "Local Sourcing",
+      "Follow Sourcing",
+      "Single Sourcing",
+      "Strategic Sourcing",
+      "Global Sourcing"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 52,
+    "numero": 52,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Os sistemas de apoio à decisão devem prover um conjunto de capacidades, tais como",
+    "opcoes": [
+      "ser resiliente contra condições temporais mutantes.",
+      "prescindir do julgamento humano no processo de análise.",
+      "permitir a fácil execução das análises de sensibilidade.",
+      "apoiar decisões interdependentes, exceto as sequenciais.",
+      "evitar sua utilização em ambientes voltados para internet\n(web)."
+    ],
+    "alternativas": [
+      "ser resiliente contra condições temporais mutantes.",
+      "prescindir do julgamento humano no processo de análise.",
+      "permitir a fácil execução das análises de sensibilidade.",
+      "apoiar decisões interdependentes, exceto as sequenciais.",
+      "evitar sua utilização em ambientes voltados para internet\n(web)."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 53,
+    "numero": 53,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Os sistemas de apoio à decisão possuem um conjunto de\ncomponentes mínimos, dentre os quais se identifica(m)",
+    "opcoes": [
+      "a interface com o usuário, que abrange todos os aspectos de interação entre o sistema e seu usuário, e\nque melhora a operação de outros componentes do\nSAD.",
+      "o subsistema baseado em conhecimento, contendo\nmodelos completados e elementos básicos para desenvolver aplicações SAD.",
+      "o subsistema de gerenciamento de dados, que contém todos os modelos personalizados, os quais fornecem as capacidades analíticas do SAD.",
+      "o subsistema de gerenciamento de modelos, que oferece a especialização demandada por um problema\nnão estruturado ou semiestruturado.",
+      "os usuários, que são pessoas envolvidas com o processo de tomada de decisão apoiado pelo SAD e atuantes nesse processo."
+    ],
+    "alternativas": [
+      "a interface com o usuário, que abrange todos os aspectos de interação entre o sistema e seu usuário, e\nque melhora a operação de outros componentes do\nSAD.",
+      "o subsistema baseado em conhecimento, contendo\nmodelos completados e elementos básicos para desenvolver aplicações SAD.",
+      "o subsistema de gerenciamento de dados, que contém todos os modelos personalizados, os quais fornecem as capacidades analíticas do SAD.",
+      "o subsistema de gerenciamento de modelos, que oferece a especialização demandada por um problema\nnão estruturado ou semiestruturado.",
+      "os usuários, que são pessoas envolvidas com o processo de tomada de decisão apoiado pelo SAD e atuantes nesse processo."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 54,
+    "numero": 54,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Das tecnologias computacionais a seguir listadas, quais as d\nde apoio à decisão?",
+    "opcoes": [
+      "Algoritmos Genéticos, Protocolo TCP/IP",
+      "Escalonamento round robin, Data warehouses",
+      "Modelagem Estruturada Moderna, Redes neurais artificia",
+      "Servidores OLAP, Data Marts",
+      "Servidores OLTP, Mineração de Dados"
+    ],
+    "alternativas": [
+      "Algoritmos Genéticos, Protocolo TCP/IP",
+      "Escalonamento round robin, Data warehouses",
+      "Modelagem Estruturada Moderna, Redes neurais artificia",
+      "Servidores OLAP, Data Marts",
+      "Servidores OLTP, Mineração de Dados"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 55,
+    "numero": 55,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "A estrutura analítica do projeto (EAP) é figura central na elab\nPara sua elaboração, o PMBOK 5ª edição indica a utilização",
+    "opcoes": [
+      "Decomposição e Opinião especializada",
+      "Geração de alternativas e Análise do produto",
+      "Grupos de discussão e Protótipos",
+      "Análise de documentos e Diagrama de contexto",
+      "Benchmarking e Mapas mentais"
+    ],
+    "alternativas": [
+      "Decomposição e Opinião especializada",
+      "Geração de alternativas e Análise do produto",
+      "Grupos de discussão e Protótipos",
+      "Análise de documentos e Diagrama de contexto",
+      "Benchmarking e Mapas mentais"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 56,
+    "numero": 56,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "A contratação direta será feita, nos termos da Lei no 13.303/20\nna hipótese de contratação de profissionais ou empresas de\nzado:",
+    "opcoes": [
+      "publicidade institucional",
+      "divulgação de serviços",
+      "manutenção predial",
+      "restauração de bens de valor histórico",
+      "execução de obras vultosas"
+    ],
+    "alternativas": [
+      "publicidade institucional",
+      "divulgação de serviços",
+      "manutenção predial",
+      "restauração de bens de valor histórico",
+      "execução de obras vultosas"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 57,
+    "numero": 57,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "A Tabela a seguir apresenta a distribuição de atropelamento\ngrupo etário, no período de 1 ano.\nGrupo Etário Vítima\n1 a 14 anos - Infância\n15 a 29 anos – Juventude\n30 a 44 anos – Meia idade\n45 a 59 anos – Maturidade\n60 ou mais – Terceira idade\nSe Q , Q e Q são respectivamente o 1o quartil, a mediana e\n1 2 3\npelamentos, numa ordenação por grupo etário, se encontram",
+    "opcoes": [
+      "infância, meia idade, maturidade",
+      "infância, meia idade, terceira idade",
+      "infância, maturidade, terceira idade",
+      "juventude, meia idade, maturidade",
+      "juventude, maturidade, terceira idade"
+    ],
+    "alternativas": [
+      "infância, meia idade, maturidade",
+      "infância, meia idade, terceira idade",
+      "infância, maturidade, terceira idade",
+      "juventude, meia idade, maturidade",
+      "juventude, maturidade, terceira idade"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 58,
+    "numero": 58,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Um consultor foi contratado por uma empresa de médio\nporte que atua no setor de transportes e tem enfrentado\nalguns desafios em sua reestruturação para fazer frente\nao novo cenário que está surgindo nesse mercado.\nO consultor, após fazer a análise da empresa e comparar\ncom o cenário do ambiente em que ela atua, indicou algumas linhas de ação para que essa empresa tenha um\nnovo posicionamento de mercado.\nO trabalho realizado pelo consultor está associado à",
+    "opcoes": [
+      "atualização da missão da empresa, que tem como objetivo a identificação dos seus pontos fortes.",
+      "identificação da política da empresa, em que fica estabelecida a razão de sua existência no mercado.",
+      "elaboração do planejamento estratégico, com a análise do ambiente interno da organização e do macroambiente.",
+      "caracterização da estrutura da empresa, que tem\ncomo objetivo definir a direção que ela deseja seguir.",
+      "definição dos valores da empresa, que se constituem\nnos resultados que a empresa pretende atingir."
+    ],
+    "alternativas": [
+      "atualização da missão da empresa, que tem como objetivo a identificação dos seus pontos fortes.",
+      "identificação da política da empresa, em que fica estabelecida a razão de sua existência no mercado.",
+      "elaboração do planejamento estratégico, com a análise do ambiente interno da organização e do macroambiente.",
+      "caracterização da estrutura da empresa, que tem\ncomo objetivo definir a direção que ela deseja seguir.",
+      "definição dos valores da empresa, que se constituem\nnos resultados que a empresa pretende atingir."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 59,
+    "numero": 59,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Um executivo de uma grande empresa do setor de combustíveis tem uma reunião com um de seus fornecedores\npara negociar as condições de um novo lote de suprimentos. Para isso está fazendo um levantamento referente ao\nhistórico dos últimos cinco anos do relacionamento entre\nas empresas. Identificou que, em alguns momentos, o fornecedor não cumpriu os termos de acordos estabelecidos\nem negociações de fornecimento. Os termos dos acordos\nque não foram cumpridos se referem a prazos e qualidade dos itens fornecidos. Essas falhas provocaram alguns\natritos entre as partes, chegando quase à interrupção da\nparceria que havia entre as empresas.\nDiante da situação acima exposta, constata-se que",
+    "opcoes": [
+      "o conflito deve ser evitado, já que não há possibilidade de, a partir dele, serem implementadas ações que\npossam resultar em maior produtividade e desenvolvimento da empresa.",
+      "o conflito existente é decorrente de um choque de cultura e valores diferentes entre cliente e fornecedor, já\nque é comum que prazos não sejam cumpridos.",
+      "o atrito entre as partes não gerou um conflito, já que\nnão houve o rompimento definitivo entre as empresas,\ne o executivo deseja manter o relacionamento com\nesse fornecedor.",
+      "a identificação do conflito pode ser positiva, porque\npode estimular as pessoas e os grupos envolvidos\na resolverem os problemas apresentados, adotando\nações corretivas.",
+      "há um conflito de ordem pessoal, tendo em vista que\no executivo da empresa procurou aspectos negativos\nde acordos anteriores para tirar vantagem em uma\nnova negociação com o fornecedor."
+    ],
+    "alternativas": [
+      "o conflito deve ser evitado, já que não há possibilidade de, a partir dele, serem implementadas ações que\npossam resultar em maior produtividade e desenvolvimento da empresa.",
+      "o conflito existente é decorrente de um choque de cultura e valores diferentes entre cliente e fornecedor, já\nque é comum que prazos não sejam cumpridos.",
+      "o atrito entre as partes não gerou um conflito, já que\nnão houve o rompimento definitivo entre as empresas,\ne o executivo deseja manter o relacionamento com\nesse fornecedor.",
+      "a identificação do conflito pode ser positiva, porque\npode estimular as pessoas e os grupos envolvidos\na resolverem os problemas apresentados, adotando\nações corretivas.",
+      "há um conflito de ordem pessoal, tendo em vista que\no executivo da empresa procurou aspectos negativos\nde acordos anteriores para tirar vantagem em uma\nnova negociação com o fornecedor."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 60,
+    "numero": 60,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "As negociações são constantes no mundo dos negócios,\nnos relacionamentos diários e em tantas outras situações\nque nem se percebe a importância desse processo.\nUma negociação se caracteriza por ser um processo que",
+    "opcoes": [
+      "deve conduzir a um acordo que proporcione resultados que atendam aos interesses das partes e que sejam satisfatórios e colaborativos.",
+      "deve atender ao interesse individual da parte que tem\nmaior poder de barganha no processo.",
+      "desconsidera os conflitos de interesse, já que o processo, em si, tem como objetivo identificar a melhor\nsolução para as partes envolvidas.",
+      "é unidirecional, devendo abordar uma única área de\ninteresse, já que a manutenção do foco na solução é\no objetivo desse processo.",
+      "requer uma pesquisa documental rigorosa, para que a\ncomunicação possa ser negligenciada, tendo em vista\nos conflitos que a comunicação gera, por diferenças\nde interpretação."
+    ],
+    "alternativas": [
+      "deve conduzir a um acordo que proporcione resultados que atendam aos interesses das partes e que sejam satisfatórios e colaborativos.",
+      "deve atender ao interesse individual da parte que tem\nmaior poder de barganha no processo.",
+      "desconsidera os conflitos de interesse, já que o processo, em si, tem como objetivo identificar a melhor\nsolução para as partes envolvidas.",
+      "é unidirecional, devendo abordar uma única área de\ninteresse, já que a manutenção do foco na solução é\no objetivo desse processo.",
+      "requer uma pesquisa documental rigorosa, para que a\ncomunicação possa ser negligenciada, tendo em vista\nos conflitos que a comunicação gera, por diferenças\nde interpretação."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 61,
+    "numero": 61,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "O ambiente organizacional tem-se tornado cada vez mais\ncomplexo e competitivo, obrigando as empresas a se reposicionarem no mercado, a alterarem suas estruturas,\nformas de produção e tantas outras variáveis que possibilitam às organizações a consecução de seus objetivos.\nPorém, para que tudo isso seja possível, é necessário que\na empresa tenha estratégias e planos definidos para o desenvolvimento de seus recursos humanos.\nUm dos instrumentos que apoiam a gestão da empresa\npara o desenvolvimento de seus recursos humanos é a(o)",
+    "opcoes": [
+      "Gestão do Capital Humano, em que se estabelecem\npolíticas de fidelização para os empregados, estreitando o relacionamento destes através de campanhas\nque visam à comunicação interna e às políticas de benefícios e incentivos.",
+      "Gestão por competência, que auxilia a mensuração\ndos progressos das empresas rumo às suas metas de\nlongo prazo, a partir da tradução da estratégia em objetivos, indicadores, metas e iniciativas estratégicas.",
+      "Gestão do Conhecimento, que é o conjunto de processos e sistemas que permitem procurar, selecionar,\nanalisar e sintetizar criticamente, de forma sistematizada e racional, as informações disponíveis, possibilitando assim a disseminação do conhecimento.",
+      "Programa de Recompensas, que se refere ao potencial que a empresa concentra — por meio de conhecimentos, experiências e habilidades dos seus funcionários — para impulsionar o resultado em ganho\nfinanceiro.",
+      "Balanced Score Card, que permite à empresa mapear as capacidades existentes na organização, sejam\nelas técnicas, comportamentais ou conceituais, alocando as pessoas aos cargos que possibilitam seu\nmelhor desempenho."
+    ],
+    "alternativas": [
+      "Gestão do Capital Humano, em que se estabelecem\npolíticas de fidelização para os empregados, estreitando o relacionamento destes através de campanhas\nque visam à comunicação interna e às políticas de benefícios e incentivos.",
+      "Gestão por competência, que auxilia a mensuração\ndos progressos das empresas rumo às suas metas de\nlongo prazo, a partir da tradução da estratégia em objetivos, indicadores, metas e iniciativas estratégicas.",
+      "Gestão do Conhecimento, que é o conjunto de processos e sistemas que permitem procurar, selecionar,\nanalisar e sintetizar criticamente, de forma sistematizada e racional, as informações disponíveis, possibilitando assim a disseminação do conhecimento.",
+      "Programa de Recompensas, que se refere ao potencial que a empresa concentra — por meio de conhecimentos, experiências e habilidades dos seus funcionários — para impulsionar o resultado em ganho\nfinanceiro.",
+      "Balanced Score Card, que permite à empresa mapear as capacidades existentes na organização, sejam\nelas técnicas, comportamentais ou conceituais, alocando as pessoas aos cargos que possibilitam seu\nmelhor desempenho."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 62,
+    "numero": 62,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "No contexto organizacional, existe um consenso de que\no diferencial da empresa está intimamente ligado ao elemento humano, sendo este um fator crítico de sucesso.\nFatores críticos de sucesso são aqueles que",
+    "opcoes": [
+      "possibilitam à empresa demonstrar ao mercado os\nseus aspectos técnicos e conceituais representados\nem seus indicadores de desempenho econômico-\n-financeiro.",
+      "explicitam o conhecimento existente na empresa e é\nencontrado em manuais, livros e registros diversos,\nexpressando o seu know-how.",
+      "influenciam diretamente a cultura do indivíduo após\neste ser admitido na empresa, e, como consequência, têm o seu comportamento profissional e pessoal\nmodificado.",
+      "asseguram um desempenho competitivo de sucesso\npara a organização, representando as áreas-chave\nem que tudo deve dar certo para que o negócio tenha\nvantagem competitiva.",
+      "representam os recursos indispensáveis ao processo\nprodutivo de bens materiais, oferecidos pela empresa\nao mercado, e são conhecidos também como capacidade empresarial."
+    ],
+    "alternativas": [
+      "possibilitam à empresa demonstrar ao mercado os\nseus aspectos técnicos e conceituais representados\nem seus indicadores de desempenho econômico-\n-financeiro.",
+      "explicitam o conhecimento existente na empresa e é\nencontrado em manuais, livros e registros diversos,\nexpressando o seu know-how.",
+      "influenciam diretamente a cultura do indivíduo após\neste ser admitido na empresa, e, como consequência, têm o seu comportamento profissional e pessoal\nmodificado.",
+      "asseguram um desempenho competitivo de sucesso\npara a organização, representando as áreas-chave\nem que tudo deve dar certo para que o negócio tenha\nvantagem competitiva.",
+      "representam os recursos indispensáveis ao processo\nprodutivo de bens materiais, oferecidos pela empresa\nao mercado, e são conhecidos também como capacidade empresarial."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 63,
+    "numero": 63,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Uma empresa, fabricante de cosméticos, quer implementar algumas práticas de responsabilidade socioambiental.\nA empresa age dessa forma para antecipar-se à forte tendência existente no mercado, que pressiona as empresas\ndesse setor para que adotem ações compatíveis com essas práticas.\nUma prática que a empresa pode implementar com esse\nobjetivo é",
+    "opcoes": [
+      "atender aos aspectos legais no que se refere à proteção ambiental, já que os demais aspectos do negócio\nnão interferem nas práticas de sustentabilidade organizacional.",
+      "cumprir os acordos comerciais estabelecidos com os\nclientes, já que dessa forma será mantido o vínculo\nde longo prazo com a empresa, mantendo assim a\nsustentabilidade do negócio.",
+      "adquirir somente produtos e serviços que sejam fornecidos por empresas que observem os padrões éticos\ne de respeito aos empregados, tendo em vista que a\nsustentabilidade deve ser garantida ao longo de todo\no processo produtivo.",
+      "obter certificações internacionais para seu sistema de\nqualidade, com o objetivo de atender aos requisitos de\nseus clientes, mantendo assim a sua capacidade de\nexportação e sustentabilidade do negócio.",
+      "contratar um profissional de marketing para que divulgue, com profissionalismo, em seu Relatório Anual, todas as atividades que foram realizadas pela empresa\ne que tiveram um resultado positivo."
+    ],
+    "alternativas": [
+      "atender aos aspectos legais no que se refere à proteção ambiental, já que os demais aspectos do negócio\nnão interferem nas práticas de sustentabilidade organizacional.",
+      "cumprir os acordos comerciais estabelecidos com os\nclientes, já que dessa forma será mantido o vínculo\nde longo prazo com a empresa, mantendo assim a\nsustentabilidade do negócio.",
+      "adquirir somente produtos e serviços que sejam fornecidos por empresas que observem os padrões éticos\ne de respeito aos empregados, tendo em vista que a\nsustentabilidade deve ser garantida ao longo de todo\no processo produtivo.",
+      "obter certificações internacionais para seu sistema de\nqualidade, com o objetivo de atender aos requisitos de\nseus clientes, mantendo assim a sua capacidade de\nexportação e sustentabilidade do negócio.",
+      "contratar um profissional de marketing para que divulgue, com profissionalismo, em seu Relatório Anual, todas as atividades que foram realizadas pela empresa\ne que tiveram um resultado positivo."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 64,
+    "numero": 64,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Uma empresa que presta serviços educacionais, avaliando\na estrutura organizacional que mantém para realizar suas\natividades e atingir seus objetivos, observou que precisava\ndar uma conformação diferente à existente para se tornar\nmais eficiente. Para isso, gostaria de implantar uma nova\nestrutura, em que houvesse maior orientação para os resultados e ênfase na interdependência entre os departamentos, tendo em vista que a empresa atua em ambiente\ncomplexo e altamente competitivo.\nPara satisfazer às emergentes necessidades organizacionais — especialização em suas atividades e na coordenação de seus recursos, com as pessoas permanecendo\nvinculadas às suas respectivas unidades funcionais, porém movimentando-se na organização para desenvolver\nos projetos nos quais suas habilidades e conhecimentos\nsejam necessários —, a estrutura que se adequa a esses\nobjetivos é a",
+    "opcoes": [
+      "Linear, tendo em vista que, nessa conformação, os recursos estão organizados em departamentos, havendo\nduplicidade de comando e descentralização das decisões.",
+      "Matricial, que é uma estrutura que destaca a interdependência entre as áreas e atende às necessidades de\ncoordenação e de especialização, com maior descentralização de autoridade.",
+      "Funcional, que é uma estrutura que possui linhas diretas e únicas de responsabilidade entre superior e subordinados, caracterizando assim a unidade de comando, o que contribui positivamente para maior eficiência.",
+      "Divisional, estrutura na qual não há o conceito de hierarquia formal e o trabalho é feito em equipe, trabalhando cooperativamente para que as atividades sejam realizadas mais rapidamente.",
+      "Rede, que é a estrutura característica das empresas\nque trabalham com diferentes mercados e uma carteira\nde clientes variada, sendo formada por divisões separadas e autossuficientes.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "Linear, tendo em vista que, nessa conformação, os recursos estão organizados em departamentos, havendo\nduplicidade de comando e descentralização das decisões.",
+      "Matricial, que é uma estrutura que destaca a interdependência entre as áreas e atende às necessidades de\ncoordenação e de especialização, com maior descentralização de autoridade.",
+      "Funcional, que é uma estrutura que possui linhas diretas e únicas de responsabilidade entre superior e subordinados, caracterizando assim a unidade de comando, o que contribui positivamente para maior eficiência.",
+      "Divisional, estrutura na qual não há o conceito de hierarquia formal e o trabalho é feito em equipe, trabalhando cooperativamente para que as atividades sejam realizadas mais rapidamente.",
+      "Rede, que é a estrutura característica das empresas\nque trabalham com diferentes mercados e uma carteira\nde clientes variada, sendo formada por divisões separadas e autossuficientes.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 65,
+    "numero": 65,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "O diretor de operações de uma empresa do setor de serviços tem percebido que seu desempenho está abaixo\ndo esperado e, para informar-se melhor disso, elaborou\numa pesquisa de satisfação, que será realizada com\nseus clientes. Além dessa pesquisa, também elaborou\numa carta de controle para acompanhamento de seus\nprocessos. Seu objetivo é identificar os processos em que\nhá maior nível de insatisfação de seus clientes e quais\ndesses processos apresentam maior frequência de resultados fora dos padrões estabelecidos.\nEsse diretor de operações, ao escolher esses dois instrumentos para a avaliação do desempenho da empresa e\nde posse dos resultados, deverá",
+    "opcoes": [
+      "rever seu planejamento estratégico, já que as ações\nali planejadas não surtiram o efeito esperado.",
+      "identificar os gaps de seus processos e adotar as\nações corretivas necessárias, procurando atender às\nexpectativas de seus clientes.",
+      "alterar a política da empresa, já que esta é associada,\ndiretamente, pelos clientes, ao seu propósito, e este\nnão está sendo cumprido, tendo em vista seu desempenho abaixo do esperado.",
+      "criar uma área de atendimento ao cliente, possibilitando a resolução dos problemas que aparecem,\npontualmente, melhorando assim o relacionamento\nempresa-cliente.",
+      "substituir as pessoas responsáveis pelos processos,\nos quais têm maior índice de insatisfação dos clientes."
+    ],
+    "alternativas": [
+      "rever seu planejamento estratégico, já que as ações\nali planejadas não surtiram o efeito esperado.",
+      "identificar os gaps de seus processos e adotar as\nações corretivas necessárias, procurando atender às\nexpectativas de seus clientes.",
+      "alterar a política da empresa, já que esta é associada,\ndiretamente, pelos clientes, ao seu propósito, e este\nnão está sendo cumprido, tendo em vista seu desempenho abaixo do esperado.",
+      "criar uma área de atendimento ao cliente, possibilitando a resolução dos problemas que aparecem,\npontualmente, melhorando assim o relacionamento\nempresa-cliente.",
+      "substituir as pessoas responsáveis pelos processos,\nos quais têm maior índice de insatisfação dos clientes."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 66,
+    "numero": 66,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Uma empresa está preocupada com a alta rotatividade de\nfuncionários que tem ocorrido ao longo dos últimos três\nanos. Para diminuir o efeito da falta de uma política de\nRecursos Humanos que possibilite a manutenção de seu\nquadro de empregados, a empresa pensou em elaborar\num plano de cargos e salários.\nO plano de cargos e salários é importante porque",
+    "opcoes": [
+      "permite que a empresa estabeleça os salários que os\nempregados terão vinculado ao tempo em que lá permanecerem, facilitando dessa forma a criação de uma\npolítica de recursos humanos.",
+      "permite que a empresa direcione cada empregado\npara a carreira necessária dentro da estrutura organizacional existente.",
+      "é um instrumento de gestão que tem como objetivo\nmotivar os empregados, apresentando a remuneração que eles terão ao longo do tempo de sua permanência na empresa.",
+      "comunica, de maneira eficaz, aos empregados, a trilha a ser percorrida para que ele consiga desenvolver-\n-se dentro da empresa.",
+      "demonstra os salários de todos os empregados da\nempresa, eliminando a possibilidade de conflitos decorrentes de diferenças salariais, e garantindo a transparência do processo."
+    ],
+    "alternativas": [
+      "permite que a empresa estabeleça os salários que os\nempregados terão vinculado ao tempo em que lá permanecerem, facilitando dessa forma a criação de uma\npolítica de recursos humanos.",
+      "permite que a empresa direcione cada empregado\npara a carreira necessária dentro da estrutura organizacional existente.",
+      "é um instrumento de gestão que tem como objetivo\nmotivar os empregados, apresentando a remuneração que eles terão ao longo do tempo de sua permanência na empresa.",
+      "comunica, de maneira eficaz, aos empregados, a trilha a ser percorrida para que ele consiga desenvolver-\n-se dentro da empresa.",
+      "demonstra os salários de todos os empregados da\nempresa, eliminando a possibilidade de conflitos decorrentes de diferenças salariais, e garantindo a transparência do processo."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 67,
+    "numero": 67,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Uma empresa baseada no conhecimento reconhece que\neste elemento — o conhecimento — é um recurso estratégico. Para tirar o máximo proveito do que isto pode\nrepresentar em sua gestão e na melhoria de sua competitividade, adota modos diferentes de conversão do\nconhecimento, com o objetivo de torná-lo disponível na\norganização.\nUm dos processos utilizados para a conversão do conhecimento na organização é a",
+    "opcoes": [
+      "combinação, que é um processo de compartilhamento\nde experiências e, a partir daí, a criação do conhecimento tácito.",
+      "externalização, que se constitui em um processo de\ntransformação do conhecimento tácito em conhecimento explícito.",
+      "socialização, que é um processo de composição de\nconceitos, que envolve a integração de conjuntos diferentes de conhecimento explícito, em um sistema de\nconhecimento.",
+      "adaptação, que é o conhecimento organizacional gerado pelas redes informais e auto-organizadas para\nsua evolução.",
+      "internalização, que é o processo de ampliação do\nconhecimento explícito realizado pelo próprio funcionário, e que possibilita o compartilhamento, com o\nambiente externo, dos conhecimentos existentes internamente."
+    ],
+    "alternativas": [
+      "combinação, que é um processo de compartilhamento\nde experiências e, a partir daí, a criação do conhecimento tácito.",
+      "externalização, que se constitui em um processo de\ntransformação do conhecimento tácito em conhecimento explícito.",
+      "socialização, que é um processo de composição de\nconceitos, que envolve a integração de conjuntos diferentes de conhecimento explícito, em um sistema de\nconhecimento.",
+      "adaptação, que é o conhecimento organizacional gerado pelas redes informais e auto-organizadas para\nsua evolução.",
+      "internalização, que é o processo de ampliação do\nconhecimento explícito realizado pelo próprio funcionário, e que possibilita o compartilhamento, com o\nambiente externo, dos conhecimentos existentes internamente."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 68,
+    "numero": 68,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "A adoção de ações de sustentabilidade por uma empresa\ntem a capacidade de mudar de forma positiva a imagem\ndela junto ao público, de maneira geral.\nÉ um exemplo de ação de sustentabilidade empresarial\no(a)",
+    "opcoes": [
+      "patrocínio de projetos que visem ao desenvolvimento\neducacional e cultural da comunidade em que a empresa está inserida.",
+      "oferecimento de produtos mais baratos no mercado,\nutilizando mão de obra autônoma, diminuindo os custos de produção, já que a empresa se desobriga dos\nencargos trabalhistas.",
+      "descarte de esgoto ou resíduos químicos em rios ou\ncórregos próximos à empresa para diminuir os deslocamentos e possibilidade de acidentes.",
+      "reserva de uma área, dentro da própria empresa, para\ndescartar produtos químicos ou outros poluentes gerados no processo produtivo, evitando a contaminação\nde áreas externas.",
+      "utilização predominante, nos processos de produção,\nde fontes de energia derivadas de combustíveis fósseis\nporque são renováveis."
+    ],
+    "alternativas": [
+      "patrocínio de projetos que visem ao desenvolvimento\neducacional e cultural da comunidade em que a empresa está inserida.",
+      "oferecimento de produtos mais baratos no mercado,\nutilizando mão de obra autônoma, diminuindo os custos de produção, já que a empresa se desobriga dos\nencargos trabalhistas.",
+      "descarte de esgoto ou resíduos químicos em rios ou\ncórregos próximos à empresa para diminuir os deslocamentos e possibilidade de acidentes.",
+      "reserva de uma área, dentro da própria empresa, para\ndescartar produtos químicos ou outros poluentes gerados no processo produtivo, evitando a contaminação\nde áreas externas.",
+      "utilização predominante, nos processos de produção,\nde fontes de energia derivadas de combustíveis fósseis\nporque são renováveis."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 69,
+    "numero": 69,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Um executivo, recém-contratado em uma empresa que\natua na área de serviços, foi nomeado para fazer o monitoramento das ações a serem realizadas, pelas diferentes\náreas da organização, naquele ano. As ações a serem monitoradas são aquelas que foram estabelecidas com base\nno planejamento estratégico da empresa.\nO executivo, para realizar a atividade para a qual foi designado, solicitou a cada uma das áreas da organização que\ndesenvolvesse o seu plano de ação.\nPlano de ação é um documento",
+    "opcoes": [
+      "que representa o esforço temporário a ser realizado por\ncada área da empresa para criar um produto ou serviço\nexclusivo, e que tem como característica o desenvolvimento das atividades por etapas, com evolução progressiva, possibilitando assim o seu monitoramento.",
+      "onde estão identificados os pontos fortes e fracos da\nempresa, as ameaças e oportunidades existentes no\nmercado, e os novos produtos e serviços que serão\nofertados pela empresa, para que o monitoramento\ndesses elementos sirva de base para a revisão do planejamento estratégico.",
+      "onde são estabelecidas as ações preventivas, preditivas e reativas, de acordo com a estrutura estratégica\nrealizada pela empresa e que ajudará a controlar uma\nsituação de emergência e a minimizar as suas consequências negativas, controle este que será possibilitado pelo monitoramento.",
+      "utilizado para o controle e melhoria contínua de processos e produtos, onde devem estar descritos seus\nquatro elementos básicos: o trabalho a ser realizado;\na efetivação do trabalho planejado; a identificação dos\ngaps entre o realizado e o que foi planejado; e as ações\ncorretivas para os problemas que possam ocorrer na\nexecução das atividades.",
+      "utilizado para fazer um planejamento de trabalho necessário para atingimento dos resultados desejados\nou na resolução de problemas, com informações como\nobjetivos, ações e responsáveis com suas respectivas\ndatas de entregas, o que possibilita o monitoramento\ndas atividades realizadas.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "que representa o esforço temporário a ser realizado por\ncada área da empresa para criar um produto ou serviço\nexclusivo, e que tem como característica o desenvolvimento das atividades por etapas, com evolução progressiva, possibilitando assim o seu monitoramento.",
+      "onde estão identificados os pontos fortes e fracos da\nempresa, as ameaças e oportunidades existentes no\nmercado, e os novos produtos e serviços que serão\nofertados pela empresa, para que o monitoramento\ndesses elementos sirva de base para a revisão do planejamento estratégico.",
+      "onde são estabelecidas as ações preventivas, preditivas e reativas, de acordo com a estrutura estratégica\nrealizada pela empresa e que ajudará a controlar uma\nsituação de emergência e a minimizar as suas consequências negativas, controle este que será possibilitado pelo monitoramento.",
+      "utilizado para o controle e melhoria contínua de processos e produtos, onde devem estar descritos seus\nquatro elementos básicos: o trabalho a ser realizado;\na efetivação do trabalho planejado; a identificação dos\ngaps entre o realizado e o que foi planejado; e as ações\ncorretivas para os problemas que possam ocorrer na\nexecução das atividades.",
+      "utilizado para fazer um planejamento de trabalho necessário para atingimento dos resultados desejados\nou na resolução de problemas, com informações como\nobjetivos, ações e responsáveis com suas respectivas\ndatas de entregas, o que possibilita o monitoramento\ndas atividades realizadas.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 70,
+    "numero": 70,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "administrador_a_junior",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Um estudante de Administração está fazendo uma pesquisa sobre as empresas nas quais gostaria de trabalhar. Ele\né um indivíduo bastante espontâneo, inteligente, curioso e\ncom grande potencial de desenvolvimento.\nConversando com seus colegas sobre as empresas que\nhavia pesquisado, e suas intenções, um deles observou\nque algumas empresas listadas por ele apresentavam uma\ncultura que talvez não fosse adequada para o seu estilo e\nobjetivos profissionais.\nPensando nesse comentário, ele foi pesquisar mais sobre\nos tipos de cultura que podem existir nas organizações e\nidentificou que gostaria de trabalhar em uma empresa onde\npudesse pesquisar, conversar sobre diversos conhecimentos e gerar ideias, onde o ambiente fosse agradável e que\nhouvesse uma visão clara e de longo prazo permeando a\norganização.\nCom base nessas informações, conclui-se que esse estudante deseja trabalhar em uma organização cuja cultura\nseja de",
+    "opcoes": [
+      "Inovação",
+      "Pessoas",
+      "Tarefas",
+      "Funções",
+      "Poder\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "Inovação",
+      "Pessoas",
+      "Tarefas",
+      "Funções",
+      "Poder\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 71,
+    "numero": 1,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "De acordo com a primeira estrofe do poema, o medo do\nmarciano origina-se no fato de que",
+    "opcoes": [
+      "a aparência do homem em conflito consigo mesmo o\napavora.",
+      "as contradições existenciais do homem não lhe fazem\nsentido.",
+      "o homem tinha atitudes de ameaça ao marciano.",
+      "o homem e o marciano não teriam chance de travar\nqualquer tipo de interação.",
+      "o encontro na rua foi casual, tendo o marciano se assustado com a aparência física do homem."
+    ],
+    "alternativas": [
+      "a aparência do homem em conflito consigo mesmo o\napavora.",
+      "as contradições existenciais do homem não lhe fazem\nsentido.",
+      "o homem tinha atitudes de ameaça ao marciano.",
+      "o homem e o marciano não teriam chance de travar\nqualquer tipo de interação.",
+      "o encontro na rua foi casual, tendo o marciano se assustado com a aparência física do homem."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 72,
+    "numero": 2,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "Já no título do texto (ficção científica, em português),\nanuncia-se a possibilidade de utilizar termos correlatos a\n“espaço sideral”. É o que ocorre logo na 1a linha, com o\nuso da palavra marciano.\nOutra palavra, empregada no texto, que apresenta relação com esse mesmo campo de significação, é",
+    "opcoes": [
+      "impossibilidade (. 2)",
+      "anulação (. 4)",
+      "testemunho (. 6)",
+      "colóquio (. 7)",
+      "constelado (. 8)"
+    ],
+    "alternativas": [
+      "impossibilidade (. 2)",
+      "anulação (. 4)",
+      "testemunho (. 6)",
+      "colóquio (. 7)",
+      "constelado (. 8)"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 73,
+    "numero": 3,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "O elemento em destaque está grafado de acordo com a\nnorma-padrão em:",
+    "opcoes": [
+      "O marciano desintegrou-se por que era necessário.",
+      "O marciano desintegrou-se porquê?",
+      "Não se sabe por que o marciano se desintegrou.",
+      "O marciano desintegrou-se, e não se sabe o porque.",
+      "Por quê o marciano se desintegrou?"
+    ],
+    "alternativas": [
+      "O marciano desintegrou-se por que era necessário.",
+      "O marciano desintegrou-se porquê?",
+      "Não se sabe por que o marciano se desintegrou.",
+      "O marciano desintegrou-se, e não se sabe o porque.",
+      "Por quê o marciano se desintegrou?"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 74,
+    "numero": 4,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "Num anúncio que contenha a frase “Vende-se filhotes de\npedigree.”, para adequá-lo à norma-padrão, será necessário redigi-lo da seguinte forma:",
+    "opcoes": [
+      "Vende-se filhotes que têm pedigree.",
+      "Vende-se filhotes os quais tem pedigree.",
+      "Vendem-se filhotes que tem pedigree.",
+      "Vendem-se filhotes que têm pedigree.",
+      "Vendem-se filhotes os quais tem pedigree."
+    ],
+    "alternativas": [
+      "Vende-se filhotes que têm pedigree.",
+      "Vende-se filhotes os quais tem pedigree.",
+      "Vendem-se filhotes que tem pedigree.",
+      "Vendem-se filhotes que têm pedigree.",
+      "Vendem-se filhotes os quais tem pedigree."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 75,
+    "numero": 5,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "A forma verbal em destaque está empregada de acordo\ncom a norma-padrão em:",
+    "opcoes": [
+      "O diretor foi trago ao auditório para uma reunião.",
+      "O aluno foi suspendido por três dias pela direção da\nescola.",
+      "O réu tinha sido isento da culpa, quando nova prova\nincriminatória o condenou.",
+      "A autoridade havia extinto a lei, quando novo crime\ntornou a justificar o seu uso.",
+      "Pedro já tinha pegado os ingressos na recepção,\nquando soube que o espetáculo fora cancelado."
+    ],
+    "alternativas": [
+      "O diretor foi trago ao auditório para uma reunião.",
+      "O aluno foi suspendido por três dias pela direção da\nescola.",
+      "O réu tinha sido isento da culpa, quando nova prova\nincriminatória o condenou.",
+      "A autoridade havia extinto a lei, quando novo crime\ntornou a justificar o seu uso.",
+      "Pedro já tinha pegado os ingressos na recepção,\nquando soube que o espetáculo fora cancelado."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 76,
+    "numero": 6,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "Os alunos, em uma aula de Português, receberam como\ntarefa passar a frase abaixo para o plural e para o passado\n(pretérito perfeito e imperfeito), levando-se em conta a\nnorma-padrão da língua.\nHá opinião contrária à do diretor.\nAcertaram a tarefa aqueles que escreveram:",
+    "opcoes": [
+      "Houve opiniões contrárias às dos diretores / Havia\nopiniões contrárias às dos diretores.",
+      "Houve opiniões contrárias à dos diretores / Haviam\nopiniões contrárias à dos diretores.",
+      "Houveram opiniões contrárias à dos diretores / Haviam\nopiniões contrárias à dos diretores.",
+      "Houveram opiniões contrárias às dos diretores / Haviam\nopiniões contrárias às dos diretores.",
+      "Houveram opiniões contrárias às dos diretores / Havia\nopiniões contrárias às dos diretores."
+    ],
+    "alternativas": [
+      "Houve opiniões contrárias às dos diretores / Havia\nopiniões contrárias às dos diretores.",
+      "Houve opiniões contrárias à dos diretores / Haviam\nopiniões contrárias à dos diretores.",
+      "Houveram opiniões contrárias à dos diretores / Haviam\nopiniões contrárias à dos diretores.",
+      "Houveram opiniões contrárias às dos diretores / Haviam\nopiniões contrárias às dos diretores.",
+      "Houveram opiniões contrárias às dos diretores / Havia\nopiniões contrárias às dos diretores."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 77,
+    "numero": 7,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "A frase Compramos apostilas que nos serão úteis nos\nestudos está reescrita de acordo com a norma-padrão\nem:",
+    "opcoes": [
+      "Compramos apostilas cujas nos serão úteis nos\nestudos.",
+      "Compramos apostilas as cujas nos serão úteis nos\nestudos.",
+      "Compramos apostilas a qual nos serão úteis nos\nestudos.",
+      "Compramos apostilas as quais nos serão úteis nos\nestudos.",
+      "Compramos apostilas às quais nos serão úteis nos\nestudos."
+    ],
+    "alternativas": [
+      "Compramos apostilas cujas nos serão úteis nos\nestudos.",
+      "Compramos apostilas as cujas nos serão úteis nos\nestudos.",
+      "Compramos apostilas a qual nos serão úteis nos\nestudos.",
+      "Compramos apostilas as quais nos serão úteis nos\nestudos.",
+      "Compramos apostilas às quais nos serão úteis nos\nestudos."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 78,
+    "numero": 8,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "A palavra a, na língua portuguesa, pode ser grafada de\ntrês formas distintas entre si, sem que a pronúncia se\naltere: a, à, há. No entanto, significado e classe gramatical\ndessas palavras variam.\nA frase abaixo deverá sofrer algumas alterações nas palavras em destaque para adequar-se à norma-padrão.\nA muito tempo não vejo a parte da minha família a\nqual foi deixada de herança a fazenda a que todos\ndevotavam grande afeto.\nDe acordo com a norma-padrão, a correção implicaria,\nrespectivamente, esta sequência de palavras:",
+    "opcoes": [
+      "A - a - à - há - à",
+      "À - à - a - a - a",
+      "Há - a - à - a - a",
+      "Há - à - à - a - a",
+      "Há - a - a - à - à"
+    ],
+    "alternativas": [
+      "A - a - à - há - à",
+      "À - à - a - a - a",
+      "Há - a - à - a - a",
+      "Há - à - à - a - a",
+      "Há - a - a - à - à"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 79,
+    "numero": 9,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "De acordo com a norma-padrão, há indeterminação do\nsujeito em:",
+    "opcoes": [
+      "Olharam-se com cumplicidade.",
+      "Barbearam-se todos antes da festa.",
+      "Trata-se de resolver questões econômicas.",
+      "Vendem-se artigos de qualidade naquela loja.",
+      "Compra-se muita mercadoria em época de festas."
+    ],
+    "alternativas": [
+      "Olharam-se com cumplicidade.",
+      "Barbearam-se todos antes da festa.",
+      "Trata-se de resolver questões econômicas.",
+      "Vendem-se artigos de qualidade naquela loja.",
+      "Compra-se muita mercadoria em época de festas."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 80,
+    "numero": 10,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Português",
+    "disciplina": "Português",
+    "categoria": "Português",
+    "assunto": "Português",
+    "enunciado": "Ao escrever frases, que deveriam estar de acordo com\na norma-padrão, um funcionário se equivocou constantemente na ortografia.\nEle só NÃO se enganou em:",
+    "opcoes": [
+      "O homem foi acusado de estuprar várias vítimas.",
+      "A belesa da duquesa era realmente de se admirar.",
+      "Porque o sapato deslisou na lama, a mulher foi ao\nchão.",
+      "Sem exitar, as crianças correram para os brinquedos\ndo parque.",
+      "Sem maiores pretenções, o time venceu o jogo e se\nclassificou para a final.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "O homem foi acusado de estuprar várias vítimas.",
+      "A belesa da duquesa era realmente de se admirar.",
+      "Porque o sapato deslisou na lama, a mulher foi ao\nchão.",
+      "Sem exitar, as crianças correram para os brinquedos\ndo parque.",
+      "Sem maiores pretenções, o time venceu o jogo e se\nclassificou para a final.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 81,
+    "numero": 11,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The main purpose of the text is to",
+    "opcoes": [
+      "blame supervisors and managers who cannot use\nequipment safely in the office.",
+      "inform employees that the use of instincts is all it takes\nto prevent dangers at work.",
+      "present OSHA to American workers who had never\nheard about this organization.",
+      "argue that the acquisition of modern and safer\nequipment can prevent all job accidents.",
+      "encourage the cooperation of all employees so as to\nprevent dangers in the workplace."
+    ],
+    "alternativas": [
+      "blame supervisors and managers who cannot use\nequipment safely in the office.",
+      "inform employees that the use of instincts is all it takes\nto prevent dangers at work.",
+      "present OSHA to American workers who had never\nheard about this organization.",
+      "argue that the acquisition of modern and safer\nequipment can prevent all job accidents.",
+      "encourage the cooperation of all employees so as to\nprevent dangers in the workplace."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 82,
+    "numero": 12,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "‘Until I’m blue in the face’ in the fragment “I can stand\nin front of you and talk about working safely and what\nprocedures to follow until I’m blue in the face.” (lines 1-3)\nis substituted, without change in meaning, by ‘until I",
+    "opcoes": [
+      "dismiss you’.",
+      "lose your attention’.",
+      "get breathless but cheerful’.",
+      "get exhausted and speechless’.",
+      "become discouraged and melancholic’."
+    ],
+    "alternativas": [
+      "dismiss you’.",
+      "lose your attention’.",
+      "get breathless but cheerful’.",
+      "get exhausted and speechless’.",
+      "become discouraged and melancholic’."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 83,
+    "numero": 13,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The fragment ‘all of you have to come together on this\nissue, or we’re in trouble.’ (lines 18-19) is understood as a(n)",
+    "opcoes": [
+      "funny joke",
+      "call to action",
+      "violent threat",
+      "ineffective request",
+      "welcome imposition"
+    ],
+    "alternativas": [
+      "funny joke",
+      "call to action",
+      "violent threat",
+      "ineffective request",
+      "welcome imposition"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 84,
+    "numero": 14,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The expressions “Complying with” and “follow through”\nin the fragments “Complying with OSHA regulations isn’t\nalways easy,” (lines 10-11) and “Then it’s up to you to follow\nthrough the task and use the equipment as you were\ntrained.” (lines 23-24) may, respectively, be substituted,\nwithout change in meaning, by",
+    "opcoes": [
+      "accepting; quit",
+      "respecting; leave",
+      "refusing; complete",
+      "resisting; pursue",
+      "obeying; conclude"
+    ],
+    "alternativas": [
+      "accepting; quit",
+      "respecting; leave",
+      "refusing; complete",
+      "resisting; pursue",
+      "obeying; conclude"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 85,
+    "numero": 15,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The pronoun “those” in the sentence “Our hopes are that\nyou won’t find too many of those around here.” (lines 32-33)\nrefers to",
+    "opcoes": [
+      "safety responsibilities (line 28)",
+      "safety and health hazards (line 29)",
+      "extreme hazards (line 31)",
+      "our hopes (line 32)",
+      "more subtle hazards (line 34)"
+    ],
+    "alternativas": [
+      "safety responsibilities (line 28)",
+      "safety and health hazards (line 29)",
+      "extreme hazards (line 31)",
+      "our hopes (line 32)",
+      "more subtle hazards (line 34)"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 86,
+    "numero": 16,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "According to the text, employees have several safety\nresponsibilities at work, EXCEPT",
+    "opcoes": [
+      "understanding what constitutes a hazard.",
+      "using their instincts to help prevent risks.",
+      "avoiding obstructed spaces in the work area.",
+      "eliminating the use of all flammable materials.",
+      "correcting dangers or reporting on them to have them\nsolved."
+    ],
+    "alternativas": [
+      "understanding what constitutes a hazard.",
+      "using their instincts to help prevent risks.",
+      "avoiding obstructed spaces in the work area.",
+      "eliminating the use of all flammable materials.",
+      "correcting dangers or reporting on them to have them\nsolved."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 87,
+    "numero": 17,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The modal auxiliary in boldface conveys the idea of\nobligation in the fragment:",
+    "opcoes": [
+      "“Some of you may be familiar with OSHA” (line 7)",
+      "“we can do it.” (line 11)",
+      "“and will do what is necessary to prevent you from\nbeing injured.” (lines 14-15)",
+      "“you must first understand what constitutes a hazard.”\n(lines 30-31)",
+      "“Those obstructions could keep you from exiting the\nbuilding quickly and safely” (lines 62-64)"
+    ],
+    "alternativas": [
+      "“Some of you may be familiar with OSHA” (line 7)",
+      "“we can do it.” (line 11)",
+      "“and will do what is necessary to prevent you from\nbeing injured.” (lines 14-15)",
+      "“you must first understand what constitutes a hazard.”\n(lines 30-31)",
+      "“Those obstructions could keep you from exiting the\nbuilding quickly and safely” (lines 62-64)"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 88,
+    "numero": 18,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "Based on the meanings in the text, it is clear that",
+    "opcoes": [
+      "“sole” (line 9) and only express similar ideas.",
+      "“injured” (line 15) and hurt are antonyms.",
+      "“ensure” (line 21) and guarantee express contradictory\nideas.",
+      "“subtle” (line 41) and obvious are synonyms.",
+      "“odds” (line 77) and probabilities do not have\nequivalent meanings."
+    ],
+    "alternativas": [
+      "“sole” (line 9) and only express similar ideas.",
+      "“injured” (line 15) and hurt are antonyms.",
+      "“ensure” (line 21) and guarantee express contradictory\nideas.",
+      "“subtle” (line 41) and obvious are synonyms.",
+      "“odds” (line 77) and probabilities do not have\nequivalent meanings."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 89,
+    "numero": 19,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "The expression in boldface introduces the idea of\nconsequence in the fragment:",
+    "opcoes": [
+      "“Yet, complying with regulations is not the real reason\nfor working safely.” (lines 12-13)",
+      "“In order to do that, you must first understand what\nconstitutes a hazard.” (lines 30-31)",
+      "“As a result of your safety training and meetings like\nthese, some things may come to mind.” (lines 35-37)",
+      "“However, if there is an unlabeled chemical container\nand you have no idea what it is,” (lines 53-54)",
+      "“While nothing we do can completely eliminate the\nthreat of an incident,” (lines 75-76)"
+    ],
+    "alternativas": [
+      "“Yet, complying with regulations is not the real reason\nfor working safely.” (lines 12-13)",
+      "“In order to do that, you must first understand what\nconstitutes a hazard.” (lines 30-31)",
+      "“As a result of your safety training and meetings like\nthese, some things may come to mind.” (lines 35-37)",
+      "“However, if there is an unlabeled chemical container\nand you have no idea what it is,” (lines 53-54)",
+      "“While nothing we do can completely eliminate the\nthreat of an incident,” (lines 75-76)"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 90,
+    "numero": 20,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Língua Inglesa",
+    "disciplina": "Língua Inglesa",
+    "categoria": "Língua Inglesa",
+    "assunto": "Língua Inglesa",
+    "enunciado": "According to the text, it is clear that the author",
+    "opcoes": [
+      "believes that labor risks cannot be reduced by team\nefforts and commitment.",
+      "expects to be kept informed of potential situations that\nmay be dangerous.",
+      "considers the cooperation of workers an irrelevant\nmeasure to improve safety at work.",
+      "defends that corporate management is accountable\nfor all issues regarding safety at work.",
+      "feels that co-workers’ suggestions are useless in\nidentifying hazards in the work environment.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "believes that labor risks cannot be reduced by team\nefforts and commitment.",
+      "expects to be kept informed of potential situations that\nmay be dangerous.",
+      "considers the cooperation of workers an irrelevant\nmeasure to improve safety at work.",
+      "defends that corporate management is accountable\nfor all issues regarding safety at work.",
+      "feels that co-workers’ suggestions are useless in\nidentifying hazards in the work environment.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 91,
+    "numero": 21,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A empresa de construção civil Concreto Abstrato S.A., sediada no Brasil, está construindo diversos edifícios em um\npaís do norte da África. Os projetos são grandes e envolvem uma série de profissionais da construção civil, alguns\nlocais e outros oriundos do país sede.\nA complexidade dos projetos requer uma estrutura organizacional que atenda às características técnicas e gerenciais a ela relacionadas. Em decorrência dessas características, a empresa decidiu estabelecer a estrutura\norganizacional por projeto.\nÉ característica da estrutura organizacional por projeto a",
+    "opcoes": [
+      "divisão através de departamentos.",
+      "coordenação do topo que possui redundâncias em\nmuitas tarefas.",
+      "organização segundo os tipos de recursos técnicos\nutilizados.",
+      "manutenção dos recursos necessários sob o controle\nde um único indivíduo.",
+      "estruturação dos órgãos sob uma única linha de subordinação."
+    ],
+    "alternativas": [
+      "divisão através de departamentos.",
+      "coordenação do topo que possui redundâncias em\nmuitas tarefas.",
+      "organização segundo os tipos de recursos técnicos\nutilizados.",
+      "manutenção dos recursos necessários sob o controle\nde um único indivíduo.",
+      "estruturação dos órgãos sob uma única linha de subordinação."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 92,
+    "numero": 22,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Os diretores de uma empresa se preparam para a elaboração do planejamento estratégico para o período de\n2012 a 2017. Para isso, fizeram uma reunião visando à\ndefinição das estratégias que nortearão o trabalho.\nEm relação à elaboração do planejamento estratégico,\nconsidere as afirmações abaixo:\nI – A empresa é um sistema fechado e deverá considerar as suas forças e fraquezas na elaboração do planejamento.\nII – O ambiente organizacional divide-se em dois grupos:\nmacroambiente e microambiente.\nIII – O ambiente geral pode ser caracterizado como o conjunto de aspectos estruturais, capazes de infl uenciar\nas diferentes indústrias.\nIV – As oportunidades são fatores que fazem parte do\nmicroambiente e que podem proporcionar vantagem\ncompetitiva à empresa.\nEstão corretas as afirmações",
+    "opcoes": [
+      "I e II, apenas.",
+      "I e III, apenas.",
+      "II e III, apenas",
+      "I, II e III, apenas.",
+      "I, II, III e IV."
+    ],
+    "alternativas": [
+      "I e II, apenas.",
+      "I e III, apenas.",
+      "II e III, apenas",
+      "I, II e III, apenas.",
+      "I, II, III e IV."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 93,
+    "numero": 23,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A estrutura de uma organização deve ser estabelecida de\nacordo com os objetivos e as estratégias determinadas\npela alta administração. Para definir a estrutura, é necessário que se avaliem a rotina e os procedimentos que darão suporte às atividades para que os objetivos sejam alcançados. As empresas constituem organizações de dois\ntipos: a organização formal e a informal.\nA estrutura organizacional requer principalmente uma organização",
+    "opcoes": [
+      "formal, que é aquela planejada e resultado das relações pessoais do corpo funcional.",
+      "formal, que é instável porque está sujeita ao controle\nda direção da empresa.",
+      "formal, que enfatiza as relações de autoridade e responsabilidade.",
+      "informal, que pode ser extinta porque não faz parte do\norganograma.",
+      "informal, que é aquela que se desenvolve espontaneamente e está retratada no organograma."
+    ],
+    "alternativas": [
+      "formal, que é aquela planejada e resultado das relações pessoais do corpo funcional.",
+      "formal, que é instável porque está sujeita ao controle\nda direção da empresa.",
+      "formal, que enfatiza as relações de autoridade e responsabilidade.",
+      "informal, que pode ser extinta porque não faz parte do\norganograma.",
+      "informal, que é aquela que se desenvolve espontaneamente e está retratada no organograma."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 94,
+    "numero": 24,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A natureza da estrutura adotada por uma empresa depende, principalmente, de fatores internos.\nContribuem para a criação da estrutura da empresa os\nseguintes fatores internos, EXCETO a(s)",
+    "opcoes": [
+      "sequência de passos necessária para produzir os produtos ou serviços que os membros e clientes desejam\nou de que necessitam.",
+      "natureza dos objetivos estabelecidos para a empresa,\nseus executivos e funcionários.",
+      "atividades operantes exigidas para realizar os objetivos da empresa.",
+      "funções administrativas a desempenhar.",
+      "características pessoais do corpo funcional."
+    ],
+    "alternativas": [
+      "sequência de passos necessária para produzir os produtos ou serviços que os membros e clientes desejam\nou de que necessitam.",
+      "natureza dos objetivos estabelecidos para a empresa,\nseus executivos e funcionários.",
+      "atividades operantes exigidas para realizar os objetivos da empresa.",
+      "funções administrativas a desempenhar.",
+      "características pessoais do corpo funcional."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 95,
+    "numero": 25,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Uma organização decidiu estabelecer uma metodologia\npara a elaboração de seu planejamento estratégico. Elaborou o diagnóstico estratégico, que é o primeiro passo\ndo processo de planejamento. Com isso, identificou as\ninformações necessárias para nortear o seu direcionamento estratégico. O monitoramento ambiental forneceu\nos elementos essenciais para a determinação do rumo a\nser seguido pela organização.\nEsse rumo é explicitado através das diretrizes organizacionais formadas pelo(a)",
+    "opcoes": [
+      "plano operacional e pelo sistema de informações da\nempresa",
+      "sistema de qualidade e pelo sistema de informações\nda empresa",
+      "missão, visão e pelos objetivos da empresa",
+      "estrutura e pelos objetivos organizacionais",
+      "estrutura organizacional e pelos planos de gestão\noperacional da empresa"
+    ],
+    "alternativas": [
+      "plano operacional e pelo sistema de informações da\nempresa",
+      "sistema de qualidade e pelo sistema de informações\nda empresa",
+      "missão, visão e pelos objetivos da empresa",
+      "estrutura e pelos objetivos organizacionais",
+      "estrutura organizacional e pelos planos de gestão\noperacional da empresa"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 96,
+    "numero": 26,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A análise de cenários externos é necessária no ambiente\norganizacional, devendo tornar-se rotineira, ou seja, deve\nestar incorporada ao dia a dia das empresas que pretendem administrar estrategicamente o seu negócio.\nA empresa que se organiza estrategicamente transforma\nameaças em oportunidades.\nDe acordo com essa perspectiva, depreende-se que",
+    "opcoes": [
+      "as forças ambientais tornam-se controláveis mesmo\nquando elas não são previstas com certa antecedência.",
+      "as turbulências do mercado são minimizadas pelas\nempresas que se organizam estrategicamente, minimizando os seus possíveis impactos.",
+      "a análise e o monitoramento do mercado quantificam\nas receitas que a organização obterá em relação às\nestratégias adotadas.",
+      "a perspectiva estratégica dá a vantagem competitiva\nfundamental para que a empresa seja a líder no segmento de mercado em que atua.",
+      "uma empresa que se organiza estrategicamente não\nsofre impactos decorrentes das forças que atuam no\nmacroambiente."
+    ],
+    "alternativas": [
+      "as forças ambientais tornam-se controláveis mesmo\nquando elas não são previstas com certa antecedência.",
+      "as turbulências do mercado são minimizadas pelas\nempresas que se organizam estrategicamente, minimizando os seus possíveis impactos.",
+      "a análise e o monitoramento do mercado quantificam\nas receitas que a organização obterá em relação às\nestratégias adotadas.",
+      "a perspectiva estratégica dá a vantagem competitiva\nfundamental para que a empresa seja a líder no segmento de mercado em que atua.",
+      "uma empresa que se organiza estrategicamente não\nsofre impactos decorrentes das forças que atuam no\nmacroambiente."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 97,
+    "numero": 27,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O ambiente interno é o nível de ambiente da organização\nque está dentro dela e, normalmente, tem implicação imediata e específica na administração da organização.\nA análise do ambiente interno tem por finalidade",
+    "opcoes": [
+      "evidenciar as deficiências e forças da empresa que\nestá sendo analisada.",
+      "evidenciar os pontos fortes e fracos dos concorrentes\nque atuam no mesmo segmento de mercado.",
+      "identificar as forças ambientais incontroláveis que determinam as ações estratégicas.",
+      "monitorar o ambiente organizacional para identificar\nos riscos e as oportunidades presentes e futuras.",
+      "quantificar o volume de produção e sua relação com a\ndemanda do mercado."
+    ],
+    "alternativas": [
+      "evidenciar as deficiências e forças da empresa que\nestá sendo analisada.",
+      "evidenciar os pontos fortes e fracos dos concorrentes\nque atuam no mesmo segmento de mercado.",
+      "identificar as forças ambientais incontroláveis que determinam as ações estratégicas.",
+      "monitorar o ambiente organizacional para identificar\nos riscos e as oportunidades presentes e futuras.",
+      "quantificar o volume de produção e sua relação com a\ndemanda do mercado."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 98,
+    "numero": 28,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Existem diferentes sistemas de amortização, passíveis de\nserem utilizados na contratação de empréstimos junto a\ninstituições financeiras.\nNesse sentido, uma das características do sistema de\namortização Price consiste em",
+    "opcoes": [
+      "quitação de amortizações constantes ao longo do período do empréstimo",
+      "amortização de 100% do valor do principal na data de\nvencimento",
+      "pagamento de prestações iguais durante o período do\nfinanciamento",
+      "pagamento de juros constantes durante o período do\nfinanciamento",
+      "pagamento de prestações decrescentes ao longo do\nperíodo do empréstimo"
+    ],
+    "alternativas": [
+      "quitação de amortizações constantes ao longo do período do empréstimo",
+      "amortização de 100% do valor do principal na data de\nvencimento",
+      "pagamento de prestações iguais durante o período do\nfinanciamento",
+      "pagamento de juros constantes durante o período do\nfinanciamento",
+      "pagamento de prestações decrescentes ao longo do\nperíodo do empréstimo"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 99,
+    "numero": 29,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A companhia G tem uma carteira de quatro projetos (W,\nY, X e Z) para análise e dispõe de R$ 900 mil em caixa\npara investir. Os projetos W e Y são mutuamente exclusivos, mas ambos viáveis, e todas as outras relações entre as alternativas são de independência. Considere que,\nhavendo recursos financeiros do caixa não alocados em\nprojetos, esses recursos podem ser investidos à taxa nominal mínima de atratividade de 10% ao ano e pelos mesmos prazos dos projetos. Assuma ainda que as contas\nsão elaboradas segundo o regime de juros compostos.\nOs quatro projetos apresentam os fluxos de desembolsos\n(representados pelo símbolo -) e ingressos monetários,\nambos expressos em R$ mil, conforme a tabela.\nTempo W Y X Z\n(ano)\n0 - R$ 400 -R$ 500 -R$ 200 - R$ 300\n1 R$ 180 R$ 230 R$ 100 R$ 80\n2 R$ 180 R$ 240 R$ 100 R$ 121\n3 R$ 180 R$ 240 R$ 100 R$ 150\nApós análise das informações fornecidas, os projetos escolhidos são:",
+    "opcoes": [
+      "W, X e Z",
+      "W e X",
+      "W e Z",
+      "Y e X",
+      "Y e Z"
+    ],
+    "alternativas": [
+      "W, X e Z",
+      "W e X",
+      "W e Z",
+      "Y e X",
+      "Y e Z"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 100,
+    "numero": 30,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A companhia B presta serviços de manutenção e necessita comprar equipamento fornecido pela empresa Y, que\nfez duas propostas: (i) o equipamento seria comprado à\nvista por B pelo valor de R$ 1 milhão, ou (ii) Y alugaria\nesse mesmo equipamento por dado valor (em duas parcelas, sendo uma no fim do primeiro ano, e a outra, no fim\ndo segundo ano), durante o período de dois anos. Sabe-\n-se que, ao adquirir o equipamento, B consegue revendê-\n-lo no mercado secundário por R$ 700 mil ao final dos\ndois anos. Considere, na elaboração dos cálculos, as informações fornecidas, o custo nominal de oportunidade\nde 10% ao ano e o regime de juros simples.\nO valor anual aproximado do aluguel que tornaria equivalentes as duas propostas do ponto de vista financeiro é,\nem reais, de",
+    "opcoes": [
+      "237.340,00",
+      "239.130,00",
+      "241.490,00",
+      "242.560,00",
+      "245.780,00"
+    ],
+    "alternativas": [
+      "237.340,00",
+      "239.130,00",
+      "241.490,00",
+      "242.560,00",
+      "245.780,00"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 101,
+    "numero": 31,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Considere válida a paridade de taxa de juros para aplicações em moedas diferentes. As moedas em questão são\no yuan chinês e o dólar americano. Admitam-se os seguintes parâmetros: taxa de câmbio à vista de 6,30 yuans\npor 1,00 dólar; uma aplicação em yuan rende 3,50% a.a;\ne uma aplicação em dólar rende 0,20% a.a. Suponha, ainda, que a taxa de câmbio seja cotada com duas casas\ndecimais.\nA taxa de câmbio aproximada yuans por dólar a termo\n(por um ano), de modo a assegurar a paridade, é de",
+    "opcoes": [
+      "6,10",
+      "6,23",
+      "6,31",
+      "6,42",
+      "6,51"
+    ],
+    "alternativas": [
+      "6,10",
+      "6,23",
+      "6,31",
+      "6,42",
+      "6,51"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 102,
+    "numero": 32,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Uma equação estabelece paridade entre o preço de uma\nopção de compra e o preço de uma opção de venda, impedindo a existência de oportunidades de arbitragem.\nEssas opções possuem mesma ação subjacente, mesma\ndata de vencimento e mesmo preço de exercício. As opções são do tipo europeu. Além disso, não há pagamento\nde proventos e de nenhum outro tipo de benefício até o\nvencimento das opções.\nConsidere que, no momento inicial, o preço corrente da\nação é de R$ 16,00 e o valor da opção europeia de compra é igual a R$ 1,00, e que, por sua vez, o valor presente\ndo preço de exercício equivale a R$ 18,00.\nQual é o valor teórico da opção europeia de venda, em\nreais, no momento inicial?",
+    "opcoes": [
+      "1,00",
+      "2,00",
+      "2,12",
+      "3,00",
+      "5,00"
+    ],
+    "alternativas": [
+      "1,00",
+      "2,00",
+      "2,12",
+      "3,00",
+      "5,00"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 103,
+    "numero": 33,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Por meio de técnicas e procedimentos contábeis a companhia controla o seu patrimônio, registra e divulga as\nmutações ocorridas em seus elementos patrimoniais.\nA atitude tomada pela gestão da empresa que produziria\num lançamento contábil no Ativo e outro lançamento contábil na Demonstração do Resultado do Exercício é a",
+    "opcoes": [
+      "aquisição de matéria-prima para ser guardada no almoxarifado com pagamento a prazo.",
+      "compra à vista de prédio para instalar sua unidade\noperacional.",
+      "contratação de um empréstimo de longo prazo, com\nrecebimento da totalidade dos recursos financeiros no\nmomento inicial.",
+      "constituição de valor de provisão para devedores duvidosos num dado exercício, com respectiva contrapartida.",
+      "integralização de capital, com respectiva entrada imediata de recursos financeiros no caixa da empresa."
+    ],
+    "alternativas": [
+      "aquisição de matéria-prima para ser guardada no almoxarifado com pagamento a prazo.",
+      "compra à vista de prédio para instalar sua unidade\noperacional.",
+      "contratação de um empréstimo de longo prazo, com\nrecebimento da totalidade dos recursos financeiros no\nmomento inicial.",
+      "constituição de valor de provisão para devedores duvidosos num dado exercício, com respectiva contrapartida.",
+      "integralização de capital, com respectiva entrada imediata de recursos financeiros no caixa da empresa."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 104,
+    "numero": 34,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Por conta de questões normativas, uma companhia deverá efetuar periodicamente análise sobre a recuperabilidade dos seus ativos imobilizados, pois podem ocorrer\nvariações de valor ao longo do tempo.\nNo âmbito dos conceitos de contabilidade, o valor recuperável de um ativo imobilizado é definido como o(a)",
+    "opcoes": [
+      "maior valor entre o valor em uso e o valor líquido de\nvenda",
+      "menor valor entre o valor em uso e o valor líquido de\nvenda",
+      "valor residual do ativo ao fim de período preestabelecido",
+      "valor de reposição do ativo",
+      "perda de valor do ativo"
+    ],
+    "alternativas": [
+      "maior valor entre o valor em uso e o valor líquido de\nvenda",
+      "menor valor entre o valor em uso e o valor líquido de\nvenda",
+      "valor residual do ativo ao fim de período preestabelecido",
+      "valor de reposição do ativo",
+      "perda de valor do ativo"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 105,
+    "numero": 35,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A administração de materiais auxilia uma organização na\ngestão e no controle de todo o fluxo de materiais que passa pela empresa. Nesse contexto, a correta classificação\ndos materiais possibilita a utilização de sistemas automatizados de controle de estoque.\nNÃO é um objetivo da codificação de materiais",
+    "opcoes": [
+      "facilitar a comunicação entre as áreas funcionais de\numa organização no que tange ao suprimento e à manutenção dos materiais.",
+      "facilitar o controle contábil dos estoques.",
+      "dificultar a duplicidade de itens.",
+      "promover a padronização de materiais.",
+      "evitar avarias no material."
+    ],
+    "alternativas": [
+      "facilitar a comunicação entre as áreas funcionais de\numa organização no que tange ao suprimento e à manutenção dos materiais.",
+      "facilitar o controle contábil dos estoques.",
+      "dificultar a duplicidade de itens.",
+      "promover a padronização de materiais.",
+      "evitar avarias no material."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 106,
+    "numero": 36,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A redução de estoques em cada elo de uma cadeia de\nsuprimentos é o objetivo de todas as empresas que compõem essa cadeia. Tal redução pode ser alcançada através da adoção de diferentes políticas e/ou práticas.\nAo se considerarem apenas os elos a jusante da empresa\nfocal, a política/prática com menor impacto na redução do\ninventário a jusante na cadeia é a de",
+    "opcoes": [
+      "aumento do giro de estoque na gôndola",
+      "adoção do VMI (Vendor Managed Inventory)",
+      "compartilhamento de componentes",
+      "implementação do ECR (Efficient Consumer Response)",
+      "postergação"
+    ],
+    "alternativas": [
+      "aumento do giro de estoque na gôndola",
+      "adoção do VMI (Vendor Managed Inventory)",
+      "compartilhamento de componentes",
+      "implementação do ECR (Efficient Consumer Response)",
+      "postergação"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 107,
+    "numero": 37,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A utilização de sistemas/métodos de previsão para a área\nde planejamento e controle da produção tem como premissa",
+    "opcoes": [
+      "atualizar as estimativas periodicamente.",
+      "estimar o erro de previsão apenas para ambientes em\nque a demanda sofra pouca variação no curto prazo.",
+      "estimar o valor da demanda apenas para ambientes\nem que a demanda sofra pouca variação no curto prazo.",
+      "utilizá-los no curto prazo apenas, pois a incerteza e o\nerro de previsão podem ser calculados.",
+      "realizá-los, obrigatoriamente, em conjunto com a área de\nvendas."
+    ],
+    "alternativas": [
+      "atualizar as estimativas periodicamente.",
+      "estimar o erro de previsão apenas para ambientes em\nque a demanda sofra pouca variação no curto prazo.",
+      "estimar o valor da demanda apenas para ambientes\nem que a demanda sofra pouca variação no curto prazo.",
+      "utilizá-los no curto prazo apenas, pois a incerteza e o\nerro de previsão podem ser calculados.",
+      "realizá-los, obrigatoriamente, em conjunto com a área de\nvendas."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 108,
+    "numero": 38,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O LEC (Lote Econômico de Compra) é a quantidade a ser\ncomprada que minimiza os custos logísticos totais.\nEm relação ao cálculo do LEC, considere as afirmativas\nabaixo.\nI – O LEC supõe uma demanda constante.\nII – No LEC, a demanda é deterministicamente conhecida.\nIII – No LEC, a demanda é contínua.\nÉ correto o que se afirma em",
+    "opcoes": [
+      "I, apenas.",
+      "III, apenas.",
+      "I e II, apenas.",
+      "II e III, apenas.",
+      "I, II, III."
+    ],
+    "alternativas": [
+      "I, apenas.",
+      "III, apenas.",
+      "I e II, apenas.",
+      "II e III, apenas.",
+      "I, II, III."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 109,
+    "numero": 39,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A logística reversa trata do fluxo de materiais que retornam\natravés do canal de distribuição pós-venda (CDR-PV) ou\ndo canal de distribuição reverso pós-consumo (CDR-PC).\nO canal de distribuição reverso de pós-consumo",
+    "opcoes": [
+      "considera apenas produtos que se destinam ao mercado secundário.",
+      "contempla canais de reúso, nos quais o produto ou\nseus componentes serão reutilizados na função original, sem a necessidade de remanufatura.",
+      "é o fluxo reverso originado após a comercialização do\nitem.",
+      "é o fluxo reverso de materiais do cliente final até a\nempresa focal.",
+      "é o processo de armazenar todos os produtos destinados a, pelo menos, um elo a montante."
+    ],
+    "alternativas": [
+      "considera apenas produtos que se destinam ao mercado secundário.",
+      "contempla canais de reúso, nos quais o produto ou\nseus componentes serão reutilizados na função original, sem a necessidade de remanufatura.",
+      "é o fluxo reverso originado após a comercialização do\nitem.",
+      "é o fluxo reverso de materiais do cliente final até a\nempresa focal.",
+      "é o processo de armazenar todos os produtos destinados a, pelo menos, um elo a montante."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 110,
+    "numero": 40,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "É um objetivo da área de higiene e segurança no trabalho:",
+    "opcoes": [
+      "indenizar o trabalhador em caso de acidente do trabalho.",
+      "diagnosticar as doenças ocupacionais e realizar o seu\ntratamento.",
+      "determinar o modal de transporte.",
+      "proteger a integridade física e mental do trabalhador.",
+      "proibir a utilização de EPI.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "indenizar o trabalhador em caso de acidente do trabalho.",
+      "diagnosticar as doenças ocupacionais e realizar o seu\ntratamento.",
+      "determinar o modal de transporte.",
+      "proteger a integridade física e mental do trabalhador.",
+      "proibir a utilização de EPI.\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 111,
+    "numero": 41,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A RO, sociedade anônima de capital fechado, apresentou\nas seguintes informações ao final do exercício encerrado\nem 31 de dezembro de 2011:\nCapital Social 20.000,00\nÁgio na compra de ações 5.000,00\nAlienação de partes beneficiárias 2.000,00\nPrêmio na alienação de debêntures 4.000,00\nConsiderando-se exclusivamente as informações recebidas, o Patrimônio Líquido da RO, em 31 de dezembro de\n2011, em reais, é",
+    "opcoes": [
+      "17.000,00",
+      "22.000,00",
+      "24.000,00",
+      "27.000,00",
+      "31.000,00"
+    ],
+    "alternativas": [
+      "17.000,00",
+      "22.000,00",
+      "24.000,00",
+      "27.000,00",
+      "31.000,00"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 112,
+    "numero": 42,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O Razão é um livro utilizado para registrar os fatos\nadministrativos da mesma natureza, numa mesma conta,\nsob uma denominação que os identifique de forma clara\ne precisa.\nNesse contexto, nas sociedades anônimas, o livro Razão é",
+    "opcoes": [
+      "facultativo sob o enfoque da legislação fiscal do imposto de renda.",
+      "escriturado por lançamento completo em ordem cronológica rigorosa.",
+      "utilizado para registrar os fatos administrativos na forma de razonete sintético.",
+      "auxiliar sendo o livro de maior valia para a legislação\nsocietária.",
+      "o instrumento mais valioso para o desempenho da\ncontabilidade."
+    ],
+    "alternativas": [
+      "facultativo sob o enfoque da legislação fiscal do imposto de renda.",
+      "escriturado por lançamento completo em ordem cronológica rigorosa.",
+      "utilizado para registrar os fatos administrativos na forma de razonete sintético.",
+      "auxiliar sendo o livro de maior valia para a legislação\nsocietária.",
+      "o instrumento mais valioso para o desempenho da\ncontabilidade."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 113,
+    "numero": 43,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "À procura de novas oportunidades de atuação em mercados internacionais, a empresa ZYX encontrou uma forma\nde atuar na Índia. Para tanto, a ZYX concedeu o uso do\nprocesso de fabricação de seus produtos a uma empresa\nindiana. Em troca, receberia o pagamento de uma taxa\nde 20% sobre o faturamento mensal dos produtos ZYX\nna Índia.\nA forma de ingresso no mercado internacional escolhida\npela ZYX é denominada",
+    "opcoes": [
+      "exportação indireta",
+      "exportação direta",
+      "investimento direto",
+      "licenciamento",
+      "joint-ventures"
+    ],
+    "alternativas": [
+      "exportação indireta",
+      "exportação direta",
+      "investimento direto",
+      "licenciamento",
+      "joint-ventures"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 114,
+    "numero": 44,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Uma indústria adota nas suas decisões gerenciais o custeio direto. Na análise gerencial da margem de contribuição de um de seus produtos, essa indústria apresentou\nas seguintes anotações referentes unicamente ao produto\nem análise:\nQuantidade produzida e vendida 40.000 unidades\nPreço de venda unitário R$ 50,00\nMargem de contribuição unitária R$ 30,00\nPonto de equilíbrio comercial ou operacional 20.000 unidades\nConsiderando-se exclusivamente as informações recebidas e que a indústria estima para o próximo período produtivo produzir 50.000 e vender 45.000 unidades desse\nproduto, bem como adotar o critério do custeio por absorção, o valor do estoque desse produto, em reais, é",
+    "opcoes": [
+      "90.000,00",
+      "100.000,00",
+      "150.000,00",
+      "160.000,00",
+      "175.000,00"
+    ],
+    "alternativas": [
+      "90.000,00",
+      "100.000,00",
+      "150.000,00",
+      "160.000,00",
+      "175.000,00"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 115,
+    "numero": 45,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Ao final de um determinado período produtivo, uma indústria que produz um só produto e que adota o custeio variável nas suas análises gerenciais apresentou as seguintes\ninformações ao final de um exercício social:\nMargem de contribuição unitária = R$ 25,00\nPreço de venda do produto = R$ 45,00\nCustos variáveis totais = R$ 400.000,00\nCustos fixos por unidade = R$ 10,00\nSabendo-se que toda a produção foi vendida, o resultado\n(lucro líquido) da indústria, em reais, é",
+    "opcoes": [
+      "200.000,00",
+      "300.000,00",
+      "400.000,00",
+      "500.000,00",
+      "900.000,00"
+    ],
+    "alternativas": [
+      "200.000,00",
+      "300.000,00",
+      "400.000,00",
+      "500.000,00",
+      "900.000,00"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 116,
+    "numero": 46,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A empresa XYZ produz três tipos de óleos lubrificantes:\nminerais, semissintéticos e sintéticos, com atuação focada exclusivamente no atendimento a proprietários de\ncaminhões. Dessa forma, consolida suas operações ao\nse aproximar dos consumidores e oferecer o produto que\natende mais adequadamente a suas necessidades.\nO padrão de seleção de mercado-alvo da empresa XYZ é\nclassificado como",
+    "opcoes": [
+      "especialização por mercado",
+      "especialização por produto",
+      "especialização seletiva",
+      "cobertura total do mercado",
+      "concentração"
+    ],
+    "alternativas": [
+      "especialização por mercado",
+      "especialização por produto",
+      "especialização seletiva",
+      "cobertura total do mercado",
+      "concentração"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 117,
+    "numero": 47,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Uma companhia industrial apresentou as seguintes informações com relação à produção de um produto de sua\nlinha de produção:\nCompra de matéria-prima 500.000,00\nCusto dos produtos acabados no período 400.000,00\nCustos indiretos de fabricação, do produto 30.000,00\nDevolução de matéria-prima comprada 40.000,00\nEstoque inicial de matéria-prima 60.000,00\nMão de obra direta do período, utilizada no 100.000,00\nproduto\nConsiderando-se exclusivamente as informações recebidas e os fundamentos técnico-conceituais de custos, o\nvalor do estoque final de produtos em elaboração (produção), no encerramento do período produtivo informado,\nem reais, é",
+    "opcoes": [
+      "100.000,00",
+      "200.000,00",
+      "250.000,00",
+      "260.000,00",
+      "400.000,00"
+    ],
+    "alternativas": [
+      "100.000,00",
+      "200.000,00",
+      "250.000,00",
+      "260.000,00",
+      "400.000,00"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 118,
+    "numero": 48,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Analistas apontam o rápido crescimento das vendas de\nóleo no país e a maior concorrência nesse setor. Os custos das empresas para obterem clientes são médios, e os\nlucros são crescentes, de forma que é possível afirmar\nque o ciclo de vida desse produto se encontra no estágio\nde crescimento.\nNesse momento, os gerentes de marketing devem adotar\ncomo estratégia preços",
+    "opcoes": [
+      "elevados",
+      "reduzidos",
+      "de penetração",
+      "de desnatamento",
+      "equivalentes aos da concorrência"
+    ],
+    "alternativas": [
+      "elevados",
+      "reduzidos",
+      "de penetração",
+      "de desnatamento",
+      "equivalentes aos da concorrência"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 119,
+    "numero": 49,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A empresa estava pronta para lançar seu novo lubrificante\ne precisava fazer um teste de mercado com resultados rápidos. Dessa forma, ofereceu gratuitamente seu produto\na determinados consumidores e, no intervalo de dez dias,\nofereceu-lhes o mesmo produto a um preço menor que o\nnormal. Essa oferta se repetiu por mais três vezes para\nque os gerentes observassem as escolhas e os níveis de\nsatisfação dos clientes.\nEsse método de teste de produtos de consumo no mercado é classificado como pesquisa de",
+    "opcoes": [
+      "adotantes imediatos",
+      "estágios de mercados",
+      "mercado-teste simulado",
+      "mercado-teste controlado",
+      "onda de vendas"
+    ],
+    "alternativas": [
+      "adotantes imediatos",
+      "estágios de mercados",
+      "mercado-teste simulado",
+      "mercado-teste controlado",
+      "onda de vendas"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 120,
+    "numero": 50,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Um estádio olímpico possui 4 acessos: norte, sul, leste e\noeste. Quatro delegações se dirigem aleatoriamente ao\nestádio.\nQual é a probabilidade de cada uma se dirigir a um acesso diferente das demais?",
+    "opcoes": [
+      "1/256",
+      "1/64",
+      "1/24",
+      "3/64",
+      "3/32"
+    ],
+    "alternativas": [
+      "1/256",
+      "1/64",
+      "1/24",
+      "3/64",
+      "3/32"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 121,
+    "numero": 51,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O gerente de marketing de uma transportadora, após receber algumas reclamações, contratou um consultor externo. Depois de visitar todas as unidades da empresa no\npaís, o consultor apontou em seu relatório que os veículos\nestão em bom estado de conservação, assim como as\ninstalações físicas da transportadora de maneira geral. O\ntreinamento dos funcionários da transportadora parece\ncorreto, os prazos de entrega são atendidos com precisão\ne, raramente, o serviço não é completado na primeira vez.\nO atendimento ao cliente é rápido e cordial, e os funcionários parecem inspirar confiança nos clientes. Há um relatório dos percursos e prazos de entrega realizados nos\núltimos meses, e as informações a respeito das encomendas despachadas podem ser acessadas pelos clientes.\nEntretanto, a intensa atividade da companhia parece ser\nincompatível com eventuais necessidades especiais de\nclientes. Clientes que apresentaram algum tipo de necessidade específica foram tratados da mesma forma que todos os outros, ou lhes foi sugerido que procurassem outra\ntransportadora.\nCom base no modelo SERVQUAL, a deficiência da transportadora identificada pelo consultor está relacionada ao\nfator",
+    "opcoes": [
+      "confiabilidade",
+      "segurança",
+      "empatia",
+      "itens tangíveis",
+      "capacidade de resposta"
+    ],
+    "alternativas": [
+      "confiabilidade",
+      "segurança",
+      "empatia",
+      "itens tangíveis",
+      "capacidade de resposta"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 122,
+    "numero": 52,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Em uma determinada região, constatou-se que\n• 25% das pessoas não praticam atividade física.\n• 25% das pessoas são do sexo feminino e praticam atividade física.\n• 15% das pessoas que não praticam atividade física\nsão do sexo masculino.\nSeleciona-se aleatoriamente uma pessoa dessa população.\nA probabilidade de que seja do sexo masculino ou que\nnão pratique exercício físico é de",
+    "opcoes": [
+      "15%",
+      "25%",
+      "72,5%",
+      "75%",
+      "90%"
+    ],
+    "alternativas": [
+      "15%",
+      "25%",
+      "72,5%",
+      "75%",
+      "90%"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 123,
+    "numero": 53,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A tabela apresenta uma distribuição hipotética. Não há\nobservações coincidentes com os limites das classes.\nClasses Frequência\nabsoluta\nde 0 a 10 4\nde 10 a 20 10\nde 20 a 30 50\nde 30 a 40 100\nTotal 164\nA melhor estimativa para o terceiro quartil da distribuição\né, aproximadamente, de",
+    "opcoes": [
+      "34,75",
+      "34,9",
+      "35",
+      "35,75",
+      "35,9"
+    ],
+    "alternativas": [
+      "34,75",
+      "34,9",
+      "35",
+      "35,75",
+      "35,9"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 124,
+    "numero": 54,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Um gerente pretende reorganizar o departamento de vendas da empresa, cuja linha de produtos é composta por\napenas dois óleos lubrificantes. A empresa precisa de\nmais flexibilidade no contato com seus clientes, seus vendedores precisam ser estimulados e ter suas responsabilidades definidas mesmo que, para isso, seja necessário\ninvestir em sistemas de controle de trabalho. Seus clientes são bastante homogêneos e estão concentrados em\náreas centrais das cidades.\nDadas as características da empresa e de seus clientes,\no departamento de vendas dessa empresa deve ser organizado",
+    "opcoes": [
+      "por clientes",
+      "por território",
+      "por produtos",
+      "por vendedor",
+      "de forma mista"
+    ],
+    "alternativas": [
+      "por clientes",
+      "por território",
+      "por produtos",
+      "por vendedor",
+      "de forma mista"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 125,
+    "numero": 55,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Uma empresa tem 38 funcionários, sendo a média de idade 32 anos e o desvio padrão de 4 anos. Foram contratados mais dois funcionários, ambos com 32 anos.\nEm relação à variância original, a variância da nova distribuição de salários ficará\nDado\nA variável idade é expressa em termos de\nanos completos.",
+    "opcoes": [
+      "5% menor",
+      "23,75% menor",
+      "76,25% menor",
+      "95% menor",
+      "não se alterará"
+    ],
+    "alternativas": [
+      "5% menor",
+      "23,75% menor",
+      "76,25% menor",
+      "95% menor",
+      "não se alterará"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 126,
+    "numero": 56,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Quantas são as soluções inteiras e não negativas da\nequação x + x + x + x + x + x = 3?\n1 2 3 4 5 6",
+    "opcoes": [
+      "20",
+      "56",
+      "88",
+      "120",
+      "336"
+    ],
+    "alternativas": [
+      "20",
+      "56",
+      "88",
+      "120",
+      "336"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 127,
+    "numero": 57,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Quantos anagramas de 5 letras distintas podem ser formados com as letras T, R, A, N e S se o R não pode preceder o T ?",
+    "opcoes": [
+      "24",
+      "48",
+      "60",
+      "84",
+      "120"
+    ],
+    "alternativas": [
+      "24",
+      "48",
+      "60",
+      "84",
+      "120"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 128,
+    "numero": 58,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Nas organizações de aprendizagem, os padrões de raciocínio se expandem com as pessoas aprendendo continuamente a aprender em grupo.\nCom relação ao tipo de aprendizagem transformacional,\ntem-se que ela",
+    "opcoes": [
+      "está focada nas estratégias da organização, no seu\ndesenvolvimento, na sua implementação e nas prováveis melhorias.",
+      "orienta para o desempenho e a valorização de tarefas\nespecíficas.",
+      "orienta para a eficiência na prática da função, mostrando também como se faz para promover o aprendizado e o crescimento da equipe.",
+      "orienta para as formas de se realizarem mudanças\nsignificativas na organização.",
+      "trata dos fundamentos de uma organização, dos seus\nvalores, atos e de suas convicções."
+    ],
+    "alternativas": [
+      "está focada nas estratégias da organização, no seu\ndesenvolvimento, na sua implementação e nas prováveis melhorias.",
+      "orienta para o desempenho e a valorização de tarefas\nespecíficas.",
+      "orienta para a eficiência na prática da função, mostrando também como se faz para promover o aprendizado e o crescimento da equipe.",
+      "orienta para as formas de se realizarem mudanças\nsignificativas na organização.",
+      "trata dos fundamentos de uma organização, dos seus\nvalores, atos e de suas convicções."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 129,
+    "numero": 59,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A cultura organizacional representa a maneira pela qual a\norganização vizualiza a si própria e ao seu ambiente. Fator de sucesso ou de fracasso das organizações, a cultura\npode ser aprendida através de histórias, rituais, símbolos\ne linguagem.\nA empresa cujos colaboradores se apropriam da cultura\norganizacional através de símbolos materiais",
+    "opcoes": [
+      "dissemina as experiências do passado sobre acertos\ne erros para ancorar e legitimar práticas atuais.",
+      "desenvolve termos singulares para descrever equipamentos, escritórios, pessoas-chave e fornecedores.",
+      "estimula a maneira de os funcionários se vestirem.",
+      "projeta o arranjo físico dos escritórios, definindo o mobiliário e o local em que líder e liderados serão instalados.",
+      "organiza comemorações e rituais que reúnem e aproximam os funcionários."
+    ],
+    "alternativas": [
+      "dissemina as experiências do passado sobre acertos\ne erros para ancorar e legitimar práticas atuais.",
+      "desenvolve termos singulares para descrever equipamentos, escritórios, pessoas-chave e fornecedores.",
+      "estimula a maneira de os funcionários se vestirem.",
+      "projeta o arranjo físico dos escritórios, definindo o mobiliário e o local em que líder e liderados serão instalados.",
+      "organiza comemorações e rituais que reúnem e aproximam os funcionários."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 130,
+    "numero": 60,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O gráfico corresponde a uma função de em .\nEssa função é:",
+    "opcoes": [
+      "f(x)= sen 2x",
+      "f(x)= 2 sen x",
+      "f(x)= 1 + sen 2x",
+      "f(x)= 1 + cos 2x",
+      "f(x)= 1 + 2cos x"
+    ],
+    "alternativas": [
+      "f(x)= sen 2x",
+      "f(x)= 2 sen x",
+      "f(x)= 1 + sen 2x",
+      "f(x)= 1 + cos 2x",
+      "f(x)= 1 + 2cos x"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 131,
+    "numero": 61,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Seja a progressão geométrica: , , , ...\nO quarto termo dessa progressão é:",
+    "opcoes": [
+      "0",
+      "",
+      "",
+      "1",
+      "5"
+    ],
+    "alternativas": [
+      "0",
+      "",
+      "",
+      "1",
+      "5"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 132,
+    "numero": 62,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O trabalho em equipe é o maior desafio dentro das organizações. É uma tarefa complexa reunir equipes e garantir\no desempenho, já que engloba pessoas com atitudes,\nconhecimentos e características diferentes.\nPara a formação de uma equipe de um departamento\ncom alto desempenho, é necessário que essa equipe saiba agilizar tarefas e desenvolver a comunicação em clima\naberto e confiável.\nOs atributos necessários para atingir tais metas são, respectivamente,",
+    "opcoes": [
+      "clareza e responsabilidade",
+      "criatividade e clareza",
+      "interação e flexibilidade",
+      "rapidez e interação",
+      "responsabilidade e flexibilidade"
+    ],
+    "alternativas": [
+      "clareza e responsabilidade",
+      "criatividade e clareza",
+      "interação e flexibilidade",
+      "rapidez e interação",
+      "responsabilidade e flexibilidade"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 133,
+    "numero": 63,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Considere as seguintes premissas:\nI - Quem gosta de música não é triste.\nII - Gatos não gostam de chocolate.\nIII - Quem não gosta de chocolate é triste.\nCom base nessas premissas, conclui-se que",
+    "opcoes": [
+      "gatos tristes gostam de chocolate.",
+      "gatos não gostam de música.",
+      "quem não gosta de música é triste.",
+      "quem gosta de chocolate não é triste.",
+      "quem não gosta de chocolate é gato."
+    ],
+    "alternativas": [
+      "gatos tristes gostam de chocolate.",
+      "gatos não gostam de música.",
+      "quem não gosta de música é triste.",
+      "quem gosta de chocolate não é triste.",
+      "quem não gosta de chocolate é gato."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 134,
+    "numero": 64,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A avaliação de desempenho de pessoas que trabalham\nem organizações deve utilizar critérios de equidade e de\njustiça.\nA técnica de incidentes críticos permite identificar desempenhos positivos e negativos.\nÉ considerado aspecto não desejável pela técnica a(o)",
+    "opcoes": [
+      "facilidade de trabalhar em equipe",
+      "facilidade de argumentação",
+      "apresentação de ideias inovadoras",
+      "foco exclusivo na tarefa em execução",
+      "espírito altamente empreendedor"
+    ],
+    "alternativas": [
+      "facilidade de trabalhar em equipe",
+      "facilidade de argumentação",
+      "apresentação de ideias inovadoras",
+      "foco exclusivo na tarefa em execução",
+      "espírito altamente empreendedor"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 135,
+    "numero": 65,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Liderança é uma relação interpessoal e social que obedece a uma dinâmica complexa. Uma gestão eficaz e eficiente das pessoas de uma equipe no atendimento dos\nobjetivos propostos pela organização faz parte dos atributos de um líder.\nCom relação à liderança autocrática, o líder",
+    "opcoes": [
+      "toma decisões sem levar em consideração a opinião\nda equipe.",
+      "toma a decisão, mas escuta os subordinados.",
+      "toma a decisão se houver consenso na equipe.",
+      "envolve algumas pessoas da equipe para tomar sua\ndecisão.",
+      "repassa a decisão aos liderados."
+    ],
+    "alternativas": [
+      "toma decisões sem levar em consideração a opinião\nda equipe.",
+      "toma a decisão, mas escuta os subordinados.",
+      "toma a decisão se houver consenso na equipe.",
+      "envolve algumas pessoas da equipe para tomar sua\ndecisão.",
+      "repassa a decisão aos liderados."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 136,
+    "numero": 66,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Um sistema de remuneração deve ser moldado e ajustado às características únicas da organização e do ambiente que a envolve.\nQuando um plano de remuneração adota o critério do elitismo, a empresa",
+    "opcoes": [
+      "remunera os funcionários em um nível percentual\nabaixo ou acima do mercado.",
+      "remunera com base em decisões efetuadas por um\nórgão central.",
+      "estabelece diferentes planos de remuneração conforme níveis hierárquicos ou grupos de funcionários.",
+      "privilegia o tempo de casa do funcionário.",
+      "valoriza os conhecimentos e as competências do funcionário para o desenvolvimento do trabalho ou da organização."
+    ],
+    "alternativas": [
+      "remunera os funcionários em um nível percentual\nabaixo ou acima do mercado.",
+      "remunera com base em decisões efetuadas por um\nórgão central.",
+      "estabelece diferentes planos de remuneração conforme níveis hierárquicos ou grupos de funcionários.",
+      "privilegia o tempo de casa do funcionário.",
+      "valoriza os conhecimentos e as competências do funcionário para o desenvolvimento do trabalho ou da organização."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 137,
+    "numero": 67,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A disciplina progressiva é a forma mais utilizada de procedimento disciplinar, aplicado pelo gerente, que dá ao colaborador a oportunidade para corrigir seu comportamento.\nAs infrações podem ser catalogadas em duas categorias:\nleves e graves.\nÉ considerada falta grave a",
+    "opcoes": [
+      "falta de atenção ao trabalho",
+      "falta ao trabalho",
+      "desonestidade",
+      "agressão verbal",
+      "incompetência"
+    ],
+    "alternativas": [
+      "falta de atenção ao trabalho",
+      "falta ao trabalho",
+      "desonestidade",
+      "agressão verbal",
+      "incompetência"
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 138,
+    "numero": 68,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "A teoria dos dois fatores de Herzberg apresenta duas\nabordagens para a motivação: a dos fatores motivacionais, que se baseia em necessidades subjetivas de caráter intrínseco, e a dos fatores higiênicos de caráter extrínseco.\nUm profissional que procure por estímulos intrínsecos terá\nredução na satisfação em função de",
+    "opcoes": [
+      "condições do ambiente de trabalho climaticamente\nadequadas.",
+      "condições do ambiente de trabalho inadequadas.",
+      "incremento de responsabilidade.",
+      "sensação de não estar realizando-se.",
+      "salário abaixo do ofertado no mercado."
+    ],
+    "alternativas": [
+      "condições do ambiente de trabalho climaticamente\nadequadas.",
+      "condições do ambiente de trabalho inadequadas.",
+      "incremento de responsabilidade.",
+      "sensação de não estar realizando-se.",
+      "salário abaixo do ofertado no mercado."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 139,
+    "numero": 69,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "O desenvolvimento de carreiras de funcionários deixou de\nser exclusiva responsabilidade das empresas, já que os\npróprios trabalhadores assumem parte desta responsabilidade. A essência de um programa de desenvolvimento de pessoas de uma empresa está na oferta do apoio\nnecessário para que os funcionários desenvolvam, em\nbases continuadas, suas capacidades, habilidades e conhecimentos.\nConsidere as afirmações abaixo sobre o apoio dado pela\nempresa aos seus funcionários.\nI - As empresas devem alinhar suas metas e estratégias futuras em relação aos planos individuais dos\ntrabalhadores.\nII - Os funcionários devem ter oportunidade de usufruir\nde experiências profi ssionais que sejam novas, interessantes e desafi adoras.\nIII - A organização deve custear os cursos e treinamentos necessários para a reciclagem dos funcionários.\nIV - A organização estimula que os funcionários reservem tempo fora de seu horário de trabalho para reciclagem e participação em cursos por ela oferecidos.\nEstão corretas as afirmações",
+    "opcoes": [
+      "I e II, apenas.",
+      "I e III, apenas.",
+      "II e III, apenas.",
+      "I, II e III, apenas.",
+      "I, II, III e IV."
+    ],
+    "alternativas": [
+      "I e II, apenas.",
+      "I e III, apenas.",
+      "II e III, apenas.",
+      "I, II e III, apenas.",
+      "I, II, III e IV."
+    ],
+    "resposta": 0
+  },
+  {
+    "id": 140,
+    "numero": 70,
+    "banca": "CESGRANRIO",
+    "orgao": "Transpetro",
+    "prova": "prova_1_administrador_a_jnior 2012",
+    "materia": "Conhecimentos Específicos",
+    "disciplina": "Conhecimentos Específicos",
+    "categoria": "Conhecimentos Específicos",
+    "assunto": "Conhecimentos Específicos",
+    "enunciado": "Os planos de benefícios classificam-se em legais, obrigatórios por legislação e espontâneos, conforme a sua\nexigibilidade legal.\nSão casos de benefícios legais:",
+    "opcoes": [
+      "assistência odontológica, salário-família e férias remuneradas",
+      "13o salário, salário-maternidade e FGTS",
+      "FGTS, áreas de lazer e abono de 1/3 sobre as férias",
+      "abono de 1/3 sobre as férias, adicional de periculosidade e refeitório",
+      "gratificações, prêmios de produção e empréstimos\naos funcionários\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "alternativas": [
+      "assistência odontológica, salário-família e férias remuneradas",
+      "13o salário, salário-maternidade e FGTS",
+      "FGTS, áreas de lazer e abono de 1/3 sobre as férias",
+      "abono de 1/3 sobre as férias, adicional de periculosidade e refeitório",
+      "gratificações, prêmios de produção e empréstimos\naos funcionários\nO\nH\nN\nU\nC\nS\nA\nR"
+    ],
+    "resposta": 0
+  }
+]

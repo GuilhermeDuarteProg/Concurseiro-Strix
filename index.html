@@ -1,137 +1,294 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador de Concursos</title>
+  <title>Concurseiro Strix</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Fonte moderna Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Cabeçalho Principal -->
-  <header class="app-header">
-    <div class="header-brand">
-      <span class="logo-icon">🎯</span>
-      <h1>Simulado<span>Concursos</span></h1>
-    </div>
-
-    <div class="header-controls">
-      <!-- Seletor de Simulado -->
-      <select id="seletorProvas" onchange="carregarProva(this.value)">
-        <!-- Preenchido via JS -->
-      </select>
-
-      <!-- Alternador de Tema (Dark Mode) -->
-      <button id="btn-theme" class="btn-icon" onclick="toggleTheme()" title="Alternar Tema">
-        🌙
-      </button>
-    </div>
+  <!-- Header & Menu de Navegação -->
+  <header>
+    <div class="brand">Concurseiro Strix</div>
+    <nav>
+      <ul>
+        <li><a href="#inicio" class="nav-btn active" onclick="switchTab('inicio', event)">Início</a></li>
+        <li><a href="#dashboard" class="nav-btn" onclick="switchTab('dashboard', event)">Área do Aluno</a></li>
+        <li><a href="#concursos" class="nav-btn" onclick="switchTab('concursos', event)">Concursos</a></li>
+        <li><a href="#simulado" class="nav-btn" onclick="switchTab('simulado', event)">Simulado</a></li>
+        <li><a href="#gerar" class="nav-btn" onclick="switchTab('gerar', event)">Gerar Simulado</a></li>
+      </ul>
+    </nav>
+    <button type="button" class="btn-secondary" onclick="openLoginModal()">Login / Registrar</button>
   </header>
 
-  <!-- Barra de Ferramentas de Estudo -->
-  <section class="toolbar">
-    <div class="toolbar-group">
-      <!-- Filtro de Disciplina -->
-      <label for="filtroDisciplina">Matéria:</label>
-      <select id="filtroDisciplina" onchange="aplicarFiltroDisciplina(this.value)">
-        <option value="todas">Todas as Disciplinas</option>
-      </select>
-    </div>
-
-    <div class="toolbar-group">
-      <!-- Alternador de Modo: Estudo vs Simulado -->
-      <label class="switch-label">
-        <input type="checkbox" id="chkModoEstudo" checked onchange="toggleModoEstudo(this.checked)">
-        <span>Modo Treino (Gabarito na Hora)</span>
-      </label>
-    </div>
-
-    <div class="toolbar-group">
-      <!-- Botão de Marcação para Revisão -->
-      <button id="btn-revisar" class="btn-revisar" onclick="toggleRevisao()">
-        🏳️ Marcar p/ Revisão
-      </button>
-    </div>
-  </section>
-
-  <!-- Área Principal do Simulado -->
-  <main id="area-estudo" class="main-container oculto">
-    
-    <!-- Painel Esquerdo: Texto de Apoio / Interpretação -->
-    <aside id="texto-apoio" class="painel-texto">
-      <!-- O texto de suporte é injetado via JS quando existir -->
-    </aside>
-
-    <!-- Painel Direito: Questão e Alternativas -->
-    <section class="painel-questao">
-      <div class="questao-header">
-        <span id="info-disciplina" class="badge-disciplina">Disciplina</span>
-        <span class="dica-mouse">💡 <i>Clique com o botão direito para riscar uma opção.</i></span>
+  <!-- Aba 1: Início -->
+    <section id="inicio" class="tab-content active">
+      <div class="hero-card">
+        <h1>Sua aprovação começa aqui.</h1>
+        <p>Plataforma inteligente de simulados e banco de questões para concursos públicos no padrão Strix.</p>
+        <button type="button" class="btn-primary" onclick="switchTab('simulado')">Começar Simulado Rápido</button>
       </div>
 
-      <div id="enunciado" class="enunciado-texto">
-        Selecione uma prova no menu superior para começar a responder.
+      <!-- Seção de Notícias de Concursos -->
+      <h2 class="section-title">Notícias do Mundo dos Concursos</h2>
+      <div class="news-grid">
+        
+        <!-- Concursos Abertos -->
+        <div class="news-card">
+          <span class="badge badge-open">Inscrições Abertas</span>
+          <h3>PM SP — Polícia Militar de São Paulo</h3>
+          <p><strong>Vagas:</strong> 2.000 | <strong>Escolaridade:</strong> Nível Médio</p>
+          <p><strong>Salário:</strong> Até R$ 5.482,51</p>
+          <p class="news-desc">Edital publicado para a carreira de Soldado. Excelente oportunidade na área policial.</p>
+        </div>
+
+        <div class="news-card">
+          <span class="badge badge-open">Inscrições Abertas</span>
+          <h3>Marinha do Brasil (1º Distrito Naval)</h3>
+          <p><strong>Vagas:</strong> 25 | <strong>Escolaridade:</strong> Nível Superior</p>
+          <p><strong>Salário:</strong> Varia por cargo</p>
+          <p class="news-desc">Oportunidades em diversos cargos de nível superior para atuação no Rio de Janeiro.</p>
+        </div>
+
+        <!-- Concursos Previstos / Autorizados -->
+        <div class="news-card">
+          <span class="badge badge-planned">Previsto / Solicitado</span>
+          <h3>INSS — Instituto Nacional do Seguro Social</h3>
+          <p><strong>Vagas:</strong> 8.500 solicitadas | <strong>Escolaridade:</strong> Médio e Superior</p>
+          <p><strong>Salário:</strong> A partir de R$ 5.900</p>
+          <p class="news-desc">Solicitação enviada ao MGI com previsão de 7.000 vagas apenas para Técnico do Seguro Social.</p>
+        </div>
+
+        <div class="news-card">
+          <span class="badge badge-planned">Autorizado</span>
+          <h3>Banco Central (Bacen)</h3>
+          <p><strong>Vagas:</strong> 170 autorizadas | <strong>Escolaridade:</strong> Nível Superior</p>
+          <p><strong>Salário:</strong> Até R$ 27.200,00</p>
+          <p class="news-desc">Seleção autorizada com vagas para Auditor e Procurador. Banca em fase final de escolha.</p>
+        </div>
+
       </div>
 
-      <!-- Lista de Opções -->
-      <div id="opcoes" class="opcoes-list">
-        <!-- Renderizado dinamicamente via JS -->
+      <!-- Espaço para Anúncios de Escolas Preparatórias -->
+      <h2 class="section-title">Escolas Preparatórias Parceiras</h2>
+      <div class="ads-container">
+        
+        <div class="ad-card">
+          <span class="ad-tag">Patrocinado</span>
+          <h4>Curso Preparatório AlfaCon</h4>
+          <p>Treinamento intensivo para Carreiras Policiais e Administrativas com foco na banca do seu concurso.</p>
+          <a href="#" class="btn-ad">Conhecer Cursos</a>
+        </div>
+
+        <div class="ad-card">
+          <span class="ad-tag">Patrocinado</span>
+          <h4>Estratégia Concursos</h4>
+          <p>Material em PDF completo, videoaulas direcionadas e mapas mentais para otimizar sua preparação.</p>
+          <a href="#" class="btn-ad">Ver Promoções</a>
+        </div>
+
+        <div class="ad-card">
+          <span class="ad-tag">Patrocinado</span>
+          <h4>Gran Cursos Online</h4>
+          <p>Assinatura ilimitada com acesso a milhares de cursos, mentoria e inteligência artificial para estudos.</p>
+          <a href="#" class="btn-ad">Saiba Mais</a>
+        </div>
+
       </div>
     </section>
 
-  </main>
+      <!-- Formulário de Planejamento de Estudos -->
+      <div class="card">
+        <h3>Meu Planejamento de Estudos</h3>
+        <form id="study-plan-form" onsubmit="saveStudyPlan(event)">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Concurso Alvo</label>
+              <input type="text" id="target-exam" placeholder="Ex: Polícia Federal - Agente" required>
+            </div>
+            <div class="form-group flex-1">
+              <label>Área de Estudos</label>
+              <input type="text" id="study-area" placeholder="Ex: Policial / Administrativa / Fiscal" required>
+            </div>
+          </div>
 
-  <!-- TELA DE CORREÇÃO E RESULTADO (Estilo Detran / Dark Mode) -->
-  <div id="tela-resultado" class="oculto">
-    
-    <!-- Banner Superior de Pontuação -->
-    <div class="resultado-header-card">
-      <div class="score-main">
-        <span id="resultado-porcentagem" class="porcentagem-destaque">0%</span>
-        <p id="resultado-detalhe-texto">Você acertou 0 de 0 questões</p>
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Meta de Questões Diárias</label>
+              <input type="number" id="daily-questions" placeholder="Ex: 50" min="1" required>
+            </div>
+            <div class="form-group flex-1">
+              <label>Meta de Horas Diárias</label>
+              <input type="number" id="daily-hours" placeholder="Ex: 4" min="1" step="0.5" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Plano de Estudo / Cronograma</label>
+            <textarea id="study-plan-text" rows="4" placeholder="Ex: Segunda: Português e RLM | Terça: Direito Constitucional..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Salvar Planejamento</button>
+        </form>
       </div>
-      <div id="badge-desempenho" class="status-desempenho">--</div>
-    </div>
 
-    <!-- Grid Numérico de Navegação pelo Gabarito -->
-    <div class="container-grid-gabarito">
-      <p class="instrucao-grid">CLIQUE SOBRE A QUESTÃO DESEJADA E CONFIRA O GABARITO</p>
-      <div id="grid-numeros-gabarito" class="grid-numeros"></div>
-    </div>
+      <div class="card">
+        <h3>Histórico Recente</h3>
+        <p>Último simulado realizado: <strong>Direito Constitucional</strong> — 8/10 acertos (80%)</p>
+      </div>
+    </section>
 
-    <!-- Card da Questão Selecionada no Gabarito -->
-    <div id="painel-revisao-questao" class="card-revisao">
-      <!-- Renderizado via JavaScript -->
-    </div>
+    <!-- Aba 3: Concursos -->
+    <section id="concursos" class="tab-content">
+      <h1>Banco de Concursos & Questões</h1>
+      <div class="card">
+        <h3>Simulado Rápido</h3>
+        <p>Selecione uma disciplina e comece a treinar suas questões no modelo interativo Strix.</p>
+      </div>
+    </section>
 
-    <!-- Botões de Ação -->
-    <div class="acoes-resultado">
-      <button onclick="voltarAoSimulado()" class="btn-acao-secundario">← Voltar ao Simulado</button>
-    </div>
+    <!-- Aba 4: Simulado -->
+    <section id="simulado" class="tab-content">
+      <h1>Configurar Simulado</h1>
+      <div class="card">
+        <div class="form-group">
+          <label>Título do Simulado</label>
+          <input type="text" placeholder="Ex: Simulado Geral - Polícia Federal">
+        </div>
+        <div class="form-group">
+          <label>Disciplina</label>
+          <select>
+            <option value="">Selecione a disciplina...</option>
+            <option value="portugues">Língua Portuguesa</option>
+            <option value="direito-const">Direito Constitucional</option>
+            <option value="direito-adm">Direito Administrativo</option>
+          </select>
+        </div>
+        <button type="button" class="btn-primary">Iniciar Simulado</button>
+      </div>
+    </section>
 
+    <!-- Aba 5: Gerar Simulado (Conversor PDF para JSON) -->
+    <section id="gerar" class="tab-content">
+      <h1>Importar Prova em PDF (Conversor JSON)</h1>
+      
+      <div class="card">
+        <h3>Carregar Prova em PDF</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+          O leitor extrai o texto em 2 colunas, descarta a capa (página 1) e remove hifenizações ao final das linhas.
+        </p>
+
+        <div class="form-group">
+          <label>Selecione o arquivo PDF da Prova</label>
+          <input type="file" id="pdf-file-input" accept="application/pdf">
+        </div>
+
+        <button type="button" class="btn-primary" onclick="processPDFToJSON()">Converter PDF para JSON</button>
+      </div>
+
+      <!-- Área de Exibição do Resultado -->
+      <div class="card" id="json-result-card" style="display: none;">
+        <h3>JSON Extraído da Prova</h3>
+        <div class="form-group">
+          <textarea id="json-output" rows="12" style="font-family: monospace; font-size: 0.85rem;" readonly></textarea>
+        </div>
+        <button type="button" class="btn-secondary" onclick="downloadJSON()">Baixar Arquivo JSON</button>
+      </div>
+    </section>
+
+  <!-- Modal Unificado: Login e Cadastro -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button type="button" class="close-modal" onclick="closeLoginModal()">&times;</button>
+      
+      <!-- Formulário de Login -->
+      <div id="login-form-container">
+        <h2>Acessar Conta</h2>
+        <form onsubmit="handleAuth(event, 'login')">
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" placeholder="seuemail@exemplo.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label>Senha</label>
+            <div class="password-wrapper">
+              <input type="password" id="password-input" placeholder="••••••••" required>
+              <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password-input', 'eye-icon')">
+                <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
+        </form>
+        <p class="auth-switch">Ainda não tem conta? <a href="#" onclick="toggleAuthMode('register')">Registre-se já</a></p>
+      </div>
+
+      <!-- Formulário de Cadastro -->
+      <div id="register-form-container" style="display: none;">
+        <h2>Criar Conta</h2>
+        <form onsubmit="handleAuth(event, 'register')">
+          <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" placeholder="Seu nome" required>
+          </div>
+
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" placeholder="seuemail@exemplo.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label>Senha</label>
+            <div class="password-wrapper">
+              <input type="password" id="reg-password-input" placeholder="••••••••" required>
+              <button type="button" class="toggle-password" onclick="togglePasswordVisibility('reg-password-input', 'reg-eye-icon')">
+                <svg id="reg-eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn-primary" style="width: 100%;">Registrar-se</button>
+        </form>
+        <p class="auth-switch">Já possui uma conta? <a href="#" onclick="toggleAuthMode('login')">Fazer Login</a></p>
+      </div>
+
+    </div>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="script.js"></script>
+</body>
+<
+</html>
+<!-- Aba: Conversor de PDF para JSON -->
+<section id="gerar" class="tab-content">
+  <h1>Importar Prova em PDF (Conversor JSON)</h1>
+  <div class="card">
+    <div class="form-group">
+      <label>Selecione o PDF da Prova</label>
+      <input type="file" id="pdf-file-input" accept="application/pdf">
+    </div>
+    <button type="button" class="btn-primary" onclick="processPDFToJSON()">Extrair Questões para JSON</button>
   </div>
 
-  <!-- Rodapé Fixado para Navegação -->
-  <footer class="app-footer">
-    <button class="btn-nav" onclick="mudarQuestao(-1)">◀ Anterior</button>
-    <span id="contador-questoes">Questão 0 de 0</span>
-    <button class="btn-nav" onclick="mudarQuestao(1)">Próxima ▶</button>
-    <button class="btn-finalizar" onclick="calcularResultado()">📊 Finalizar e Ver Nota</button>
-  </footer>
+  <div class="card" id="json-result-card" style="display: none;">
+    <h3>Resultado do JSON Extraído</h3>
+    <textarea id="json-output" rows="10" readonly></textarea>
+    <button type="button" class="btn-secondary" onclick="downloadJSON()" style="margin-top: 10rem;">Baixar Arquivo JSON</button>
+  </div>
+</section>
 
-  <script src="script.js"></script>
-  <script>
-    // Script rápido para controle de Tema (Light / Dark)
-    function toggleTheme() {
-      const html = document.documentElement;
-      const themeAtual = html.getAttribute('data-theme');
-      const novoTema = themeAtual === 'light' ? 'dark' : 'light';
-      html.setAttribute('data-theme', novoTema);
-      document.getElementById('btn-theme').innerText = novoTema === 'dark' ? '☀️' : '🌙';
-    }
-  </script>
-</body>
-</html>
+<!-- CDN da Biblioteca PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
