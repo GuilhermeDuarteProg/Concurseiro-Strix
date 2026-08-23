@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   loadStudyPlan();
+  carregarCatalogoProvas();
 });
 
 function switchTab(tabId, event) {
@@ -76,7 +77,6 @@ function handleAuth(event, type) {
   closeLoginModal();
 }
 
-// Salva o plano de estudos no localStorage
 function saveStudyPlan(event) {
   event.preventDefault();
 
@@ -89,37 +89,25 @@ function saveStudyPlan(event) {
   };
 
   localStorage.setItem('strix_study_plan', JSON.stringify(plan));
-  renderStudyPlan(plan);
   alert('Plano de estudos salvo com sucesso!');
 }
 
-// Carrega o plano de estudos gravado
 function loadStudyPlan() {
   const savedPlan = localStorage.getItem('strix_study_plan');
   if (savedPlan) {
     const plan = JSON.parse(savedPlan);
-    document.getElementById('target-exam').value = plan.targetExam || '';
-    document.getElementById('study-area').value = plan.studyArea || '';
-    document.getElementById('daily-questions').value = plan.dailyQuestions || '';
-    document.getElementById('daily-hours').value = plan.dailyHours || '';
-    document.getElementById('study-plan-text').value = plan.studyPlanText || '';
-    renderStudyPlan(plan);
+    if (document.getElementById('target-exam')) document.getElementById('target-exam').value = plan.targetExam || '';
+    if (document.getElementById('study-area')) document.getElementById('study-area').value = plan.studyArea || '';
+    if (document.getElementById('daily-questions')) document.getElementById('daily-questions').value = plan.dailyQuestions || '';
+    if (document.getElementById('daily-hours')) document.getElementById('daily-hours').value = plan.dailyHours || '';
+    if (document.getElementById('study-plan-text')) document.getElementById('study-plan-text').value = plan.studyPlanText || '';
   }
 }
 
-// Atualiza o painel superior com os dados gravados
-function renderStudyPlan(plan) {
-  if (plan.dailyQuestions) {
-    document.getElementById('disp-meta-questoes').textContent = plan.dailyQuestions;
-  }
-  if (plan.dailyHours) {
-    document.getElementById('disp-meta-horas').textContent = `${plan.dailyHours}h`;
-  }
-  if (plan.targetExam) {
-    document.getElementById('disp-concurso').textContent = plan.targetExam;
-  }
-}// Configuração do Worker do PDF.js
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+// Configuração do Worker do PDF.js
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+}
 
 async function processPDFToJSON() {
   const fileInput = document.getElementById('pdf-file-input');
@@ -134,7 +122,6 @@ async function processPDFToJSON() {
 
   let fullExtractedText = "";
 
-  // Começa da página 2 para ignorar a capa/instruções
   for (let pageNum = 2; pageNum <= pdf.numPages; pageNum++) {
     const page = await pdf.getPage(pageNum);
     const textContent = await page.getTextContent();
@@ -145,7 +132,6 @@ async function processPDFToJSON() {
     let leftColumnItems = [];
     let rightColumnItems = [];
 
-    // Separa os elementos de texto por coordenada X (Duas Colunas)
     textContent.items.forEach(item => {
       if (item.str.trim() === '') return;
 
@@ -158,26 +144,19 @@ async function processPDFToJSON() {
       }
     });
 
-    // Ordena de cima para baixo (maior Y para menor Y)
     const sortByY = (a, b) => b.y - a.y;
     leftColumnItems.sort(sortByY);
     rightColumnItems.sort(sortByY);
 
-    // Junta o texto respeitando as colunas
     const leftText = leftColumnItems.map(i => i.text).join(' ');
     const rightText = rightColumnItems.map(i => i.text).join(' ');
 
     fullExtractedText += leftText + " " + rightText + " ";
   }
 
-  // 1. Correção de Hifenização no final das linhas
-  // Transforma "cons- \n tituição" ou "cons- tituição" em "constituição"
   let cleanText = fullExtractedText.replace(/(\w+)-\s+(\w+)/g, '$1$2');
-
-  // 2. Normalização de espaços múltiplos
   cleanText = cleanText.replace(/\s+/g, ' ');
 
-  // 3. Estruturação do JSON dividindo por padrão "QUESTÃO X"
   const questionsRaw = cleanText.split(/(?=QUESTÃO\s+\d+|QUESTAO\s+\d+)/gi);
   
   const parsedQuestions = questionsRaw
@@ -189,7 +168,6 @@ async function processPDFToJSON() {
       };
     });
 
-  // Exibe o JSON gerado
   const jsonOutput = JSON.stringify(parsedQuestions, null, 2);
   document.getElementById('json-output').value = jsonOutput;
   document.getElementById('json-result-card').style.display = 'block';
@@ -203,12 +181,9 @@ function downloadJSON() {
   a.href = url;
   a.download = 'questoes_concurso.json';
   a.click();
-}// Carrega o catálogo assim que o site abre
-document.addEventListener('DOMContentLoaded', () => {
-  carregarCatalogoProvas();
-});
+}
 
-// Lê o arquivo provas/index.json
+// Carrega o catálogo de provas
 async function carregarCatalogoProvas() {
   const selectProvas = document.getElementById('select-prova');
   if (!selectProvas) return;
@@ -219,10 +194,8 @@ async function carregarCatalogoProvas() {
 
     const provas = await response.json();
     
-    // Limpa as opções padrão
     selectProvas.innerHTML = '<option value="">Selecione uma prova disponível...</option>';
 
-    // Preenche com as provas cadastradas
     provas.forEach(prova => {
       const option = document.createElement('option');
       option.value = prova.arquivo;
@@ -233,7 +206,10 @@ async function carregarCatalogoProvas() {
     console.error('Erro ao carregar catálogo de provas:', erro);
     selectProvas.innerHTML = '<option value="">Erro ao carregar provas</option>';
   }
-}async function iniciarSimulado() {
+}
+
+// Renderiza o simulado na tela ao clicar
+async function iniciarSimulado() {
   const selectProvas = document.getElementById('select-prova');
   const arquivoJson = selectProvas ? selectProvas.value : '';
 
@@ -254,7 +230,6 @@ async function carregarCatalogoProvas() {
 
     const dadosProva = await response.json();
     
-    // Suporta tanto array direto de questoes quanto objeto com chave 'questoes'
     const questoes = dadosProva.questoes || (Array.isArray(dadosProva) ? dadosProva : []);
 
     if (questoes.length === 0) {
@@ -265,14 +240,14 @@ async function carregarCatalogoProvas() {
     let htmlContent = `<h2>${dadosProva.concurso || 'Simulado'}</h2><hr style="margin-bottom: 1.5rem; border-color: rgba(255,255,255,0.1);">`;
 
     questoes.forEach((q, index) => {
-      const num = q.numero || (index + 1);
+      const num = q.numero || q.id || (index + 1);
       const disciplina = q.disciplina ? `<small style="color: var(--text-secondary);">${q.disciplina}</small><br>` : '';
       
       htmlContent += `
         <div style="margin-bottom: 2rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
           ${disciplina}
           <strong>Questão ${num}</strong>
-          <p style="margin: 0.8rem 0;">${q.enunciado || q.texto || ''}</p>
+          <p style="margin: 0.8rem 0;">${q.enunciado || q.texto || q.raw_content || ''}</p>
           <div class="alternativas-container">
       `;
 

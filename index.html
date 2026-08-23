@@ -26,7 +26,8 @@
     <button type="button" class="btn-secondary" onclick="openLoginModal()">Login / Registrar</button>
   </header>
 
-  <!-- Aba 1: Início -->
+  <main>
+    <!-- Aba 1: Início -->
     <section id="inicio" class="tab-content active">
       <div class="hero-card">
         <h1>Sua aprovação começa aqui.</h1>
@@ -34,17 +35,14 @@
         <button type="button" class="btn-primary" onclick="switchTab('simulado')">Começar Simulado Rápido</button>
       </div>
 
-      <!-- Seção de Notícias de Concursos -->
       <h2 class="section-title">Notícias do Mundo dos Concursos</h2>
       <div class="news-grid">
-        
-        <!-- Concursos Abertos -->
         <div class="news-card">
           <span class="badge badge-open">Inscrições Abertas</span>
           <h3>PM SP — Polícia Militar de São Paulo</h3>
           <p><strong>Vagas:</strong> 2.000 | <strong>Escolaridade:</strong> Nível Médio</p>
           <p><strong>Salário:</strong> Até R$ 5.482,51</p>
-          <p class="news-desc">Edital publicado para a carreira de Soldado. Excelente oportunidade na área policial.</p>
+          <p class="news-desc">Edital publicado para a carreira de Soldado.</p>
         </div>
 
         <div class="news-card">
@@ -52,16 +50,15 @@
           <h3>Marinha do Brasil (1º Distrito Naval)</h3>
           <p><strong>Vagas:</strong> 25 | <strong>Escolaridade:</strong> Nível Superior</p>
           <p><strong>Salário:</strong> Varia por cargo</p>
-          <p class="news-desc">Oportunidades em diversos cargos de nível superior para atuação no Rio de Janeiro.</p>
+          <p class="news-desc">Oportunidades em diversos cargos de nível superior.</p>
         </div>
 
-        <!-- Concursos Previstos / Autorizados -->
         <div class="news-card">
           <span class="badge badge-planned">Previsto / Solicitado</span>
           <h3>INSS — Instituto Nacional do Seguro Social</h3>
           <p><strong>Vagas:</strong> 8.500 solicitadas | <strong>Escolaridade:</strong> Médio e Superior</p>
           <p><strong>Salário:</strong> A partir de R$ 5.900</p>
-          <p class="news-desc">Solicitação enviada ao MGI com previsão de 7.000 vagas apenas para Técnico do Seguro Social.</p>
+          <p class="news-desc">Solicitação enviada ao MGI com previsão de vagas.</p>
         </div>
 
         <div class="news-card">
@@ -69,40 +66,35 @@
           <h3>Banco Central (Bacen)</h3>
           <p><strong>Vagas:</strong> 170 autorizadas | <strong>Escolaridade:</strong> Nível Superior</p>
           <p><strong>Salário:</strong> Até R$ 27.200,00</p>
-          <p class="news-desc">Seleção autorizada com vagas para Auditor e Procurador. Banca em fase final de escolha.</p>
+          <p class="news-desc">Seleção autorizada com vagas para Auditor e Procurador.</p>
         </div>
-
       </div>
 
-      <!-- Espaço para Anúncios de Escolas Preparatórias -->
       <h2 class="section-title">Escolas Preparatórias Parceiras</h2>
       <div class="ads-container">
-        
         <div class="ad-card">
           <span class="ad-tag">Patrocinado</span>
           <h4>Curso Preparatório AlfaCon</h4>
-          <p>Treinamento intensivo para Carreiras Policiais e Administrativas com foco na banca do seu concurso.</p>
+          <p>Treinamento intensivo para Carreiras Policiais e Administrativas.</p>
           <a href="#" class="btn-ad">Conhecer Cursos</a>
         </div>
-
         <div class="ad-card">
           <span class="ad-tag">Patrocinado</span>
           <h4>Estratégia Concursos</h4>
-          <p>Material em PDF completo, videoaulas direcionadas e mapas mentais para otimizar sua preparação.</p>
+          <p>Material em PDF completo, videoaulas e mapas mentais.</p>
           <a href="#" class="btn-ad">Ver Promoções</a>
         </div>
-
         <div class="ad-card">
           <span class="ad-tag">Patrocinado</span>
           <h4>Gran Cursos Online</h4>
-          <p>Assinatura ilimitada com acesso a milhares de cursos, mentoria e inteligência artificial para estudos.</p>
+          <p>Assinatura ilimitada com acesso a milhares de cursos.</p>
           <a href="#" class="btn-ad">Saiba Mais</a>
         </div>
-
       </div>
     </section>
 
-      <!-- Formulário de Planejamento de Estudos -->
+    <!-- Aba 2: Área do Aluno -->
+    <section id="dashboard" class="tab-content">
       <div class="card">
         <h3>Meu Planejamento de Estudos</h3>
         <form id="study-plan-form" onsubmit="saveStudyPlan(event)">
@@ -160,20 +152,22 @@
           <label>Título do Simulado</label>
           <input type="text" placeholder="Ex: Simulado Geral - Polícia Federal">
         </div>
-<div class="form-group">
+        <div class="form-group">
           <label for="select-prova">Selecione a Prova / Simulado</label>
           <select id="select-prova">
             <option value="">Carregando provas...</option>
           </select>
-<button type="button" class="btn-primary" onclick="iniciarSimulado()">Iniciar Simulado</button>      </div>
+        </div>
+        <button type="button" class="btn-primary" onclick="iniciarSimulado()">Iniciar Simulado</button>
+      </div>
+
+      <!-- Área onde as questões do simulado vão aparecer -->
+      <div id="area-questoes" class="card" style="display: none; margin-top: 1.5rem;"></div>
     </section>
-<div id="area-questoes" class="card" style="display: none; margin-top: 1.5rem;">
-  <!-- As questões serão injetadas aqui pelo JS -->
-</div>
-    <!-- Aba 5: Gerar Simulado (Conversor PDF para JSON) -->
+
+    <!-- Aba 5: Gerar / Conversor de PDF para JSON -->
     <section id="gerar" class="tab-content">
       <h1>Importar Prova em PDF (Conversor JSON)</h1>
-      
       <div class="card">
         <h3>Carregar Prova em PDF</h3>
         <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
@@ -188,7 +182,6 @@
         <button type="button" class="btn-primary" onclick="processPDFToJSON()">Converter PDF para JSON</button>
       </div>
 
-      <!-- Área de Exibição do Resultado -->
       <div class="card" id="json-result-card" style="display: none;">
         <h3>JSON Extraído da Prova</h3>
         <div class="form-group">
@@ -197,13 +190,13 @@
         <button type="button" class="btn-secondary" onclick="downloadJSON()">Baixar Arquivo JSON</button>
       </div>
     </section>
+  </main>
 
   <!-- Modal Unificado: Login e Cadastro -->
   <div id="login-modal" class="modal-overlay">
     <div class="modal-card">
       <button type="button" class="close-modal" onclick="closeLoginModal()">&times;</button>
       
-      <!-- Formulário de Login -->
       <div id="login-form-container">
         <h2>Acessar Conta</h2>
         <form onsubmit="handleAuth(event, 'login')">
@@ -230,7 +223,6 @@
         <p class="auth-switch">Ainda não tem conta? <a href="#" onclick="toggleAuthMode('register')">Registre-se já</a></p>
       </div>
 
-      <!-- Formulário de Cadastro -->
       <div id="register-form-container" style="display: none;">
         <h2>Criar Conta</h2>
         <form onsubmit="handleAuth(event, 'register')">
@@ -261,43 +253,8 @@
         </form>
         <p class="auth-switch">Já possui uma conta? <a href="#" onclick="toggleAuthMode('login')">Fazer Login</a></p>
       </div>
-
     </div>
   </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script src="script.js"></script>
-</body>
-<
-</html>
-</div>
-    </section>
-
-    <!-- Aba 5: Gerar / Conversor de PDF para JSON -->
-    <section id="gerar" class="tab-content">
-      <h1>Importar Prova em PDF (Conversor JSON)</h1>
-      <div class="card">
-        <h3>Carregar Prova em PDF</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
-          O leitor extrai o texto em 2 colunas, descarta a capa (página 1) e remove hifenizações ao final das linhas.
-        </p>
-
-        <div class="form-group">
-          <label>Selecione o arquivo PDF da Prova</label>
-          <input type="file" id="pdf-file-input" accept="application/pdf">
-        </div>
-
-        <button type="button" class="btn-primary" onclick="processPDFToJSON()">Converter PDF para JSON</button>
-      </div>
-
-      <div class="card" id="json-result-card" style="display: none;">
-        <h3>JSON Extraído da Prova</h3>
-        <div class="form-group">
-          <textarea id="json-output" rows="12" style="font-family: monospace; font-size: 0.85rem;" readonly></textarea>
-        </div>
-        <button type="button" class="btn-secondary" onclick="downloadJSON()">Baixar Arquivo JSON</button>
-      </div>
-    </section>
-  </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script src="script.js"></script>
