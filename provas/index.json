@@ -1,11 +1,11 @@
 [
   {
-    "id": "transpetro-2023-admin",
-    "titulo": "Transpetro 2023 - Administração",
-    "instituicao": "Transpetro",
+    "id": "transpetro-2023",
+    "titulo": "Administrador Júnior",
+    "orgao": "Transpetro",
     "banca": "Cesgranrio",
     "ano": 2023,
-    "arquivo": "provas/transpetro-2023-admin.json",
-    "gabarito": "provas/gabaritos/transpetro-2023-admin.json"
+    "totalQuestoes": 70,
+    "arquivo": "provas/transpetro-2023-admin.json"
   }
 ]

@@ -272,23 +272,37 @@
 </body>
 <
 </html>
-<!-- Aba: Conversor de PDF para JSON -->
-<section id="gerar" class="tab-content">
-  <h1>Importar Prova em PDF (Conversor JSON)</h1>
-  <div class="card">
-    <div class="form-group">
-      <label>Selecione o PDF da Prova</label>
-      <input type="file" id="pdf-file-input" accept="application/pdf">
-    </div>
-    <button type="button" class="btn-primary" onclick="processPDFToJSON()">Extrair Questões para JSON</button>
-  </div>
+</div>
+    </section>
 
-  <div class="card" id="json-result-card" style="display: none;">
-    <h3>Resultado do JSON Extraído</h3>
-    <textarea id="json-output" rows="10" readonly></textarea>
-    <button type="button" class="btn-secondary" onclick="downloadJSON()" style="margin-top: 10rem;">Baixar Arquivo JSON</button>
-  </div>
-</section>
+    <!-- Aba 5: Gerar / Conversor de PDF para JSON -->
+    <section id="gerar" class="tab-content">
+      <h1>Importar Prova em PDF (Conversor JSON)</h1>
+      <div class="card">
+        <h3>Carregar Prova em PDF</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+          O leitor extrai o texto em 2 colunas, descarta a capa (página 1) e remove hifenizações ao final das linhas.
+        </p>
 
-<!-- CDN da Biblioteca PDF.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+        <div class="form-group">
+          <label>Selecione o arquivo PDF da Prova</label>
+          <input type="file" id="pdf-file-input" accept="application/pdf">
+        </div>
+
+        <button type="button" class="btn-primary" onclick="processPDFToJSON()">Converter PDF para JSON</button>
+      </div>
+
+      <div class="card" id="json-result-card" style="display: none;">
+        <h3>JSON Extraído da Prova</h3>
+        <div class="form-group">
+          <textarea id="json-output" rows="12" style="font-family: monospace; font-size: 0.85rem;" readonly></textarea>
+        </div>
+        <button type="button" class="btn-secondary" onclick="downloadJSON()">Baixar Arquivo JSON</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
