@@ -285,4 +285,166 @@ async function iniciarSimulado() {
   if (labelAtual) {
     labelAtual.classList.add('selecionada');
   }
+}let questoesAtuais = [];
+
+// Função que inicia e desenha o botão de finalizar
+async function iniciarSimulado() {
+  const selectProvas = document.getElementById('select-prova');
+  const arquivoJson = selectProvas ? selectProvas.value : '';
+
+  if (!arquivoJson) {
+    alert('Por favor, selecione uma prova primeiro!');
+    return;
+  }
+
+  const areaQuestoes = document.getElementById('area-questoes');
+  if (!areaQuestoes) return;
+
+  try {
+    areaQuestoes.style.display = 'block';
+    areaQuestoes.innerHTML = '<h3>Carregando questões do simulado...</h3>';
+
+    const response = await fetch(arquivoJson);
+    if (!response.ok) throw new Error('Não foi possível carregar as questões.');
+
+    const dadosProva = await response.json();
+    questoesAtuais = dadosProva.questoes || (Array.isArray(dadosProva) ? dadosProva : []);
+
+    if (questoesAtuais.length === 0) {
+      areaQuestoes.innerHTML = '<p>Nenhuma questão encontrada para este simulado.</p>';
+      return;
+    }
+
+    let htmlContent = `<h2>${dadosProva.concurso || 'Simulado'}</h2><hr style="margin-bottom: 1.5rem; border-color: rgba(255,255,255,0.1);">`;
+
+    questoesAtuais.forEach((q, index) => {
+      const num = q.numero || q.id || (index + 1);
+      const disciplina = q.disciplina ? `<small style="color: var(--text-secondary);">${q.disciplina}</small><br>` : '';
+      
+      htmlContent += `
+        <div style="margin-bottom: 2rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
+          ${disciplina}
+          <strong>Questão ${num}</strong>
+          <p style="margin: 0.8rem 0;">${q.enunciado || q.texto || q.raw_content || ''}</p>
+          <div class="alternativas-container">
+      `;
+
+      if (q.alternativas) {
+        Object.entries(q.alternativas).forEach(([letra, textoAlt]) => {
+          htmlContent += `
+            <label class="opcao-resposta">
+              <input type="radio" name="q_${num}" value="${letra}" onchange="destacarOpcao(this)">
+              <strong>${letra})</strong> ${textoAlt}
+            </label>
+          `;
+        });
+      }
+
+      htmlContent += `</div></div>`;
+    });
+
+    // Botão de Finalizar no fim do simulado
+    htmlContent += `
+      <div style="text-align: center; margin-top: 2rem;">
+        <button class="btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem;" onclick="validarEFinalizarSimulado()">Finalizar Simulado</button>
+      </div>
+    `;
+
+    areaQuestoes.innerHTML = htmlContent;
+  } catch (erro) {
+    console.error('Erro ao iniciar simulado:', erro);
+    areaQuestoes.innerHTML = '<p style="color: red;">Erro ao carregar o simulado. Verifique o arquivo JSON.</p>';
+  }
+}
+
+// Checa questões em branco antes de finalizar
+function validarEFinalizarSimulado() {
+  let respondidas = 0;
+  let total = questoesAtuais.length;
+
+  questoesAtuais.forEach((q, index) => {
+    const num = q.numero || q.id || (index + 1);
+    if (document.querySelector(`input[name="q_${num}"]:checked`)) {
+      respondidas++;
+    }
+  });
+
+  const emBranco = total - respondidas;
+
+  if (emBranco > 0) {
+    document.getElementById('confirm-modal-msg').innerText = `Você ainda possui ${emBranco} questão(ões) em branco de um total de ${total}. Deseja finalizar mesmo assim?`;
+    document.getElementById('confirm-modal').classList.add('active');
+  } else {
+    calcularERexibirResultado();
+  }
+}
+
+// Processa pontuação e gera o Grid
+function calcularERexibirResultado() {
+  fecharModal('confirm-modal');
+
+  let acertos = 0;
+  let erros = 0;
+  const gridContainer = document.getElementById('questoes-grid');
+  gridContainer.innerHTML = '';
+
+  questoesAtuais.forEach((q, index) => {
+    const num = q.numero || q.id || (index + 1);
+    const selecionada = document.querySelector(`input[name="q_${num}"]:checked`);
+    const respUsuario = selecionada ? selecionada.value.toUpperCase() : 'N/A';
+    const gabarito = (q.resposta_correta || q.gabarito || '').toUpperCase();
+
+    const eCorreta = respUsuario === gabarito;
+
+    if (eCorreta) {
+      acertos++;
+    } else {
+      erros++;
+    }
+
+    // Cria o quadradinho com o número da questão
+    const btnNum = document.createElement('button');
+    btnNum.className = `btn-num-questao ${eCorreta ? 'certo' : 'errado'}`;
+    btnNum.innerText = num;
+
+    if (!eCorreta) {
+      btnNum.onclick = () => abrirRevisaoQuestao(q, num, respUsuario, gabarito);
+    }
+
+    gridContainer.appendChild(btnNum);
+  });
+
+  const total = questoesAtuais.length;
+  const porcentagem = total > 0 ? Math.round((acertos / total) * 100) : 0;
+
+  document.getElementById('res-acertos').innerText = acertos;
+  document.getElementById('res-erros').innerText = erros;
+  document.getElementById('res-porcentagem').innerText = `${porcentagem}%`;
+
+  document.getElementById('result-modal').classList.add('active');
+}
+
+// Exibe detalhes da questão errada ao clicar no número vermelho
+function abrirRevisaoQuestao(q, num, respUsuario, gabarito) {
+  document.getElementById('rev-titulo').innerText = `Questão ${num}`;
+  document.getElementById('rev-enunciado').innerText = q.enunciado || q.texto || q.raw_content || '';
+  
+  const textoSuaResp = q.alternativas && q.alternativas[respUsuario] ? `${respUsuario}) ${q.alternativas[respUsuario]}` : respUsuario;
+  const textoGabarito = q.alternativas && q.alternativas[gabarito] ? `${gabarito}) ${q.alternativas[gabarito]}` : gabarito;
+
+  document.getElementById('rev-sua-resposta').innerText = textoSuaResp;
+  document.getElementById('rev-gabarito').innerText = textoGabarito;
+
+  // Dica prática personalizada
+  document.getElementById('rev-dica').innerHTML = `
+    📌 <strong>Instrução Strix de Memorização:</strong><br>
+    Copie para seu caderno de resumos apenas a opção correta: <mark style="background: rgba(124, 58, 237, 0.3); color: #fff; padding: 2px 6px; border-radius: 4px;">${textoGabarito}</mark>.<br>
+    <em>Evite copiar opções incorretas para não treinar seu cérebro com conteúdos falsos.</em>
+  `;
+
+  document.getElementById('review-modal').classList.add('active');
+}
+
+function fecharModal(id) {
+  document.getElementById(id).classList.remove('active');
 }

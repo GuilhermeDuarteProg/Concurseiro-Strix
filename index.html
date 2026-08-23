@@ -259,4 +259,71 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script src="script.js"></script>
 </body>
-</html>
+</html><!-- Modal 1: Alerta de Questões em Branco / Confirmação -->
+  <div id="confirm-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button type="button" class="close-modal" onclick="fecharModal('confirm-modal')">&times;</button>
+      <h2>Finalizar Simulado</h2>
+      <p id="confirm-modal-msg" style="margin: 1rem 0; color: var(--text-secondary);"></p>
+      <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+        <button class="btn-secondary" onclick="fecharModal('confirm-modal')">Continuar Respondendo</button>
+        <button class="btn-primary" onclick="calcularERexibirResultado()">Finalizar Mesmo Assim</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Desempenho e Grid de Questões -->
+  <div id="result-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 650px; text-align: center;">
+      <button type="button" class="close-modal" onclick="fecharModal('result-modal')">&times;</button>
+      <h2>Resultado do Simulado</h2>
+      
+      <div class="stats-grid" style="margin: 1.5rem 0;">
+        <div class="stat-card">
+          <span class="stat-value" id="res-acertos" style="color: #10b981;">0</span>
+          <span class="stat-label">Acertos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="res-erros" style="color: #ef4444;">0</span>
+          <span class="stat-label">Erros</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="res-porcentagem" style="color: var(--accent-purple);">0%</span>
+          <span class="stat-label">Aproveitamento</span>
+        </div>
+      </div>
+
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        Clique nos números <strong style="color: #ef4444;">vermelhos</strong> para revisar o gabarito e obter dicas práticas:
+      </p>
+
+      <!-- Grid com números das questões -->
+      <div id="questoes-grid" class="questoes-grid"></div>
+
+      <button class="btn-primary" style="margin-top: 1.5rem;" onclick="fecharModal('result-modal')">Fechar Resultado</button>
+    </div>
+  </div>
+
+  <!-- Modal 3: Revisão da Questão + Dica do Concurseiro -->
+  <div id="review-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px;">
+      <button type="button" class="close-modal" onclick="fecharModal('review-modal')">&times;</button>
+      <span class="badge badge-planned" style="border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.15);">Revisão de Erro</span>
+      <h3 id="rev-titulo" style="margin: 1rem 0 0.5rem 0; color: #fff;"></h3>
+      
+      <div id="rev-enunciado" style="background: var(--bg-main); padding: 1rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 1rem; border: 1px solid var(--border-color);"></div>
+
+      <div style="margin-bottom: 1rem; font-size: 0.9rem;">
+        <p style="color: #ef4444;"><strong>Sua resposta:</strong> <span id="rev-sua-resposta"></span></p>
+        <p style="color: #10b981;"><strong>Gabarito Correto:</strong> <span id="rev-gabarito"></span></p>
+      </div>
+
+      <!-- Dica Prática de Estudo Strix -->
+      <div class="strix-tip-box">
+        <h4>💡 Dica de Ouro do Concurseiro Strix</h4>
+        <p id="rev-dica">Anote este conceito no seu caderno de erros! Reescreva apenas o enunciado e a opção correta para fixar na memória de longo prazo e dominar o padrão da banca.</p>
+      </div>
+
+      <button class="btn-primary" style="width: 100%; margin-top: 1rem;" onclick="fecharModal('review-modal')">Entendido!</button>
+    </div>
+  </div>
