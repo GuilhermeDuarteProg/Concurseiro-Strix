@@ -453,4 +453,33 @@ textarea:focus {
 .btn-ad:hover {
   background-color: var(--accent-purple);
   color: #ffffff;
+}/* Estilo das alternativas */
+.opcao-resposta {
+  display: block;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Efeito ao passar o mouse */
+.opcao-resposta:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Estilo destacado quando a opção estiver marcada */
+.opcao-resposta.selecionada {
+  background: rgba(124, 58, 237, 0.2) !important;
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+}
+
+.opcao-resposta input[type="radio"] {
+  accent-color: #7c3aed;
+  margin-right: 8px;
+  transform: scale(1.1);
 }

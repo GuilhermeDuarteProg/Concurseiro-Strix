@@ -254,8 +254,8 @@ async function iniciarSimulado() {
       if (q.alternativas) {
         Object.entries(q.alternativas).forEach(([letra, textoAlt]) => {
           htmlContent += `
-            <label style="display: block; margin: 0.5rem 0; cursor: pointer;">
-              <input type="radio" name="q_${num}" value="${letra}">
+            <label class="opcao-resposta">
+              <input type="radio" name="q_${num}" value="${letra}" onchange="destacarOpcao(this)">
               <strong>${letra})</strong> ${textoAlt}
             </label>
           `;
@@ -269,5 +269,20 @@ async function iniciarSimulado() {
   } catch (erro) {
     console.error('Erro ao iniciar simulado:', erro);
     areaQuestoes.innerHTML = '<p style="color: red;">Erro ao carregar o simulado. Verifique o arquivo JSON.</p>';
+  }
+}function destacarOpcao(inputRadio) {
+  // Encontra o container pai da questão
+  const container = inputRadio.closest('.alternativas-container');
+  if (!container) return;
+
+  // Remove a classe "selecionada" de todas as opções da mesma questão
+  container.querySelectorAll('.opcao-resposta').forEach(label => {
+    label.classList.remove('selecionada');
+  });
+
+  // Adiciona a classe no label selecionado
+  const labelAtual = inputRadio.closest('.opcao-resposta');
+  if (labelAtual) {
+    labelAtual.classList.add('selecionada');
   }
 }
