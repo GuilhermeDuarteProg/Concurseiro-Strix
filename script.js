@@ -233,4 +233,66 @@ async function carregarCatalogoProvas() {
     console.error('Erro ao carregar catálogo de provas:', erro);
     selectProvas.innerHTML = '<option value="">Erro ao carregar provas</option>';
   }
+}async function iniciarSimulado() {
+  const selectProvas = document.getElementById('select-prova');
+  const arquivoJson = selectProvas ? selectProvas.value : '';
+
+  if (!arquivoJson) {
+    alert('Por favor, selecione uma prova primeiro!');
+    return;
+  }
+
+  const areaQuestoes = document.getElementById('area-questoes');
+  if (!areaQuestoes) return;
+
+  try {
+    areaQuestoes.style.display = 'block';
+    areaQuestoes.innerHTML = '<h3>Carregando questões do simulado...</h3>';
+
+    const response = await fetch(arquivoJson);
+    if (!response.ok) throw new Error('Não foi possível carregar as questões.');
+
+    const dadosProva = await response.json();
+    
+    // Suporta tanto array direto de questoes quanto objeto com chave 'questoes'
+    const questoes = dadosProva.questoes || (Array.isArray(dadosProva) ? dadosProva : []);
+
+    if (questoes.length === 0) {
+      areaQuestoes.innerHTML = '<p>Nenhuma questão encontrada para este simulado.</p>';
+      return;
+    }
+
+    let htmlContent = `<h2>${dadosProva.concurso || 'Simulado'}</h2><hr style="margin-bottom: 1.5rem; border-color: rgba(255,255,255,0.1);">`;
+
+    questoes.forEach((q, index) => {
+      const num = q.numero || (index + 1);
+      const disciplina = q.disciplina ? `<small style="color: var(--text-secondary);">${q.disciplina}</small><br>` : '';
+      
+      htmlContent += `
+        <div style="margin-bottom: 2rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
+          ${disciplina}
+          <strong>Questão ${num}</strong>
+          <p style="margin: 0.8rem 0;">${q.enunciado || q.texto || ''}</p>
+          <div class="alternativas-container">
+      `;
+
+      if (q.alternativas) {
+        Object.entries(q.alternativas).forEach(([letra, textoAlt]) => {
+          htmlContent += `
+            <label style="display: block; margin: 0.5rem 0; cursor: pointer;">
+              <input type="radio" name="q_${num}" value="${letra}">
+              <strong>${letra})</strong> ${textoAlt}
+            </label>
+          `;
+        });
+      }
+
+      htmlContent += `</div></div>`;
+    });
+
+    areaQuestoes.innerHTML = htmlContent;
+  } catch (erro) {
+    console.error('Erro ao iniciar simulado:', erro);
+    areaQuestoes.innerHTML = '<p style="color: red;">Erro ao carregar o simulado. Verifique o arquivo JSON.</p>';
+  }
 }

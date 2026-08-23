@@ -165,10 +165,11 @@
           <select id="select-prova">
             <option value="">Carregando provas...</option>
           </select>
-        </div>        <button type="button" class="btn-primary">Iniciar Simulado</button>
-      </div>
+<button type="button" class="btn-primary" onclick="iniciarSimulado()">Iniciar Simulado</button>      </div>
     </section>
-
+<div id="area-questoes" class="card" style="display: none; margin-top: 1.5rem;">
+  <!-- As questões serão injetadas aqui pelo JS -->
+</div>
     <!-- Aba 5: Gerar Simulado (Conversor PDF para JSON) -->
     <section id="gerar" class="tab-content">
       <h1>Importar Prova em PDF (Conversor JSON)</h1>
