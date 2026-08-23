@@ -447,4 +447,62 @@ function abrirRevisaoQuestao(q, num, respUsuario, gabarito) {
 
 function fecharModal(id) {
   document.getElementById(id).classList.remove('active');
+}async function processarGabaritoPDF() {
+  const fileInput = document.getElementById('pdf-gabarito-input');
+  const jsonTextArea = document.getElementById('json-output');
+
+  if (!fileInput.files.length) {
+    alert('Por favor, selecione o arquivo PDF do gabarito.');
+    return;
+  }
+
+  if (!jsonTextArea.value) {
+    alert('Primeiro converta a prova em PDF para JSON!');
+    return;
+  }
+
+  try {
+    const file = fileInput.files[0];
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+    let textoGabarito = "";
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      textoGabarito += textContent.items.map(i => i.str).join(' ') + " ";
+    }
+
+    // Procura padrões comuns de gabarito como: "1 - A", "01. A", "1 A", "Q1: A"
+    const mapaGabarito = {};
+    const regex = /(?:Q(?:uestão)?\s*)?(\d{1,3})[\s\.\-\:]*([A-E])/gi;
+    let match;
+
+    while ((match = regex.exec(textoGabarito)) !== null) {
+      const numQuestao = parseInt(match[1]);
+      const letraCorreta = match[2].toUpperCase();
+      mapaGabarito[numQuestao] = letraCorreta;
+    }
+
+    // Injeta a resposta_correta na lista de questões do JSON
+    const questoes = JSON.parse(jsonTextArea.value);
+    let atualizadas = 0;
+
+    questoes.forEach(q => {
+      const num = q.numero || q.id;
+      if (mapaGabarito[num]) {
+        q.resposta_correta = mapaGabarito[num];
+        q.gabarito = mapaGabarito[num];
+        atualizadas++;
+      }
+    });
+
+    jsonTextArea.value = JSON.stringify(questoes, null, 2);
+    alert(`Gabarito injetado com sucesso! ${atualizadas} questões atualizadas.`);
+
+  } catch (erro) {
+    console.error('Erro ao ler gabarito:', erro);
+    alert('Erro ao processar o PDF do gabarito. Verifique o arquivo.');
+  }
 }

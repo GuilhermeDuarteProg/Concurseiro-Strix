@@ -147,7 +147,19 @@
     <!-- Aba 4: Simulado -->
     <section id="simulado" class="tab-content">
       <h1>Configurar Simulado</h1>
-      <div class="card">
+      <div class="card"><hr style="margin: 1.5rem 0; border-color: var(--border-color);">
+        
+        <h3>Carregar Gabarito em PDF (Opcional)</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+          Selecione o PDF do gabarito para injetar as respostas corretas automaticamente no JSON.
+        </p>
+
+        <div class="form-group">
+          <label>Selecione o arquivo PDF do Gabarito</label>
+          <input type="file" id="pdf-gabarito-input" accept="application/pdf">
+        </div>
+
+        <button type="button" class="btn-secondary" onclick="processarGabaritoPDF()">Injetar Gabarito no JSON</button>
         <div class="form-group">
           <label>Título do Simulado</label>
           <input type="text" placeholder="Ex: Simulado Geral - Polícia Federal">
