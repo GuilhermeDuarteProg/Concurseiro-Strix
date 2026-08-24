@@ -338,4 +338,36 @@
 
       <button class="btn-primary" style="width: 100%; margin-top: 1rem;" onclick="fecharModal('review-modal')">Entendido!</button>
     </div>
+  </div><!-- No menu de navegação -->
+<button class="nav-btn" onclick="mudarAba('admin')">⚙️ Admin (Alimentar Provas)</button>
+
+<!-- Conteúdo da Aba Admin -->
+<section id="admin" class="tab-content">
+  <div class="card">
+    <h2>Painel do Administrador - Cadastrar Prova + Gabarito</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+      Cole o JSON das questões e o JSON do gabarito abaixo para mesclar e gerar o arquivo da prova pronto para salvar na pasta <code>provas/</code>.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+      <div>
+        <label><strong>1. Cole o JSON das Questões:</strong></label>
+        <textarea id="admin-json-questoes" rows="12" style="width: 100%; font-family: monospace;" placeholder='[{"numero": 1, "enunciado": "...", "alternativas": {...}}]'></textarea>
+      </div>
+
+      <div>
+        <label><strong>2. Cole o JSON do Gabarito:</strong></label>
+        <textarea id="admin-json-gabarito" rows="12" style="width: 100%; font-family: monospace;" placeholder='{"1": "E", "2": "B", "3": "B", ...}'></textarea>
+      </div>
+    </div>
+
+    <button type="button" class="btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="mesclarEBaixarProva()">
+      ✨ Mesclar Prova com Gabarito e Baixar JSON Final
+    </button>
+
+    <div style="margin-top: 1.5rem;">
+      <label><strong>3. Resultado Final (Pronto para copiar ou salvar):</strong></label>
+      <textarea id="admin-json-resultado" rows="10" readonly style="width: 100%; font-family: monospace; background: var(--bg-main);"></textarea>
+    </div>
   </div>
+</section>
